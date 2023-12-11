@@ -13,35 +13,12 @@ namespace sifoodproject.Areas.Stores.Controllers
         private readonly Sifood3Context _context;
         private readonly IStoreIdentityService _storeIdentityService;
 
-
-
-
         public ReviewapiController(Sifood3Context context, IStoreIdentityService storeIdentityService)
         {
             _context = context;
             _storeIdentityService = storeIdentityService;
 
         }
-
-        //public async Task<List<ReviewVM>> GetAll()
-        //{
-        //    var review = _context.Orders.Include(p => p.Comment)
-        //        .Include(p => p.User)
-        //        .Where(x => x.Comment != null)
-        //        .Where(e => e.StoreId == targetStoreId);
-
-        //    return await review
-        //        .Select(x => new ReviewVM
-        //    {
-        //        UserId = x.UserId,
-        //        OrderId = x.OrderId,
-        //        CommentRank = x.Comment.CommentRank,
-        //        CommentTime = x.Comment.CommentTime,
-        //        Contents = x.Comment.Contents,
-        //        StoreId = x.StoreId,
-        //        UserName = x.User.UserName
-        //    }).ToListAsync();
-        //}
 
         public async Task<List<ReviewVM>> Filter(string? text)
         {

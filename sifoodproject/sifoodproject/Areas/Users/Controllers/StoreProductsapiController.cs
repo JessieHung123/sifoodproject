@@ -153,61 +153,8 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
             var parsedClosingTime = TimeSpan.Parse(applicableOpeningTime.Substring(8, 5));
 
             return parsedOpeningTime <= currentTime && currentTime <= parsedClosingTime;
-
-            //var weekdaysOpeningTime = openingTime.Substring(3, 11);
-            //var weekendsOpeningTime = openingTime.Substring(20, 11);
-            //if (DateTime.Now.DayOfWeek == DayOfWeek.Saturday || DateTime.Now.DayOfWeek == DayOfWeek.Sunday)
-            //{
-            //    return TimeSpan.Parse(weekendsOpeningTime.Substring(0, 5)) <= currentTime && currentTime <= TimeSpan.Parse(weekendsOpeningTime.Substring(8, 5));
-            //}
-            //else
-            //{
-            //    return TimeSpan.Parse(weekdaysOpeningTime.Substring(0, 5)) <= currentTime && currentTime <= TimeSpan.Parse(weekdaysOpeningTime.Substring(8, 5));
-            //}
         }
-        //[HttpGet("Search")]
-        //public async Task<object> SearchProducts(string? query)
-        //{
-        //    string storeId = "S001";
-        //    DateTime today = DateTime.Today;
-        //    TimeSpan currentTime = DateTime.Now.TimeOfDay;
-
-        //    var filterProducts =  _context.Products
-        //        .Where(p => p.StoreId == storeId &&
-        //                    p.RealeasedTime.Date == today &&
-        //                    p.RealeasedTime.TimeOfDay < currentTime &&
-        //                    p.SuggestPickEndTime > currentTime &&
-        //                    p.IsDelete == 1 &&
-        //                    (string.IsNullOrEmpty(query) ||
-        //                     p.ProductName.Contains(query) ||
-        //                     p.Category.CategoryName.Contains(query)));
-
-
-        //    var products =  await filterProducts.Select(x => new ProductsVM
-        //        {
-        //            UnitPrice = x.UnitPrice,
-        //            ProductName = x.ProductName,
-        //            CategoryId = x.CategoryId,
-        //            CategoryName = x.Category.CategoryName,
-        //            avalibleQty = x.ReleasedQty - x.OrderedQty,
-        //            SuggestPickUpTime = $"{x.SuggestPickUpTime:hh\\:mm} ~ {x.SuggestPickEndTime:hh\\:mm}",
-        //            RealeasedTime = x.RealeasedTime,
-        //            PhotoPath = x.PhotoPath,
-        //        })
-        //        .ToListAsync();
-        //    var categories = await filterProducts.Select(x => x.Category.CategoryName)
-        //                                         .Distinct()
-        //                                         .ToListAsync();
-
-        //    var searchResults = new
-        //    {
-        //        Products = products,
-        //        Categories = categories,
-        //    };
-
-        //    return searchResults;
-
-        //}
+     
         [HttpPut("{id}")]
         public async Task<IActionResult> PutStore(string id, Store store)
         {

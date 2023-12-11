@@ -179,32 +179,6 @@ namespace sifoodproject.Areas.Users.Controllers
                     historyOrdersList = historyOrdersList.OrderByDescending(o => o.OrderDate).ToList();
                     break;
             }
-
-
-            //switch (sortOption)
-            //{
-            //    case "Status":
-            //        historyOrdersQuery = historyOrdersQuery.OrderBy(o => o.Status.StatusName);
-            //        break;
-            //    case "Low to High":
-            //        historyOrdersQuery = historyOrdersQuery.OrderBy(o => o.TotalPrice);
-            //        break;
-            //    case "High to Low":
-            //        historyOrdersQuery = historyOrdersQuery.OrderByDescending(o => o.TotalPrice);
-            //        break;
-            //    case "Newest":
-            //        historyOrdersQuery = historyOrdersQuery.OrderByDescending(o => o.OrderDate);
-            //        break;
-            //    case "Oldest":
-            //        historyOrdersQuery = historyOrdersQuery.OrderBy(o => o.OrderDate);
-            //        break;
-            //    default:
-            //        // 默認排序：按訂購日期由新到舊排序
-            //        historyOrdersQuery = historyOrdersQuery.OrderByDescending(o => o.OrderDate);
-            //        break;
-            //}
-
-            // 在過濾後的結果上應用分頁
             var paginatedOrders = historyOrdersQuery
                     .Skip((currentPage - 1) * pageSize)
                     .Take(pageSize)

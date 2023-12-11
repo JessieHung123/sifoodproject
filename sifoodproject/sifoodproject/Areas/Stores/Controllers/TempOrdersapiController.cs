@@ -27,47 +27,7 @@ namespace sifoodproject.Areas.Stores.Controllers
           }
             return await _context.Orders.ToListAsync();
         }
-
-        // GET: api/TempOrdersapi/5
-        [HttpGet("{id}")]
-        //public object GetOrder(string id)
-        //{
-        //    TimeZoneInfo taiwanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
-        //    DateTime utcNow = DateTime.UtcNow;
-        //    DateTime taiwanTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, taiwanTimeZone);
-        //    //List<int> StatusIdToCheck = new List<int> {1, 2, 3, 4};
-        //    //var order = await _context.Orders.FindAsync(id);
-        //    return _context.Orders.AsNoTracking().Include(x => x.User).Include(x => x.OrderDetails).ThenInclude(x => x.Product).Where(c => c.UserId == id && c.Status.StatusId != 5 && c.Status.StatusId != 6 && c.Status.StatusId != 7)
-        //         .Select(z => new OrderVM
-        //         {
-        //             OrderId = z.OrderId,
-        //             OrderDuration = (taiwanTime - z.OrderDate).TotalMinutes,
-        //             OrderDate = z.OrderDate.ToString("yyyy-MM-dd"),
-        //             OrderTime = z.OrderDate.ToString("HH:mm"),
-        //             DeliveryMethod = z.DeliveryMethod,
-        //             Address = z.Address,
-        //             Status = z.Status.StatusName,
-        //             StatusId = z.StatusId,
-        //             UserName = z.User.UserName,
-        //             UserEmail = z.User.UserEmail,
-        //             UserPhone = z.User.UserPhone,
-        //             PaymentMethodＮame = z.Payment.PaymentMethodＮame,
-        //             PaymentDate = z.Payment.PaymentTime.ToString("yyyy-MM-dd"),
-        //             PaymentTime = z.Payment.PaymentTime.ToString("HH:mm"),
-        //             OrderDetails = z.OrderDetails.Select(p => new OrderDetailsVM
-        //             {
-        //                 PhotoPath = p.Product.PhotoPath,
-        //                 ProductName = p.Product.ProductName,
-        //                 UnitPrice = p.Product.UnitPrice,
-        //                 Quantity = p.Quantity,
-        //                 Total = p.Quantity * p.Product.UnitPrice,
-        //             }),
-        //             ShippingFee = (decimal)z.ShippingFee,
-        //             Subtotal = z.OrderDetails.Sum(p => p.Quantity * p.Product.UnitPrice),
-        //             TotalQuantity = z.OrderDetails.Sum(p => p.Quantity),
-        //             DriverFullName = z.Driver.FullName
-        //         });
-        //}
+    
         // PUT: api/TempOrdersapi/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]

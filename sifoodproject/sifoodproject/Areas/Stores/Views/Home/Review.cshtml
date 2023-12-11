@@ -174,13 +174,6 @@
                         .then(data => _this.ReviewInfo = data)
                         .catch(error => alert(error));
                 },
-                // getReviewAPI: function () {
-                //     let _this = this;
-                //     fetch(`/api/Reviewapi/getAll`)
-                //         .then(response => response.json())
-                //         .then(data => _this.ReviewInfo = data)
-                //         .catch(error => alert(error));
-                // }
             },
         }).component("paginate", VuejsPaginateNext).mount("#reviewapp")
     </script>

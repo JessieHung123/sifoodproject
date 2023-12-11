@@ -44,20 +44,7 @@ namespace sifoodproject.Areas.Users.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<string> JoinUsSubmit(JoinUsVM joinus)
-        {
-            //if (ModelState.IsValid)
-            //{
-            //    try
-            //    {
-
-            //加上Jessie
-            //string Currentstore = await _context.Stores.OrderByDescending(s => s.StoreId).Select(s => s.StoreId).FirstOrDefaultAsync();
-            ////幫這個店家拿到新的號碼(+1)
-            //int newnumber = int.Parse(Currentstore.Substring(1)) + 1;
-            //var folderName = "S" + newnumber.ToString();
-            //Jessie止
-
-
+        {        
             // 格式化營業時間
             string formattedOpeningTime = $"平日 {joinus.WeekdayStartTime} - {joinus.WeekdayEndTime}，週末 {joinus.WeekendStartTime} - {joinus.WeekendEndTime}";
             //string formattedOpeningTime = $"平日 {joinus.WeekdayStartTime:HH:mm} - {joinus.WeekdayEndTime:HH:mm}，週末 {joinus.WeekendStartTime:HH:mm} - {joinus.WeekendEndTime:HH:mm}";

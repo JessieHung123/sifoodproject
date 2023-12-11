@@ -24,56 +24,6 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
             return  _context.Stores;
         }
 
-        // GET: api/Stores/5
-        [HttpGet("{id}")]
-        //public object GetStore(string id)
-
-        //{
-        //    var today = DateTime.Today;
-        //    var currentTime = DateTime.Now.TimeOfDay;
-        //    var store = _context.Stores.AsNoTracking().Include(x => x.Products).Include(x => x.Orders)
-        //       .ThenInclude(x => x.Comment).Where(c => c.StoreId == id);
-            
-        //    return store.Select(z => new StoreProductsVM
-        //    {
-        //           StoreName = z.StoreName,
-        //           StoreId = z.StoreId,                  
-        //           Email = z.Email,
-        //           Phone = $"{z.Phone.Substring(0, 2)} {z.Phone.Substring(2)}",
-        //           Address = z.Address,
-        //           OpeningTime = z.OpeningTime,
-        //           PhotosPath = z.PhotosPath,
-        //           Description = z.Description,
-        //           LogoPath = z.LogoPath,
-        //           CommentCount = z.Orders.Where(x => x.Comment != null).Count(),
-        //           CommentRank = z.Orders.Sum(x => x.Comment.CommentRank),
-        //           WeekdayOpeningTime = z.OpeningTime.Substring(0, 16),
-        //           WeekendOpeningTime = z.OpeningTime.Substring(17, 16),
-
-        //           Products = z.Products.Where(p=>p.RealeasedTime.Date==today&&p.RealeasedTime.TimeOfDay<currentTime&&p.SuggestPickEndTime> currentTime).Select(p => new ProductsVM
-        //           {
-        //               UnitPrice = p.UnitPrice,
-        //               ProductName = p.ProductName,
-        //               CategoryId = p.CategoryId,
-        //               CategoryName = p.Category.CategoryName,
-        //               avalibleQty = p.ReleasedQty - p.OrderedQty,
-        //               SuggestPickUpTime = $"{ p.SuggestPickUpTime.ToString(@"hh\:mm") } ~ { p.SuggestPickEndTime.ToString(@"hh\:mm")}",
-        //               RealeasedTime = p.RealeasedTime,
-        //               PhotoPath = p.PhotoPath,
-        //           }),
-
-        //           CategoryList =   z.Products.Where(p => p.RealeasedTime.Date == today && p.RealeasedTime.TimeOfDay < currentTime && p.SuggestPickEndTime > currentTime).Select(y => y.Category.CategoryName).Distinct().ToArray(),
-
-        //           Comment = z.Orders.Select(d => new CommentVM
-        //           {
-        //               Contents = d.Comment.Contents,
-        //               CommentRank = d.Comment.CommentRank,
-        //               User = d.User.UserName,
-        //               DeliveryMethod = d.DeliveryMethod
-        //           })
-        //       });
-        //}
-
         // PUT: api/Stores/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
