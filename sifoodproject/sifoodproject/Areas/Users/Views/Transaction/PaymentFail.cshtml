@@ -1,0 +1,32 @@
+﻿<section class="my-lg-14 my-8">
+    <div class="container">
+        <div class="row justify-content-center align-items-center">
+            <div class="col-12 col-md-6 col-lg-4 order-lg-1 order-2">
+                <img src="~/images/sifood_logo_bgclear.png" class="img-fluid" />
+            </div>
+            <div class="col-12 col-md-6 offset-lg-1 col-lg-4 order-lg-2 order-1 d-flex align-items-center">
+                <div>
+                    <div class="mb-lg-9 mb-5">
+                        <h1>付款失敗</h1>
+                        <p>
+                            請確認您的信用卡是否有效，並返回訂單畫面重新結帳，謝謝 !
+                        </p>
+                        <div class="col-12">
+                        </div>
+                        <div class="col-12 d-grid gap-2">
+                            <button class="btn btn-primary" onclick="redirect()">前往訂單畫面</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        function redirect() {
+            window.location.href = '/Users/Home/RealTimeOrders';
+        }
+    </script>
+}

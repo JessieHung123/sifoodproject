@@ -1,0 +1,111 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - SiFoodProjectFormal2._0</title>
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/favicon/favicon.ico">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/assets/css/theme.min.css">
+    <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet">
+    <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SiFoodProjectFormal2._0.styles.css" asp-append-version="true" />
+    <style>
+        body {
+            background-color: #D9F5DE;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100%25' height='100%25'%3E%3Cdefs%3E%3Cpattern id='p' width='100' height='100' patternUnits='userSpaceOnUse'%3E%3Cpath data-color='outline' fill='none' stroke='%23FFF' stroke-width='5' d='M0 0h100v50H0zM-50 50h100v50h-100zM50 50h100v50h-100z'%3E%3C/path%3E%3C/pattern%3E%3C/defs%3E%3Crect fill='url(%23p)' width='100%25' height='100%25'%3E%3C/rect%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+
+        #header {
+            background-color: #B0E0E6;
+        }
+    </style>
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body >
+    <header id="header">
+        <nav class="navbar navbar-expand-lg  navbar-light sticky-top px-4 px-lg-5 py-lg-0">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <a href="@Url.Action("Main", "Home")" class="navbar-brand d-flex align-items-center">
+                    <h1 class="m-0">
+                        <i class="fa fa-building text-primary me-3"></i>Sifood
+                        <img src="~/images/SiFood_logo_BGclear.png" alt="Site Logo" style="height:70px; width: 90px" class="navbar-brand" />
+                    </h1>
+                </a>
+            }
+            else
+            {
+                <a class="navbar-brand d-flex align-items-center">
+                    <h1 class="m-0">
+                        <i class="fa fa-building text-primary me-3"></i>Sifood
+                        <img src="~/images/SiFood_logo_BGclear.png" alt="Site Logo" style="height:70px; width: 90px" class="navbar-brand" />
+                    </h1>
+                </a>
+            }
+            <button type="button"
+                    class="navbar-toggler"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#navbarCollapse">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <div class="navbar-nav ms-auto py-3 py-lg-0">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <a class="nav-item nav-link active" style="font-weight: bold; font-size: 14px;" asp-area="Stores" asp-controller="Home" asp-action="Main">首頁</a>
+                        <a class="nav-item nav-link" style="font-weight: bold; font-size: 14px;" asp-area="Stores" asp-controller="Home" asp-action="RealTimeOrders">即時訂單</a>
+                        <a class="nav-item nav-link" style="font-weight: bold; font-size: 14px;" asp-area="Stores" asp-controller="Home" asp-action="History">歷史訂單</a>
+                        <a class="nav-item nav-link" style="font-weight: bold; font-size: 14px;" asp-area="Stores" asp-controller="Home" asp-action="ProductManage">商品管理</a>
+                        <a class="nav-item nav-link" style="font-weight: bold; font-size: 14px;" asp-area="Stores" asp-controller="Home" asp-action="InfoModify">資料修改</a>
+                        <a class="nav-item nav-link" style="font-weight: bold; font-size: 14px;" asp-area="Stores" asp-controller="Home" asp-action="Review">客戶評價</a>
+                        <a class="nav-item nav-link" style="font-weight: bold; font-size: 14px;" asp-area="Stores" asp-controller="Home" asp-action="FAQ">常見問題</a>
+                        <button type="button" class="nav-item nav-link" style="font-weight: bold; font-size: 14px;" onclick="logout()">登出</button>
+
+
+                    }
+                    else
+                    {
+                    }
+                </div>
+            </div>
+            </nav>
+    </header>
+    <div class="container">
+
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/assets/js/theme.min.js"></script>
+    <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+    <script>
+        async function logout() {
+            await fetch(`/Account/StoreLogout`, {
+                method: "GET",
+                headers: { "Content-Type": "application/json" },
+                credentials: 'include',
+            }).then(response => {
+                if (response.ok) {
+                    setTimeout(() => {
+                        window.location.href = "/Stores/Account/Login";
+                        alert("已成功登出");
+                    }, 1000);
+                }
+            }).catch(error => alert("發生錯誤"));
+        }
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+
+</html>
+

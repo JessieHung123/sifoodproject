@@ -1,6 +1,8 @@
+using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using sifoodproject.Models;
+using sifoodproject.Services;
 
 namespace sifoodproject
 {
@@ -16,17 +18,17 @@ namespace sifoodproject
                 options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("Sifood"));
             });
 
-            //builder.Services.AddHangfire(configuration => configuration
-            //               .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
-            //               .UseSimpleAssemblyNameTypeSerializer()
-            //               .UseRecommendedSerializerSettings()
-            //               .UseSqlServerStorage(builder.Configuration.GetConnectionString("Sifood")));
-            //builder.Services.AddHangfireServer();
+            builder.Services.AddHangfire(configuration => configuration
+                           .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+                           .UseSimpleAssemblyNameTypeSerializer()
+                           .UseRecommendedSerializerSettings()
+                           .UseSqlServerStorage(builder.Configuration.GetConnectionString("Sifood")));
+            builder.Services.AddHangfireServer();
 
             builder.Services.AddControllersWithViews();
             builder.Services.AddHttpContextAccessor();
-            //builder.Services.AddTransient<IUserIdentityService, UserIdentityService>();
-            //builder.Services.AddTransient<IStoreIdentityService, StoreIdentityService>();
+            builder.Services.AddTransient<IUserIdentityService, UserIdentityService>();
+            builder.Services.AddTransient<IStoreIdentityService, StoreIdentityService>();
             builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
             .AddCookie(options =>
             {

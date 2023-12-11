@@ -1,0 +1,608 @@
+﻿@{
+    Layout = "~/Areas/Users/Views/Shared/_Layout.cshtml";
+    ViewData["Title"] = "歷史訂單";
+}
+<!-- CSS -->
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet">
+
+    <!--改放大鏡和X顯示問題-->
+    <style>
+        .input-group-append .btn {
+            margin-left: 2px; /* 增加按鈕間的間隔 */
+        }
+
+        .input-group .form-control {
+            padding-right: 2.5rem; /* 確保輸入框內有足夠的空間 */
+        }
+    
+    </style>
+
+    <!--改評論剩餘字數-->
+    <style >
+        .comment-info {
+            padding-left: 10px; /* 或者您想要的任何距離 */
+        }
+    </style>
+
+
+    }
+
+
+<!-- Main -->
+
+<section>
+    <div id="historyApp">
+        <div class="container">
+            <div class="row">
+                <!--左側Side bar PartialView-->
+                <partial name="_MembershipPartial"></partial>
+
+                <!--Title-->
+                <div class="col-lg-9 col-md-8 col-12">
+                    <div class="py-6 p-md-6 p-lg-10">
+                        <h2 class="mb-6">我的訂單</h2>
+                        <div id="error-message" style="color: red; display: none;"></div>
+
+                        <!-- 加入filter 搜索和篩選 -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="d-lg-flex justify-content-between align-items-center">
+                                    <div class="mb-3 mb-lg-0">
+                                        <p class="mb-0">共 <span class="text-dark">{{ totalOrdersCount }}</span> 筆</p>
+                                    </div>
+
+                                    <!-- text搜索框-->
+                                    <div class="col-xxl-4 col-lg-4 d-none d-lg-block">
+                                        <div class="input-group">
+                                            <input class="form-control rounded" 
+                                                        type="text" 
+                                                        placeholder="Search for products" 
+                                                        v-model="searchTerm"
+                                                        @@keyup.enter="searchOrders"> <!-- 添加 Enter 鍵監聽器 -->
+
+                                            <span class="input-group-append">
+                                                <button class="btn bg-white" v-on:click="searchOrders">
+                                                    <!-- 放大鏡圖標 -->
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.414-1.415l-3.85-3.85a1.002 1.002 0 0 0-.114-.098zM13 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                                    </svg>
+                                                </button>
+                                                <!-- X 圖標（當有輸入時顯示） -->
+                                                <button class="btn bg-white" v-if="searchTerm.length > 0" v-on:click="clearSearch">X</button>
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <!-- 顯示筆數選擇 -->
+                                    <div class="form-group">
+                                        <select class="form-select" v-model.number="countPerPage">
+                                            <option value="5">顯示: 5</option>
+                                            <option value="10">顯示:10</option>
+                                            <option value="20">顯示:20</option>
+                                            <option value="30">顯示:30</option>
+                                        </select>
+                                    </div>
+
+                                    <!-- Sort顯示 -->
+                                    <div class="form-group">
+                                        <select class="form-select" v-model="sortOption">
+                                            <option value="default">排序</option>
+                                            @* <option value="Status">訂單狀態</option> *@
+                                            <option value="priceAsc">金額：由低到高</option>
+                                            <option value="priceDesc">金額: 由高到低</option>
+                                            <option value="dateAsc">訂購日期：由舊到新</option>
+                                            <option value="dateDesc">訂購日期：由新到舊</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--搜尋結果錯誤顯示-->
+                        <div v-if="orders.length === 0">
+                            沒有找到匹配的訂單。
+                        </div>
+                        <div v-if="errorMessage" class="alert alert-danger">
+                            {{ errorMessage }}
+                        </div>
+                        <div class="mt-10 table-responsive-xxl border-0">
+                            <table class="table mb-0 text-nowrap table-centered">
+                                <thead class="bg-light">
+                                    <tr>
+                                        <th>明細|評論</th>
+                                        <th>&nbsp;</th>
+                                        <th>商品</th>
+                                        <th>訂單編號</th>
+                                        <th>訂購日期</th>
+                                        <th>件數</th>
+                                        <th>訂單狀態</th>
+                                        <th>金額</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr v-for="order in filterOrder">
+                                        <td class=" text-muted align-middle border-top-0">
+                                            <!-- 觸發模態框的按鈕 -->
+                                            <a class="text-inherit" @@click="loadOrderDetails(order.orderId)"
+                                            data-bs-toggle="modal" data-bs-target="#orderDetailModal">
+                                                <i class="feather-icon icon-eye ms-5"></i>
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <img :src="order.firstProductPhotoPath" alt="Product" class="icon-shape icon-xl">
+                                        </td>
+                                        <td> {{order.firstProductName }}</td>
+                                        <td>{{ order.orderId }}</td>
+                                        <td>                                            
+                                            {{showDate(order.orderDate) }}<br>
+                                            {{showTime(order.orderDate)}}
+                                        </td>
+                                        <td> {{order.quantity }}</td>
+                                        <td>
+                                            <span :class="getStatusClass(order.status)">{{order.status}}</span>
+                                        </td>
+                                        <td>$ {{ order.totalPrice}} </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!--分頁-->
+                        <div class="border-top d-md-flex justify-content-between align-items-center p-6">
+                            <nav aria-label="Page navigation">
+                                <paginate :page-count="total"
+                                          :prev-text="'<'"
+                                          :next-text="'>'"
+                                          :click-handler="pageClick">
+                                    <span slot="prevContent"><i class="feather-chevrons-left"></i></span>
+                                    <span slot="nextContent"><i class="feather-chevrons-right"></i></span>
+                                </paginate>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+     
+        <!--modal-->
+        <div class="modal fade" id="orderDetailModal" tabindex="-1" >
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h3 class="modal-title" id="exampleModalScrollableTitle">明細 & 評論</h3>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="col-12 card py-3 p-md-4 p-lg-4">
+                            <div class="py-2 p-md-2 p-lg-2">
+                                <!-- heading -->
+                                <h2 class="mb-2">訂單明細</h2>
+                            </div>
+
+                            <!-- 訂單明細 -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="mt-2 mt-lg-0 card shadow-sm">
+                                        <h5 class="px-6 py-4 bg-transparent mb-0">訂單編號： {{ orderDetail.orderId }}</h5>
+                                        <div class="ms-6 mb-3">
+                                            商品種類：{{ orderDetail.items.length }} 種
+                                        </div>
+                                        <div class="ms-6 mb-3">
+                                            運送方式：<span :class="getDeliveryMethodClass(orderDetail.deliveryMethod)">{{ orderDetail.deliveryMethod }}</span>
+                                            <!--依據不同運送方式給顏色-->
+                                            @*  @{
+                                            string badgeClass = Model.DeliveryMethod switch
+                                            {
+                                            "外送" => "badge bg-light-info text-dark-info",
+                                            "自取" => "badge bg-light-danger text-dark-danger",
+                                            };
+                                            }
+                                            <span class="@badgeClass">@Model.DeliveryMethod</span> *@
+                                        </div>
+
+                                        <!-- 列表渲染 -->
+                                        <ul class="list-group list-group-flush">
+                                            <!-- list group item -->
+                                            <li class="list-group-item px-4 py-3" v-for="item in orderDetail.items">
+                                                <div class="row align-items-center mb-3">
+                                                    <div class="col-2 col-md-2">
+                                                        <img :src="item.photoPath" alt="Product" class="img-fluid">
+                                                    </div>
+                                                    <div class="col-5 col-md-5 mb-3">
+                                                        <h6>{{ item.productName }}</h6>
+                                                    </div>
+                                                    <div class="col-2 col-md-2 text-center text-muted mb-3">
+                                                        <span>{{ item.quantity }}</span>
+                                                    </div>
+                                                    <div class="col-3 text-lg-end text-start text-md-end col-md-3 mb-3">
+                                                        <span class="fw-bold">${{ item.unitPrice }}</span>
+                                                    </div>
+                                                </div>                                               
+                                            </li>
+
+                                            <!-- list group item -->
+                                            <li class="list-group-item px-4 py-3">
+                                                <div class="d-flex align-items-center justify-content-between   mb-2">
+                                                    <div>
+                                                        金額小計
+                                                    </div>
+                                                    <div class="fw-bold">
+                                                        ${{ orderDetail.itemsSubTotal }}
+                                                        @* $@Convert.ToInt32(Model.ItemsSubTotal) *@
+                                                    </div>
+                                                </div>
+                                                <div class="d-flex align-items-center justify-content-between  ">
+                                                    <div>
+                                                        運費
+                                                    </div>
+                                                    <div class="fw-bold">
+                                                        ${{ orderDetail.shippingFee }}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            <!-- list group item -->
+                                            <li class="list-group-item px-4 py-3">
+                                                <div class="d-flex align-items-center justify-content-between fw-bold">
+                                                    <div>
+                                                        總金額
+                                                    </div>
+                                                    <div>
+                                                        ${{ orderDetail.totalPrice }}
+                                                    </div>
+                                                </div>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br /><br />
+                        <!-- 星星區塊第二種 -->
+                        <div class="card py-3 ｍｔ-4 p-md-4 p-lg-4 ">
+                            <div class="card-body">
+                                <!-- rating -->
+                                <h3 class="mb-5"><mark>請給店家評分<mark></h3>
+                                <div class="border-bottom py-4 mb-4">
+                                    <div class="rating-box">
+                                        <div class="rating">
+                                            @* :class="getStarClass(star)" v-on:mouseover="setHoverRating(star)" v-on:mouseout="setHoverRating(0)" v-on:click="setCurrentRating(star)" *@
+                                            <span v-for="star in 5" :key="star"
+                                                      class="fa" :class="getStarClass(star)"
+                                                  v-on:mouseover="setHoverRating(star)"
+                                                  v-on:mouseout="setHoverRating(0)"
+                                                  v-on:click="setCurrentRating(star)"
+                                                      style="font-size:35px;"></span>
+                                            @* <span class="fa fa-star-o text-warning" style="font-size:35px;"></span>
+                                            <span class="fa fa-star-o text-warning" style="font-size:35px;"></span>
+                                            <span class="fa fa-star-o text-warning" style="font-size:35px;"></span>
+                                            <span class="fa fa-star-o text-warning" style="font-size:35px;"></span>
+                                            <span class="fa fa-star-o text-warning" style="font-size:35px;"></span> *@
+                                        </div>
+                                        <h5 class="mt-4"> {{ ratingText }}</h5>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <br />
+
+                        <div class=" py-4 mb-4 ms-2">
+                            <!-- heading -->
+                            <h3 class="mt=3">給店家的評語</h3>
+                            @* <textarea id="commentContent" class="form-control" rows="3" placeholder="請輸入您的評論"></textarea> *@
+                            <textarea v-model="comment" 
+                                            class="form-control" 
+                                            rows="3" 
+                                            placeholder="請輸入您的評論"
+                                            v-on:input="checkCommentLength">
+                            </textarea>
+                            <!--顯示剩餘字數-->
+                            <div class="comment-info"> ＊評論尚有 <span :class="{ 'text-danger': remainingCharacters <= 50,'text-primary': remainingCharacters > 30 }">{{ remainingCharacters }}</span> 個字符剩餘</div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <!-- button -->
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" v-on:click="submitRating()">送出評價</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</section>
+
+
+@section Scripts{
+    @* <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script> *@
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://unpkg.com/vuejs-paginate-next@latest/dist/vuejs-paginate-next.umd.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script>
+        const historyApp = Vue.createApp({
+            data() {
+                return {
+                    orders: [],
+                    //filter&分頁
+                    countPerPage: 5, //每頁顯示的數量
+                    pageNumber: 1, //當前頁碼
+                    searchTerm: '',
+                    sortOption: "default",
+                    errorMessage: "", // 初始化為空字符串
+                    totalOrdersCount: 0, //總訂單數量
+                    filteredOrders: [], // 新增一個用於存儲篩選後的訂單的數據屬性
+                    //星星
+                    currentRating: 0,
+                    hoverRating: 0,
+                    ratingText: "請給分",
+                    //文字評論
+                    comment: "",
+                    //訂單明細
+                    orderDetail: {
+                        orderId: "1",
+                        items: [],
+                        deliveryMethod: "",
+                        itemsSubTotal: "0",
+                        shippingFee: "0",
+                        totalPrice: "0"
+                    }
+                };
+            },
+            
+            //整合搜尋
+            watch: {
+                // 當排序選項更改時
+                sortOption(newSortOption) {
+                    this.applySort();
+                },
+                // 當每頁顯示數量更改時
+                countPerPage(newCount) {
+                    this.pageNumber = 1; // 重置到第一頁
+                    this.applySort(); // 重新應用排序
+                }
+            },
+            
+            mounted() {
+                this.loadOrders();
+            },
+            computed: {
+                total() {
+                    return Math.ceil(this.filteredOrders.length / this.countPerPage);
+                },
+                filterOrder() {
+                    let start = (this.pageNumber - 1) * this.countPerPage;
+                    let end = start + this.countPerPage;
+                    return this.filteredOrders.slice(start, end);
+                },
+
+                //評論剩幾個字
+                remainingCharacters() {
+                    return 200 - this.comment.length;
+                }
+            },
+            methods: {
+                showDate(dateString) {
+                    return new Date(dateString).toISOString().split('T')[0]
+                },
+                showTime(dateString) {
+                    return new Date(dateString).toTimeString().split(' ')[0]
+                },
+
+                //filter
+                searchOrders() {
+                    this.pageNumber = 1; // 重置到第一頁
+                    this.filteredOrders = this.orders.filter(order => {
+                        let orderIdValid = order.orderId ? order.orderId.includes(this.searchTerm) : false;
+                        let productNameValid = order.firstProductName ? order.firstProductName.includes(this.searchTerm) : false;
+                        return orderIdValid || productNameValid;
+                    });
+                    this.applySort();
+                },
+                clearSearch() {
+                    this.searchTerm = '';
+                    this.searchOrders();
+                },
+                applySort() {
+                    switch (this.sortOption) {
+                        case "priceDesc":
+                            this.filteredOrders.sort((a, b) => b.totalPrice - a.totalPrice);
+                            break;
+                        case "priceAsc":
+                            this.filteredOrders.sort((a, b) => a.totalPrice - b.totalPrice);
+                            break;
+                        case "dateDesc":
+                            this.filteredOrders.sort((a, b) => new Date(b.orderDate) - new Date(a.orderDate));
+                            break;
+                        case "dateAsc":
+                            this.filteredOrders.sort((a, b) => new Date(a.orderDate) - new Date(b.orderDate));
+                            break;
+                        // 預設排序（如果需要）
+                    }
+                },
+
+                loadOrders() {
+                    //let _this = this;
+                    fetch(`/api/HistoryOrderapi/GetHistoryOrders`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.orders = data;
+                            this.filteredOrders = data; // 初始化時，filteredOrders 應包含所有訂單
+                            this.totalOrdersCount = data.length; // 更新總訂單數量
+                        })
+                        .catch(err => console.error(err));
+                },
+                pageClick(num) {
+                    this.pageNumber = num; // 設置當前頁碼
+                    this.loadOrders(); // 加載新頁面的訂單
+                },
+
+
+                getDeliveryMethodClass(type) {
+                    if (type == "外送") return "badge bg-light-info text-dark-info"
+                    if (type == "自取") return "badge bg-light-danger text-dark-danger"
+                },
+                loadOrderDetails(orderId) {
+                    // 重置評價相關的狀態
+                    this.currentRating = 0;
+                    this.comment = "";
+                    this.hoverRating = 0;
+                    this.ratingText = "請給分";
+
+                    // 加載訂單明細
+                    fetch(`/api/HistoryOrderapi/GetOrderDetails/${orderId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            this.orderDetail = data;
+                            // 檢查是否有已存在的評價
+                            if (data.commentRank && data.commentContents) {
+                                // 如果有，則設置到相關的數據屬性中
+                                this.currentRating = data.commentRank;
+                                this.comment = data.commentContents;
+                            } else {
+                                // 如果沒有，則重置評價相關的狀態
+                                this.currentRating = 0;
+                                this.comment = "";
+                            }
+                        })
+                        .catch(err => {
+                            console.error("加載訂單明細出錯: ", err);
+                            // 適當的錯誤處理
+                        });
+                },
+                getStatusClass(status) {
+                    switch (status) {
+                        case "已送達":
+                            return "badge bg-light-info text-dark-info";
+                        case "已領取":
+                            return "badge bg-light-danger text-dark-danger";
+                        case "已取消":
+                            return "badge bg-light text-dark";
+                        case "待確認":
+                            return "badge bg-warning text-dark";
+                        case "待配送":
+                            return "badge bg-info text-dark";
+                        case "待領取":
+                            return "badge bg-secondary";
+                        case "配送中":
+                            return "badge bg-primary";
+                        default:
+                            return "badge bg-secondary"; // 預設情況
+                    }
+                },
+               
+
+                //星星
+                getStarClass(star) {
+                    if (star <= this.hoverRating || (this.hoverRating === 0 && star <= this.currentRating)) {
+                        return 'fa-star text-warning'; // 實心星星
+                    } else {
+                        return 'fa-star-o text-warning'; // 空心星星
+                    }
+                },
+                setHoverRating(star) {
+                    this.hoverRating = star;
+                    if (star > 0) {
+                        this.ratingText = "正在打分數";
+                    } else if (this.currentRating > 0) {
+                        // 當滑鼠離開且已有選定評分時，顯示選定的評分
+                        this.ratingText = "您給的分數是 " + this.currentRating;
+                    } else {
+                        this.ratingText = "請點選星星給分";
+                    }
+                },
+                setCurrentRating(star) {
+                    this.currentRating = star;
+                    this.hoverRating = star; // 讓滑鼠離開的時候星值保留
+                    this.ratingText = "您給的分數是 " + star;
+                },
+
+                //限制評論字數
+                checkCommentLength() {
+                    if (this.comment.length > 200) {
+                        // 如果字符數超過 200，顯示警告
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '字符數量限制',
+                            text: '評論不能超過 200 個字符',
+                            confirmButtonText: '確定'
+                        });
+                        // 將評論截斷到 200 個字符
+                        this.comment = this.comment.substring(0, 200);
+                    }
+                },
+
+                submitRating() {
+                    // 在提交評價之前，再次檢查字符數
+                    if (this.comment.length > 200) {
+                        // 如果字符數超過 200，顯示警告並阻止提交
+                        Swal.fire({
+                            icon: 'warning',
+                            title: '字符數量限制',
+                            text: '評論不能超過 200 個字符',
+                            confirmButtonText: '確定'
+                        });
+                        return;
+                    }
+
+                    fetch('/api/HistoryOrderapi/SubmitRating', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            orderId: this.orderDetail.orderId,
+                            rating: this.currentRating,
+                            comment: this.comment,
+                        })
+                    })
+                        .then(response => { 
+                                    if (response.ok) {
+                            return response.json();
+                        } else if (response.status === 400) {
+                            throw new Error('無效的請求數據。');
+                        } else if (response.status === 404) {
+                            throw new Error('找不到相關的訂單。');
+                        } else {
+                            throw new Error('發生未知錯誤。');
+                        }
+                        })
+                            //response.json())
+                        .then(data => {
+                            //alert(data.message || "評價提交成功"); // 這裡可以自定義 alert 的內容
+                            //sweet alert
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: "成功送出評價!",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+
+                            $('#orderDetailModal').modal('hide'); // 這將會關閉 Modal
+                        })
+                        .catch(err => {
+                            console.error("提交評價出錯: ", err);
+                            //alert("提交評價出錯"); // 發生錯誤時的 alert
+                            //sweet alert
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "error",
+                                title: "發生錯誤",
+                                showConfirmButton: false,
+                                timer: 1500
+                            });
+                        });
+                }
+
+            }
+        }).component("paginate", VuejsPaginateNext).mount('#historyApp');
+    </script>
+
+}

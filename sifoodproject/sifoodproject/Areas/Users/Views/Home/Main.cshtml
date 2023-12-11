@@ -1,0 +1,436 @@
+﻿@using sifoodproject.Areas.Users.Models.ViewModels;
+@model IEnumerable<StoreVM>
+@{
+    Layout = "~/Areas/Users/Views/Shared/_Layout.cshtml";
+}
+@section Styles{
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.8.1/slick-theme.css">
+    <style>
+        .highlight {
+            color: green !important;
+            text-decoration: underline !important;
+            font-weight: bold !important;
+        }
+    </style>
+}
+@{
+    ViewData["Title"] = "HomePage";
+}
+<div>
+    <div class="container" id="main">
+        <section>
+            <div class="slider slider-nav responsive row  mx-auto p-3 " style="display:flex;justify-content: space-around">
+                <img class="rounded-2" style="width:350px ;height:180px" src="~/images/mainpage/banner1.png" />
+                <img class="rounded-2" style="width:350px ;height:180px" src="~/images/mainpage/banner2.png" />
+                <img class="rounded-2" style="width:350px ;height:180px" src="~/images/mainpage/banner3.png" />
+                <img class="rounded-2" style="width:340px ;height:180px" src="~/images/mainpage/banner4.png" />
+                <img class="rounded-2" style="width:340px ;height:180px" src="~/images/mainpage/banner5.png" />
+            </div>
+        </section>
+        <!-- row -->
+        <div class="row gx-10">
+            <!-- col -->
+            <aside class="col-lg-3 col-md-4 mb-6 mb-md-0">
+                <div class="offcanvas offcanvas-start offcanvas-collapse w-md-50 " tabindex="-1" id="offcanvasCategory" aria-labelledby="offcanvasCategoryLabel">
+
+                    <div class="offcanvas-header d-lg-none">
+                        <h5 class="offcanvas-title" id="offcanvasCategoryLabel">Filter</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                    </div>
+                    <div class="offcanvas-body ps-lg-2 pt-lg-0">
+                        <div class="mb-8">
+                            <!-- title -->
+                            <h5 class="mb-3">依地區探索</h5>
+                            <!-- nav -->
+                            <ul class="nav nav-category" id="categoryCollapseMenu">
+                                <li class="nav-item border-bottom w-100 " v-for="(area,name) in showArea">
+                                    <a class="nav-link collapsed" style="color:#6c757d;font-weight: bold" data-bs-toggle="collapse" :data-bs-target="'#flush-collapseTwo'+name"
+                                       aria-expanded="false"
+                                       aria-controls="flush-collapseTwo">
+                                        {{name}} <i class="feather-icon icon-chevron-right"></i>
+                                    </a>
+                                    <!-- collapse -->
+                                    <div :id="'flush-collapseTwo'+name" class="accordion-collapse collapse" data-bs-parent="#categoryCollapseMenu">
+                                        <div>
+                                            <ul class="nav flex-column ms-3">
+                                                <!-- nav item -->
+                                                <li class="nav-item" v-for="(region,regionName) in Object.groupBy(area,z=>z.region)">
+                                                    <button class="nav-link" :class="name==selectedSetting.city && regionName==selectedSetting.region?'highlight':''" v-on:click="selectRegion(name,regionName,$event)">{{regionName}}</button>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="mb-8">
+                            <!-- title -->
+                            <h5 class="mb-3">依種類探索</h5>
+                            <div class="form-check mb-2" v-for="(condition, index) in showCategory" :key="index">
+                                <!-- input -->
+                                <input :id="condition" class="form-check-input" style="color:#6c757d;border: 2px solid" type="checkbox" :value="condition" v-model="selectedSetting.category">
+                                <label :for="condition" class="form-check-label" style="color:#6c757d;font-weight: bold">
+                                    {{ condition }}
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-8">
+                            <h5 class="mb-3">店家狀態</h5>
+                            <!-- form check -->
+                            <div class="form-check mb-2">
+                                <!-- input -->
+                                <input class="form-check-input" style="color:#6c757d;border: 2px solid" type="checkbox" value="false" v-model="selectedSetting.isStoreActive">
+                                <label class="form-check-label" style="color:#6c757d;font-weight: bold">營業中</label>
+                            </div>
+                            <!-- form check -->
+                            <div class="form-check mb-2">
+                                <!-- input -->
+                                <input class="form-check-input" style="color:#6c757d;border: 2px solid" type="checkbox" v-model="selectedSetting.isRemain">
+                                <label class="form-check-label" style="color:#6c757d;font-weight: bold">尚有剩食庫存</label>
+                            </div>
+                        </div>
+                        <div class="mb-8 position-relative">
+                            <h5 class="mb-3">探索你的周遭</h5>
+                            <div class="position-absolute p-5 py-8">
+                                <a asp-controller="Home" asp-action="MapFind" class="btn btn-dark">GO<i class="feather-icon icon-arrow-right ms-1"></i></a>
+                            </div>
+                            <img src="~/images/Users/mapsmall.jpg" class="img-fluid rounded " />
+                        </div>
+                    </div>
+                </div>
+            </aside>
+            <section class="col-lg-9 col-md-12">
+                <!-- list icon -->
+                <div class="d-lg-flex justify-content-between align-items-center">
+                    <div class="mb-3 mb-lg-0">
+                        <p class="mb-0"> <span class="text-dark">{{storeCount}}</span> Stores found </p>
+                    </div>
+                </div>
+                <!-- row -->
+                <div class="row g-4 row-cols-xl-3 row-cols-lg-3 row-cols-2 row-cols-md-2 mt-2">
+                    <!--店家showstart-->
+                    <!-- col -->
+                    <div class="col" v-for="(item,index) in filterCard" :key="index">
+                        <!-- card -->
+                        <div class="card h-100 card-product">
+                            <div class="card-body">
+                                <!-- badge -->
+                                <div class="text-center position-relative ">
+                                    <div class=" position-absolute top-0 start-0">
+                                        <span class="badge bg-danger">庫存:{{item.inventory>0?item.inventory:0}}</span>
+                                    </div>
+                                    <a :href="'/Users/Home/Stores/'+item.storeId">
+                                        <!-- img --><img :src="item.logoPath" class="mb-3 img-fluid" />
+                                    </a>
+                                </div>
+                                <!-- heading -->
+                                <div class=" mb-1">
+                                    <a href="#!" class="text-decoration-none text-muted">
+                                        <h5>
+                                            {{item.storeName}}
+                                        </h5>
+                                    </a>
+                                </div>
+                                <div>
+                                    <h6 class="text-inherit text-muted ">{{item.description}}</h6>
+                                </div>
+                                <!-- price -->
+                                <div class="d-flex justify-content-between align-items-center mt-3">
+                                    <div>
+                                        <small class="text-warning">
+                                            <i class="bi bi-star-fill"></i>
+                                        </small> <span class="text-muted">{{item.commentRank}} ({{item.commentCount}})</span>
+                                    </div>
+                                    <!-- btn -->
+                                    <div @@click="toggle(item.storeId)">
+                                        <button class="btn btn-primary btn-sm" v-if="item.noHeart">
+                                            <i class="bi bi-heart"></i> @* 空心 *@
+                                        </button>
+                                        <button class="btn btn-primary btn-sm" v-else>
+                                            <i class="bi bi-heart-fill" style="color: red;"></i> @* 實心 *@
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--店家showend-->
+                </div>
+                <!-- row -->
+                <div class="row mt-8 justify-content-center">
+                    <div class="col">
+                        <!-- nav -->
+                        <nav>
+                            <paginate :page-count="total"
+                                      :click-handler="pageClick"
+                                      :force-page="page.pageNumber"
+                                      :prev-text="'<'"
+                                      :next-text="'>'"
+                                      :page-link-class="'page-link mx-1'"
+                                      :prev-link-class="'page-link mx-1'"
+                                      :next-link-class="'page-link mx-1'"
+                                      :container-class="'pagination justify-content-center'">
+                            </paginate>
+                        </nav>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+
+</div>
+<!--根據送出結果跳出Modal-->
+<!-- OK Modal -->
+<div class="modal fade" id="modalOK" tabindex="-1" role="dialog" aria-labelledby="okModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="okModalLabel">商品已加入收藏!</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- NotOK Modal -->
+<div class="modal fade" id="modalNotOK" tabindex="-1" role="dialog" aria-labelledby="notOkModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="notOkModalLabel">商品已取消收藏!</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Cancel Modal -->
+<div class="modal fade" id="cancel" tabindex="-1" role="dialog" aria-labelledby="cancelModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelModalLabel">未登入無法加入收藏!</h5>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="confirm" data-bs-dismiss="modal">好</button>
+            </div>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuejs-paginate-next@latest/dist/vuejs-paginate-next.umd.js"></script>
+    <script>
+        var isLogin = ('@User.Identity.IsAuthenticated' == "True");
+        const storeApp = Vue.createApp({
+            data: function () {
+                return {
+                    stores: [],
+                    storeCount: "",
+                    selectedSetting: {
+                        city: "",
+                        region: "",
+                        category: [],
+                        isStoreActive: false,
+                        isRemain: false,
+                    },
+                    isSelected: false,
+                    page: {
+                        countPerPage: 6,
+                        pageNumber: 1,
+                    },
+                }
+            },
+            computed: {
+                total() {
+                    return Math.ceil(this.showStores.length / this.page.countPerPage);
+                },
+                filterCard() {
+                    var start = (this.page.pageNumber - 1) * this.page.countPerPage;
+                    var end = start + this.page.countPerPage;
+                    return this.showStores.slice(start, end);
+                },
+                showStores: function () {
+                    var r = this.filterIsRemaining(this.stores);
+                    var f = this.filterActiveTime(r);
+                    var a = this.filterArea(f);
+                    var c = this.filtercategory(a);
+                    this.page.pageNumber = 1;
+                    this.storeCount = c.length;
+                    return c;
+                },
+                showArea() {
+                    if (this.stores.length < 1) return [];
+                    return Object.groupBy(storeApp.stores, (x) => x.city);
+                },
+                showCategory() {
+                    if (this.stores.length < 1) return [];
+                    return [...new Set([].concat(...this.stores.map(x => x.categoryName)))]
+                }
+            },
+            mounted: function () {
+                let _this = this;
+                _this.getStoreapi();
+            },
+            methods: {
+                pageClick(num) {
+                    this.page.pageNumber = num;
+                },
+                filterIsRemaining(stores) {
+                    if (this.selectedSetting.isRemain) return stores.filter(s => s.inventory > 0);
+                    return stores;
+                },
+                filterActiveTime(stores) {
+                    if (!this.selectedSetting.isStoreActive) return stores;
+                    let now = new Date();
+                    let day = now.getDay();
+                    let localHours = now.getHours();
+                    let localMinutes = now.getMinutes();
+                    if (day >= 1 && day <= 5) {
+                        return stores.filter(s => localHours >= parseInt(s.weekdayOpeningTime.slice(0, 2)) && localMinutes >= 0 && localHours < parseInt(s.weekdayClosingTime.slice(0, 2)) && localMinutes >= 0);
+                    } else {
+                        return stores.filter(s => localHours >= parseInt(s.weekendOpeningTime.slice(0, 2)) && localMinutes >= 0 && localHours < parseInt(s.weekendClosingTime.slice(0, 2)) && localMinutes >= 0);
+                    }
+                },
+                filtercategory(stores) {
+                    if (this.selectedSetting.category.length < 1) return stores;
+                    return stores.filter(x => x.categoryName.some(z => this.selectedSetting.category.includes(z)))
+                },
+                filterArea(stores) {
+                    if (this.selectedSetting.city == "" && this.selectedSetting.region == "") return stores;
+                    return stores.filter(x => x.city == this.selectedSetting.city && x.region == this.selectedSetting.region)
+                },
+                selectRegion(city, region, e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    //一樣再點一次取消不一樣就換
+                    let isBoth = (city == this.selectedSetting.city && region == this.selectedSetting.region);
+                    this.selectedSetting.city = isBoth ? "" : city;
+                    this.selectedSetting.region = isBoth ? "" : region;
+                },
+                getStoreapi() {
+                    let _this = this;
+                    fetch(`/api/Storeapi/Main2`, { method: "GET" })
+                        .then(response => {
+                            return response.json();
+                        })
+                        .then(data => {
+                            data.forEach(store => {
+                                store.commentRank = store.commentCount > 0 ? (store.commentRank / store.commentCount).toFixed(2) : 0;
+                            });
+                            _this.stores = data;
+                            _this.getFavoriteStore();
+                        })
+                        .catch(error => {
+                            console.log(error);
+                        });
+                },
+        getFavoriteStore() {
+            let _this = this;
+            if (!isLogin) { return _this.stores = _this.stores.map(store => ({ ...store, noHeart: true })); }
+            fetch(`/api/Storeapi/GetFavoriteStoreId`, { method: "GET" })
+                .then(response => response.json()
+                )
+                .then(data => {
+                    _this.stores = _this.stores.map(store => {
+                        if (data.includes(store.storeId)) { return { ...store, noHeart: false }; }
+                        else return { ...store, noHeart: true }
+                    });
+                }).catch(error => { console.log(error); });
+        },
+        toggle(storeId) {
+            let _this = this;
+            if (isLogin) {
+                var item = this.stores.find(store => store.storeId === storeId);
+                if (item.noHeart == false) { this.deleteFavorite(storeId); item.noHeart = !item.noHeart; }//準備被取消
+                else { this.addToFavorite(storeId); item.noHeart = !item.noHeart; }//準備被收藏
+            }
+                    else {
+                        $('#cancel').modal('show'); 
+                        $('#confirm').on('click', function () {
+                            $('#cancel').modal('hide');
+                            window.location.href = '/Users/Account/LoginRegister';
+                        });
+                    }
+        },
+        //加入收藏店家
+        addToFavorite(storeId) {
+            let favoriteData = {
+                storeId: storeId,
+            }
+            fetch(`/api/Storeapi/AddToFavorite`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(favoriteData)
+            }).then(response => {
+                if (response.ok) {
+                    $('#modalOK').modal('show');
+                }
+            });
+        },
+        //取消收藏
+        deleteFavorite(storeId) {
+            let favoriteCancel = {
+                storeId: storeId,
+            }
+            fetch(`/api/Storeapi/DeleteFavorite`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(favoriteCancel)
+            }).then(response => {
+                if (response.ok) {
+                    $('#modalNotOK').modal('show');
+                }
+            });
+        },
+                    }
+                }).component("paginate", VuejsPaginateNext).mount("#main");
+    </script>
+    <script src="~/slickcdn.min.js"></script>
+    <script>
+        $('.responsive').slick({
+            infinite: true,
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            autoplaySpeed: 3000,
+            dots: true,
+            arrows: false,
+            focusOnSelect: true,
+            autoplay: true,
+            responsive: [
+                {
+                    breakpoint: 1024,
+                    settings: {
+                        slidesToShow: 3,
+                        slidesToScroll: 3,
+                    }
+                },
+                {
+                    breakpoint: 990,
+                    settings: {
+                        slidesToShow: 2,
+                        slidesToScroll: 2,
+                    }
+                },
+                {
+                    breakpoint: 700,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                    }
+                },
+                {
+                    breakpoint: 480,
+                    settings: {
+                        slidesToShow: 1,
+                        slidesToScroll: 1,
+                    }
+                }
+            ]
+        });
+    </script>
+}

@@ -1,0 +1,76 @@
+﻿@section Styles {
+    <link href="~/css/loginsite.css" rel="stylesheet" />
+}
+
+<section class="my-lg-14 my-8">
+    <div class="container" id="registerConfirmationApp">
+        <template v-if="loading == true">
+            <div class="loading-overlay">
+                <div class="loading-spinner"></div>
+            </div>
+        </template>
+        <template v-else>
+            <div class="row justify-content-center align-items-center">
+                <div class="col-12 col-md-6 col-lg-4 order-lg-1 order-2">
+                    <img src="~/images/sifood_logo_bgclear.png" class="img-fluid" />
+                </div>
+                <div class="col-12 col-md-6 offset-lg-1 col-lg-4 order-lg-2 order-1 d-flex align-items-center">
+                    <div>
+                        <div class="mb-lg-9 mb-5">
+                            <h1>進行帳戶驗證</h1>
+                            <p>
+                                請前往您的電子郵件帳戶查看驗證碼，並在以下輸入，以完成帳戶開通，感謝!
+                            </p>
+                            <div class="col-12">
+                                <input v-model="verificationCode" type="text" class="form-control" id="inputEmail4" placeholder="請輸入您的驗證碼" required="">
+                            </div>
+                            <div class="col-12 d-grid gap-2">
+                                <button type="submit" class="btn btn-primary" @@click="verifyAccount">帳號驗證</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </template>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        var registerConfirmationApp = Vue.createApp({
+            data: function () {
+                return {
+                    verificationCode: "",
+                    loading: false,
+                }
+            },
+            methods: {
+                verifyAccount() {
+                    var _this = this
+                    _this.loading = true;
+                    axios.post(`/Account/OpenUserAccount`, {
+                        UserAccountVerificationCode: _this.verificationCode
+                    }, {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }).then(response => {
+                        alert(response.data);
+                        var success = "驗證帳號成功，已為您開通帳號，請再次重新登入";
+                        if (response.data == success) {
+                            window.location.href = '/Users/Account/LoginRegister'
+                        }else{
+                            _this.verificationCode = "";
+                        }
+                        _this.loading = false;
+                    }).catch(err => {
+                        alert(err);
+                    });
+                },
+            },
+        }).mount("#registerConfirmationApp")
+    </script>
+}

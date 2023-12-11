@@ -1,0 +1,286 @@
+﻿
+<body>
+    <div>
+        <div class="main-wrapper">
+            <main class="main-content-wrapper">
+                <section class="container">
+                    <div class="row mb-8">
+                        <div class="col-md-12">
+                            <div class="card bg-light border-0 rounded-4"
+                                 style="background-image: url(@ViewBag.Storephoto); background-repeat: no-repeat; background-size: cover; background-position: right;">
+                                <div class="card-body p-lg-12">
+                                    <h1>
+                                        <span class="badge bg-secondary">歡迎回來! @ViewBag.StoreName</span>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row ">
+                        <div class="col-xl-6 col-lg-6 col-md-12 col-12 mb-6">
+                            <div class="row ">
+                                <div class="col-xl-12 col-lg-12 col-md-12 col-12 mb-6">
+                                    <div class="card h-100 card-lg">
+                                        <div class="p-6" style="background-color: #B0E0E6;">
+                                            <h3 class="mb-0 fs-5">商家概況</h3>
+                                        </div>
+                                        <div class="card-body p-0">
+                                            <div class="table-responsive">
+                                                <table class="table table-centered table-borderless text-nowrap table-hover">
+                                                    <thead class="bg-light">
+                                                        <tr>
+                                                            <th scope="col">即時資訊</th>
+                                                            <th scope="col">數量</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td style="font-weight: bold;">待確認訂單</td>
+                                                            <td>@ViewBag.status1</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight: bold;">待配送訂單</td>
+                                                            <td>@ViewBag.status2</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight: bold;">待領取訂單</td>
+                                                            <td>@ViewBag.status3</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight: bold;">配送中訂單</td>
+                                                            <td>@ViewBag.status4</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td style="font-weight: bold;">上架商品數</td>
+                                                            <td>@ViewBag.SumReleasedQty</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-6 col-lg-6 col-12 mb-6">
+                            <div class="card h-100 card-lg">
+                                <div class="p-6" style="background-color: #B0E0E6;">
+                                    <h3 class="mb-0 fs-5">今日銷售</h3>
+                                </div>
+                                <div class="card-body p-6">
+                                    <div id="totalSale1" class="mt-6 d-flex justify-content-center"></div>
+                                    <div id="main" class="mt-4">
+                                        <ul v-for="(item, productName) in TotalSales" class="list-unstyled mb-0">
+                                            <li class="mb-2">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="8"
+                                                     height="8" :fill="getCircleFillColor()"
+                                                     class="bi bi-circle-fill" viewBox="0 0 16 16">
+                                                    <circle cx="8" cy="8" r="8" />
+                                                </svg> <span class="ms-1">
+                                                    <span class="text-dark">
+                                                        {{productName}}
+                                                        數量:{{item.amount}}
+                                                        總計:{{item.totalPrice}}
+                                                    </span> {{item.percentage}}%
+                                                </span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+            </main>
+        </div>
+    </div>
+</body>
+</html>
+@section Scripts
+    {
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/assets/js/theme.min.js"></script>
+    <script src="~/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+    <script src="~/assets/js/vendors/chart.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+
+    <script>
+        const StoreMainApp = Vue.createApp({
+            data: function () {
+                return {
+                    StoreInfo: [],
+                    TotalSales: {},
+                    TodaySales: 0,
+                    chartData: {
+                        series: [],
+                        labels: []
+                    },
+                    circleFillColors: ['#0aad0a', '#ffc107', '#db3030', '#016bf8'],
+                    currentColorIndex: 0,
+                }
+            },
+            computed: {
+            },
+            mounted: function () {
+                let _this = this;
+                _this.getStoreInfoAPI();
+            },
+            methods: {
+                getStoreInfoAPI: function () {
+                    var isLoggedIn = ('@User.Identity.IsAuthenticated' == "True");
+                    if (!isLoggedIn) {
+                        alert("請先登入")
+                        window.location.href = "/Stores/Account/Login";
+                    }
+                    else {
+                        let _this = this; /* test */
+                        var uri = `/Stores/Home/SaleInfo`;
+                        fetch(uri, { method: "GET" })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                }
+                                throw new Error(`HTTP error! Status: ${response.status}`);
+                            })
+                            .then(data => {
+                                // 在這裡處理數據
+                                console.log(JSON.stringify(data));
+                                _this.StoreInfo = data /* test */
+                                _this.calculateTotalSales();
+                                _this.updateChartData();
+                            })
+                            .catch(error => {
+                                alert(error);
+                            });
+                    }
+
+                },
+                //計算各類別商品的加總
+                calculateTotalSales: function () {
+                    let _this = this; /* test */
+                    _this.TotalSales = {};
+                    _this.StoreInfo.forEach(item => {
+                        _this.TodaySales += item.unitPrice * item.quantity;
+                        const productName = item.productName;
+                        if (!_this.TotalSales[productName]) {
+                            _this.TotalSales[productName] = {
+                                totalPrice: 0,
+                                amount: 0,
+                                percentage: 0,
+                            };
+                        }
+                        _this.TotalSales[productName].amount += item.quantity;
+                        _this.TotalSales[productName].totalPrice += (item.unitPrice * item.quantity);
+                    });
+                    for (const productName in _this.TotalSales) {
+                        const product = _this.TotalSales[productName];
+                        product.percentage = ((product.totalPrice / _this.TodaySales) * 100).toFixed(2);
+                    }
+                },
+                //取得各類別商品的總金額作為chart.js功能所需要的變數
+                updateChartData: function () {
+                    let _this = this;
+                    _this.chartData.series = [];
+                    _this.chartData.labels = [];
+                    for (const productName in _this.TotalSales) {
+                        _this.chartData.series.push(_this.TotalSales[productName].totalPrice);
+                        _this.chartData.labels.push(productName);
+                    }
+                    _this.updateChart();
+                },
+                // 引用chart.js裡面的表格套件
+                updateChart: function () {
+                    if ($('#totalSale1').length) {
+                        var options = {
+                            series: this.chartData.series,
+                            labels: this.chartData.labels,
+                            colors: ['#0aad0a', '#ffc107', '#db3030', '#016bf8'],
+                            chart: {
+                                type: 'donut',
+                                height: 280,
+                            },
+                            legend: {
+                                show: false,
+                            },
+                            dataLabels: {
+                                enabled: false,
+                            },
+                            plotOptions: {
+                                pie: {
+                                    donut: {
+                                        size: '85%',
+                                        background: 'transparent',
+                                        labels: {
+                                            show: true,
+                                            name: {
+                                                show: true,
+                                                fontSize: '22px',
+                                                fontFamily: '"Inter", "sans-serif"',
+                                                fontWeight: 600,
+                                                colors: [window.theme.gray600],
+                                                offsetY: -10,
+                                                formatter: function (val) {
+                                                    return val
+
+                                                }
+                                            },
+                                            value: {
+                                                show: true,
+                                                fontSize: '24px',
+                                                fontFamily: '"Inter", "sans-serif"',
+                                                fontWeight: 800,
+                                                colors: window.theme.gray800,
+                                                offsetY: 8,
+                                                formatter: function (val) {
+                                                    return val
+                                                }
+                                            },
+                                            total: {
+                                                show: true,
+                                                showAlways: false,
+                                                label: 'Total Sales',
+                                                fontSize: '16px',
+                                                fontFamily: '"Inter", "sans-serif"',
+                                                fontWeight: 400,
+                                                colors: window.theme.gray400,
+                                                formatter: function (w) {
+                                                    return w.globals.seriesTotals.reduce((a, b) => {
+                                                        return a + b
+                                                    }, 0)
+                                                }
+                                            }
+                                        },
+                                    },
+                                },
+                            },
+                            stroke: {
+                                width: 0,
+                            },
+                            responsive: [{
+                                breakpoint: 1400,
+                                options: {
+                                    chart: {
+                                        type: 'donut',
+                                        width: 290,
+                                        height: 330,
+                                    },
+                                },
+                            },],
+                        };
+                        var chart = new ApexCharts(document.querySelector('#totalSale1'), options);
+                        chart.render();
+                    }
+                },
+                getCircleFillColor: function () {
+                    const color = this.circleFillColors[this.currentColorIndex];
+                    this.currentColorIndex = (this.currentColorIndex + 1) % this.circleFillColors.length;
+                    return color;
+                }
+            },
+        }).mount("#main")
+    </script>
+}
+

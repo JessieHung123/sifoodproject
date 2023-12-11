@@ -1,0 +1,406 @@
+﻿@using sifoodproject.Areas.Stores.Models
+@model IEnumerable<storeHistoryOrderVM>
+
+
+<!-- 引用Layout -->
+@{
+    Layout = "_Layout";
+}
+
+<!-- Title -->
+@{
+    ViewData["Title"] = "歷史訂單";
+}
+
+<!-- CSS -->
+@section Styles {
+    <!-- Favicon icon-->
+    <link rel="shortcut icon" type="image/x-icon" href="~/assets/images/favicon/favicon.ico">
+
+
+    <!-- Libs CSS -->
+    <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet">
+    <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet">
+
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="~/assets/css/theme.min.css">
+    <link href="~/assets/libs/prismjs/themes/prism-okaidia.min.css" rel="stylesheet" />
+
+    <!--改放大鏡和X顯示問題-->
+    <style>
+        .input-group-append .btn {
+            margin-left: 2px; /* 增加按鈕間的間隔 */
+        }
+
+        .input-group .form-control {
+            padding-right: 2.5rem; /* 確保輸入框內有足夠的空間 */
+        }
+    </style>
+}
+
+
+
+<!-- main -->
+<div class="main-wrapper">
+    <!-- main wrapper -->
+    <main class="main-content-wrapper">
+        <div class="container">
+            <!-- row -->
+            <div class="row mb-8">
+                <div class="col-md-12">
+                    <!-- page header -->
+                    <div>
+                        <h1>歷史訂單</h1>
+                        <!-- breacrumb -->
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0 mt-3">
+                                <li class="breadcrumb-item"><a asp-area="Stores" asp-controller="Home" asp-action="Main">店家頁面</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">檢視詳細訂單資料</li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <!-- row -->
+            <div class="row">
+                <div class="col-xl-12 col-12 mb-5">
+                    <!-- card -->
+                    <div class="card h-100 card-lg">
+
+                        <!-- 加入filter -->
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="mx-12 mt-10 d-lg-flex justify-content-around align-items-center">
+                                    <div class="mb-3 mb-lg-0">
+                                        <p class="mb-0">共 <span class="text-dark">@ViewBag.TotalOrdersCount </span> 筆</p>
+                                    </div>
+
+                                    <!-- text搜尋-->
+                                    <!--分開放放大鏡和X-->
+                                    <div class="col-xxl-4 col-lg-4 d-none d-lg-block">
+                                        <form action="@Url.Action("History", "Home")" method="get" id="searchForm">
+                                            <div class="input-group">
+                                                <input class="form-control rounded" name="searchTerm" type="text"
+                                                       placeholder="Search for products" value="@ViewBag.SearchTerm" id="searchInput">
+                                                <span class="input-group-append">
+                                                    <button class="btn bg-white" type="submit" id="searchButton">
+                                                        <!-- 放大鏡SVG -->
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-search" viewBox="0 0 16 16">
+                                                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.414-1.415l-3.85-3.85a1.002 1.002 0 0 0-.114-.098zM13 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z" />
+                                                        </svg>
+                                                    </button>
+                                                    <button class="btn bg-white clear-button" type="button" onclick="clearSearch()" id="clearButton" style="display: inline-block;">
+                                                        X
+                                                    </button>
+                                                </span>
+                                            </div>
+                                        </form>
+                                    </div>
+
+                                    <!-- select option -->
+                                    <form id="orderForm" action="@Url.Action("History", "Home")" method="get">
+                                        <!-- 加入一個隱藏的輸入欄位來保存 searchTerm -->
+                                        <input type="hidden" name="searchTerm" value="@ViewBag.SearchTerm">
+                                        <!-- 顯示筆數選擇 -->
+                                        <select class="form-select" name="pageSize" aria-label="Default select example" onchange="this.form.submit()">
+                                            <option value="" selected>顯示筆數</option>
+                                            <option value="5">顯示: 5</option>
+                                            <option value="10">顯示:10</option>
+                                            <option value="20">顯示:20</option>
+                                            <option value="30">顯示:30</option>
+                                        </select>
+                                    </form>
+
+                                    <!-- Sort顯示 -->
+                                    <div>
+                                        <form method="get" action="@Url.Action("History", "Home")">
+                                            <!-- 保留當前的搜索詞 -->
+                                            <input type="hidden" name="searchTerm" value="@ViewBag.SearchTerm" />
+                                            <!-- Sort選擇 -->
+                                            <select class="form-select" name="sortOption" aria-label="Default select example" onchange="this.form.submit()">
+                                                <option value="=">排序</option>
+                                                <option value="Status">訂單狀態</option>
+                                                <option value="Low to High">金額：由低到高</option>
+                                                <option value="High to Low">金額: 由高到低</option>
+                                                <option value="Newest">訂購日期：由新到舊</option>
+                                                <option value="Oldest">訂購日期：由舊到新</option>
+                                            </select>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- card body -->
+                        <div class="card-body p-0">
+                            <!-- table responsive -->
+                            <div class="table-responsive">
+                                <!-- Table -->
+                                <div class="mt-10 table-responsive-xxl border-0">
+
+                                    <table class="table mb-0 text-nowrap table-centered ">
+                                        <!-- Table Head -->
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th>明細</th>
+                                                <th>&nbsp;</th>
+                                                <th>商品</th>
+                                                <th>訂單編號</th>
+                                                <th>訂購日期</th>
+                                                <th>件數</th>
+                                                <th>訂單狀態</th>
+                                                <th>金額</th>
+
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var order in Model)
+                                            {
+                                                <tr>
+                                                    <td class="text-muted align-middle border-top-0">
+                                                        <!-- 觸發模態框的按鈕 -->
+                                                        <a href="#" onclick="loadOrderDetails('@order.OrderId')" type="button" class="text-inherit" 
+                                                            data-bs-toggle="modal" data-bs-placement="top" data-bs-title="View"
+                                                            data-bs-target="#exampleModalScrollable-@order.OrderId-Store">
+                                                            <i class="feather-icon icon-eye"></i>
+                                                        </a>
+
+                                                        <div class="modal fade gd-example-modal-lg" id="exampleModalScrollable-@order.OrderId-Store" 
+                                                                tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel-@order.OrderId-Store" 
+                                                                aria-hidden="true">
+                                                            <div class="modal-dialog modal-dialog-scrollable" role="document">
+                                                                <div class="modal-content">
+                                                                    <!-- 部分視圖將在這裡動態加載 -->
+                                                                    
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="align-middle border-top-0 w-0">
+                                                        <a href="#">
+                                                            <img src="@Url.Content($"{order.FirstProductPhotoPath}")" alt="Ecommerce" class="icon-shape icon-xl">
+                                                        </a>
+                                                    </td>
+                                                    <td class="align-middle border-top-0">
+                                                        <a href="#" class="fw-semi-bold text-inherit">
+                                                            <h6 class="mb-0">@order.FirstProductName</h6>
+                                                        </a>
+                                                        @* <span><small class="text-muted">@order.ProductSize</small></span> *@
+                                                    </td>
+                                                    <td class="align-middle border-top-0">
+                                                        <a href="#" class="text-inherit">@order.OrderId</a>
+                                                    </td>
+                                                    <td class="align-middle border-top-0">
+                                                        @order.OrderDate.ToString("yyyy-MM-dd")
+                                                    </td>
+                                                    <td class="align-middle border-top-0">
+                                                        @order.Quantity
+                                                    </td>
+                                                    <td class="align-middle border-top-0">
+                                                        <!--依據不同訂單裝狀態給顏色-->
+                                                        @{
+                                                            string badgeClass = order.Status switch
+                                                            {
+                                                                "已送達" => "badge bg-light-info text-dark-info",
+                                                                "已領取" => "badge bg-light-danger text-dark-danger",
+                                                                "已取消" => "badge bg-light text-dark",
+                                                                "待確認" => "badge bg-warning text-dark",
+                                                                "待配送" => "badge bg-info text-dark",
+                                                                "待領取" => "badge bg-secondary",
+                                                                "配送中" => "badge bg-primary",
+                                                               
+                                                            };
+                                                        }
+                                                        <span class="@badgeClass">@order.Status</span>
+                                                    </td>
+                                                    <td class="align-middle border-top-0">
+                                                        $@order.TotalPrice
+                                                    </td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="border-top d-md-flex justify-content-between align-items-center p-6">
+                         @*    <span>Showing 1 to 8 of 12 entries</span> *@
+                            <nav class="mt-2 mt-md-0">
+                                <ul class="pagination mb-0 ">
+                                    <li class="page-item disabled"><a class="page-link " href="#!">Previous</a></li>
+                                    <li class="page-item"><a class="page-link active" href="#!">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#!">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#!">3</a></li>
+                                    <li class="page-item"><a class="page-link" href="#!">Next</a></li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</div>
+
+
+@section Scripts{
+    <!-- Libs JS -->
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+
+    <!-- Theme JS -->
+    <script src="~/assets/js/theme.min.js"></script>
+
+    @*
+    <script src="https://cdn.jsdelivr.net/npm/rater-js@1.0.1/index.min.js"></script>
+    <script src="~/assets/libs/rater-js/index.js"></script> *@
+
+    <!--Elly測試改引用Bootstrap-->
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Libs JS -->
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+
+    <!-- Javascript 放jQuery後面-->
+    <!-- Theme JS -->
+    <script src="~/assets/js/theme.min.js"></script>
+    <script src="~/assets/libs/prismjs/prism.js"></script>
+    <script src="~/assets/libs/prismjs/components/prism-scss.min.js"></script>
+    <script src="~/assets/libs/prismjs/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="~/assets/libs/prismjs/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <script src="~/assets/js/vendors/sidebarMenu.js"></script>
+
+    <!--Sweet Alert-->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        var currentOrderId; // 用於保存當前訂單的ID
+
+        //var submitRatingUrl = '@Url.Action("SubmitRating", "Member")';
+
+        document.addEventListener('DOMContentLoaded', function () {
+            // Text 搜索
+            var searchInput = document.getElementById('searchInput');
+            var clearButton = document.getElementById('clearButton');
+            if (searchInput && clearButton) {
+                searchInput.addEventListener('input', function () {
+                    clearButton.style.display = this.value.length > 0 ? 'inline-block' : 'none';
+                });
+            }
+
+            // 清除搜索
+            window.clearSearch = function () {
+                if (searchInput) {
+                    searchInput.value = '';
+                    searchInput.dispatchEvent(new Event('input'));
+                }
+                var searchForm = document.getElementById('searchForm');
+                if (searchForm) {
+                    searchForm.submit();
+                }
+            };
+
+            // 顯示筆數下拉選單
+            var pageSizeSelect = document.getElementById('pageSizeSelect');
+            if (pageSizeSelect) {
+                pageSizeSelect.addEventListener('change', function () {
+                    this.form.submit();
+                });
+            }
+
+            // 排序
+            var sortSelect = document.getElementById('sortSelect');
+            if (sortSelect) {
+                sortSelect.addEventListener('change', function () {
+                    var selectedValue = this.value;
+                    var currentUrl = new URL(window.location);
+                    currentUrl.searchParams.set('sortOption', selectedValue);
+                    window.location.href = currentUrl.href;
+                });
+            }
+
+            //嘗試清除Modal殘餘遮罩
+            function clearModalsBackdrop() {
+                var backdrops = document.querySelectorAll('.modal-backdrop');
+                backdrops.forEach(function (backdrop) {
+                    backdrop.remove();
+                });
+            }
+
+            // // 定義初始化 rater-js 的函數
+            // function initializeRater() {
+            //     if (document.querySelector("#rater")) {
+            //         var raterOptions = {
+            //             starSize: 32,
+            //             element: document.querySelector("#rater"),
+            //             rateCallback: function (rating, done) {
+            //                 this.setRating(rating);
+            //                 done();
+            //             }
+            //         };
+            //         new Rater(raterOptions);
+            //     }
+            // }
+
+            // 處理 Modal for Orderdetail
+            window.loadOrderDetails = function (orderId) {
+                currentOrderId = orderId; // 保存當前訂單ID
+
+                //偵錯:查orderID
+                console.log("載入訂單詳情，訂單 ID:", orderId);
+
+                // 構建正確的模態框 ID
+                var modalId = 'exampleModalScrollable-' + orderId+'-Store';
+
+                //偵錯:查modalId
+                console.log("模態框 ID:", modalId);
+
+                // 獲取模態框元素
+                var modalElement = document.getElementById(modalId);
+
+                // 使用 Fetch API 向後端發送請求
+                fetch('@Url.Action("GetOrderDetails", "Home")?orderId=' + orderId)
+                    .then(response => response.text())
+                    .then(response => {
+                        // 確保模態框元素存在
+                        if (modalElement) {
+                            // 將返回的視圖填充到模態框中
+                            modalElement.querySelector('.modal-content').innerHTML = response;
+
+                            // 初始化並顯示模態框
+                            var myModal = new bootstrap.Modal(modalElement);
+                            myModal.show();
+
+
+                            // 添加 hidden.bs.modal 事件監聽器
+                            modalElement.addEventListener('hidden.bs.modal', function () {
+                                clearModalsBackdrop();
+                            });
+
+                            
+                        }
+                    })
+                    .catch(err => {
+                        // 處理錯誤情況
+                        console.error("發生錯誤: ", err);
+                    });
+            };
+
+         
+
+            // 綁定 loadOrderDetails 事件
+            var elements = document.querySelectorAll('[data-order-id]');
+            elements.forEach(function (element) {
+                element.addEventListener('click', function () {
+                    var orderId = this.getAttribute('data-order-id');
+                    loadOrderDetails(orderId);
+                });
+            });
+        });
+    </script>
+
+}

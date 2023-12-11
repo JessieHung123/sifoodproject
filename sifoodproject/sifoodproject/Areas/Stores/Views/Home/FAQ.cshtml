@@ -1,0 +1,275 @@
+<!-- 引用Layout -->
+@{
+    Layout = "_Layout";
+}
+
+<!-- Title -->
+@{
+    ViewData["Title"] = "常見問題";
+}
+
+<!-- CSS -->
+@section Styles {
+    <!-- Libs CSS -->
+    <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet">
+    <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet">
+
+
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="~/assets/css/theme.min.css">
+}
+
+
+<main>
+    <!-- section -->
+    <div class="mt-4">
+        <div class="container">
+            <div class="row ">
+                <div class="col-12">
+                    <!-- breadcrumb -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a href="@Url.Action("Main","Home")">店家首頁</a></li>
+                            @* <li class="breadcrumb-item"><a href="#!">Blog</a></li> *@
+                            <li class="breadcrumb-item active" aria-current="page">常見問題</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- section -->
+    <section class="my-lg-14 my-8">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 offset-md-2">
+                    <!-- text -->
+                    <div class="mb-5">
+                        <div class="mb-3 text-center"><a href="">店家</a></div>
+                        <h1 class="fw-bold text-center">常見問題</h1>
+                    </div>
+                    <!-- img -->
+                    <div class="mb-8 img-zoom">
+                        <img src="~/images/stores/faq/sorefaq.png" class="img-fluid rounded" alt="店家操作流程">
+                    </div>
+
+                    <div>
+                        <!-- text -->
+                        <div class="mb-4">
+
+                            <!-- Accordion Example -->
+
+                            <div class="accordion" id="accordionExample">
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingOne">
+                                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                                                data-bs-target="#collapseOne" aria-expanded="true"
+                                                aria-controls="collapseOne">
+                                            Q1:店家照片為什麼不能修改
+                                        </button>
+                                    </h2>
+                                    <div id="collapseOne" class="accordion-collapse collapse show"
+                                         aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>為了維護平台風格一至性並確保品質，店家照片請先上傳給我們審核</strong>
+                                            如要修改照片，請email給我們
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTwo">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseTwo"
+                                                aria-expanded="false" aria-controls="collapseTwo">
+                                            Q2:上架產品有什麼要求？
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTwo" class="accordion-collapse collapse"
+                                         aria-labelledby="headingTwo" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>產品必須是即期食品，且需提供產品描述、價格和可用日期等詳細信息。</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingThree">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseThree"
+                                                aria-expanded="false" aria-controls="collapseThree">
+                                            Q3:如何設定優惠價格？
+                                        </button>
+                                    </h2>
+                                    <div id="collapseThree" class="accordion-collapse collapse"
+                                         aria-labelledby="headingThree" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>您可以根據產品的原價和即期狀態，自行設定一個合理的優惠價格。</strong>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingFour">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseFour"
+                                                aria-expanded="false" aria-controls="collapseFour">
+                                            Q4:如果產品沒有賣出怎麼辦？
+                                        </button>
+                                    </h2>
+                                    <div id="collapseFour" class="accordion-collapse collapse"
+                                         aria-labelledby="headingFour" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>產品過期未賣出將自動下架，</strong>
+                                            您可以考慮調整價格或改善產品描述來增加銷量。
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingFive">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseFive"
+                                                aria-expanded="false" aria-controls="collapseFive">
+                                            Q5:店家如何處理訂單？
+                                        </button>
+                                    </h2>
+                                    <div id="collapseFive" class="accordion-collapse collapse"
+                                         aria-labelledby="headingFive" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>收到訂單後，請確認庫存並準備產品，等待消費者自取或外送員取貨。</strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingSix">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseSix"
+                                                aria-expanded="false" aria-controls="collapseSix">
+                                            Q6:店家能否取消已確認的訂單？
+                                        </button>
+                                    </h2>
+                                    <div id="collapseSix" class="accordion-collapse collapse"
+                                         aria-labelledby="headingSix" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>一旦確認訂單後，除非特殊情況，通常無法取消。若必須取消，請盡快通知消費者和平台。</strong>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingSeven">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseSeven"
+                                                aria-expanded="false" aria-controls="collapseSeven">
+                                            Q7:有哪些配送選項？
+                                        </button>
+                                    </h2>
+                                    <div id="collapseSeven" class="accordion-collapse collapse"
+                                         aria-labelledby="headingSeven" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>您可以選擇消費者自取或利用我們的外送服務。</strong>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingEight">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseEight"
+                                                aria-expanded="false" aria-controls="collapseEight">
+                                            Q8:如何處理退款？
+                                        </button>
+                                    </h2>
+                                    <div id="collapseEight" class="accordion-collapse collapse"
+                                         aria-labelledby="headingEight" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>如果訂單在10分鐘內被消費者取消</strong>
+                                            ，系統將自動處理退款。
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingNine">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseNine"
+                                                aria-expanded="false" aria-controls="collapseNine">
+                                            Q9:店家的收益如何結算？
+                                        </button>
+                                    </h2>
+                                    <div id="collapseNine" class="accordion-collapse collapse"
+                                         aria-labelledby="headingNinw" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>銷售收益將在扣除必要費用後</strong>
+                                            ，定期匯入您指定的銀行賬戶。
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="accordion-item">
+                                    <h2 class="accordion-header" id="headingTen">
+                                        <button class="accordion-button collapsed" type="button"
+                                                data-bs-toggle="collapse" data-bs-target="#collapseTen"
+                                                aria-expanded="false" aria-controls="collapseTen">
+                                            Q10:如何提升在平台的能見度？
+                                        </button>
+                                    </h2>
+                                    <div id="collapseTen" class="accordion-collapse collapse"
+                                         aria-labelledby="headingTen" data-bs-parent="#accordionExample">
+                                        <div class="accordion-body">
+                                            <strong>良好的產品描述、合理的價格和積極的顧客服務，</strong>
+                                            有助於提高您在平台上的評價和能見度。
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <hr class="mt-lg-10 mb-lg-6 my-md-6">
+                        <!-- blockquote -->
+                        <blockquote class="blockquote text-center ">
+                            <p class="text-primary fst-italic fw-semi-bold lh-base h1 px-2 px-lg-14">
+                                "歡迎加入惜食，一起愛護地球"
+                            </p>
+                            <p class="text-primary fst-italic fw-semi-bold lh-base h1 px-2 px-lg-14">
+                                「你必須成為你希望在這個世界上看見的改變。(You must be the change you want to see in the world.)」
+                            </p>
+                            <footer class="blockquote-footer mt-3 text-muted">
+                                <cite title="Source Title">甘地(Mahatma Gandhi)</cite>
+                            </footer>
+                        </blockquote>
+                        <hr class="mt-lg-6 mb-lg-10 my-md-6">
+
+                        <div class="d-flex justify-content-between align-items-center mb-5">
+                            <div class="d-flex align-items-center">
+                                <img src="~/images/sifood_logo_bgclear.png" alt=""
+                                     class="rounded-circle avatar-md">
+                                <div class="ms-2 lh-1">
+                                    <h5 class="mb-0 ">惜食</h5>
+                                    <span class="text-primary small">珍惜食材</span>
+                                </div>
+                            </div>
+                            <div>
+                                @* <!-- social -->
+                                <span class="ms-2 text-muted">Share</span>
+                                <a href="#" class="ms-2 text-muted"><i class="bi bi-facebook fs-6"></i></a>
+                                <a href="#" class="ms-2 text-muted"><i class="bi bi-twitter fs-6"></i></a>
+                                <a href="#" class="ms-2 text-muted "><i class="bi bi-linkedin fs-6"></i></a> *@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    </section>
+</main>
+
+
+@section Scripts {
+    <!-- Javascript-->
+    <!-- Libs JS -->
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+
+    <!-- Theme JS -->
+    <script src="~/assets/js/theme.min.js"></script>
+
+}

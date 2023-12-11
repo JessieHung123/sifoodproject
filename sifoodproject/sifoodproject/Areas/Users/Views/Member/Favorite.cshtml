@@ -1,0 +1,178 @@
+@using sifoodproject.Areas.Users.Models.ViewModels;
+@model IEnumerable<FavoriteVM>
+
+<!-- Title -->
+@{
+    ViewData["Title"] = "我的收藏";
+}
+
+@section Styles{
+    <style>
+        .div:where(.swal2-container) button:where(.swal2-styled).swal2-confirm {
+            border: 0;
+            border-radius: 0.25em;
+            background: #986DB2;
+            color: #fff;
+            font-size: 1em;
+    </style>
+    
+}
+}
+
+
+<!--Main:主要編輯區在這 -->
+<main>
+    <!-- section-->
+    <div class="mt-4">
+        <div class="container">
+            <!-- row -->
+            <div class="row ">
+                <!-- col -->
+                <div class="col-12">
+                    <!-- breadcrumb -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Main">首頁</a></li>
+                            <li class="breadcrumb-item"><a asp-controller="Member" asp-action="Profile">會員資料</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">收藏店家</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- section -->
+    <section class="mt-8 mb-14">
+        
+        <div class="container">
+            <!-- row -->
+            <div class="row">
+                <partial name="_MembershipPartial"></partial>
+                @*<!-- 新增的partial標籤，有時間要再調整調整col-lg-*的值以適應版面 -->
+                <div class="col-lg-3 col-md-4 col-6 border-end  d-none d-md-block">
+                <partial name="_MembershipPartial">
+                </div> *@
+
+                <div class="col-md-8">
+                    <div class="mb-8">
+                        <!-- heading -->
+                        <h1 class="mb-1">收藏店家</h1>
+                        <p>目前共有 @ViewBag.FavoriteStoresCount 個喜愛的店家</p>
+                        <div class="card border border-danger p-6" style="max-width: 768px">
+                            <!--加上form-->
+                            <form id="deleteForm" method="post" action="@Url.Action("DeleteFavorite", "Member")">
+                                <!-- table -->
+                                <div class="table-responsive">
+                                    <table class="table text-nowrap table-with-checkbox">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th>
+                                                    <!-- form check -->
+                                                    <div class="form-check">
+                                                        <!-- input -->
+                                                        <input class="form-check-input" type="checkbox" id="checkAll">
+                                                        <!-- label -->
+                                                        <label class="form-check-label" for="checkAll">全選</label>
+                                                    </div>
+                                                </th>
+                                                <th></th>
+                                                <th>店家</th>
+                                                <th>刪除收藏</th>
+                                            </tr>
+                                        </thead>
+
+                                        <tbody>
+                                            @*  <!--在 <tbody> 部分使用 @foreach 循環來動態生成每一行--> *@
+                                            @foreach (var store in Model)
+                                            {
+                                                <tr>
+                                                    <td class="align-middle">
+                                                        <!-- form check -->
+                                                        <div class="form-check">
+                                                            @*  <!-- input 這邊value="@store.FavoriteId"--> id="checkbox-@store.FavoriteId"*@
+                                                            <input class="form-check-input" type="checkbox" name="selectedFavorites" value="@store.FavoriteId" id="checkbox-@store.FavoriteId">
+                                                            @* <!-- label for="checkbox-@store.FavoriteId"--> *@
+                                                            <label class="form-check-label" for="checkbox-@store.FavoriteId"></label>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="align-middle">
+                                                        <a href="#">
+                                                            <img src="@store.LogoPath" class="icon-shape icon-xxl" alt="">
+                                                        </a>
+                                                    </td>
+
+                                                    <td class="align-middle">
+                                                        <div>
+                                                            <h5 class="fs-6 mb-0"><a href="#" class="text-inherit">@store.StoreName</a></h5>
+                                                        </div>
+                                                    </td>
+
+                                                    <td class="align-middle ">
+                                                        <a type="submit" name="singleDelete" value="@store.FavoriteId" class="text-muted" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top" title="移除收藏">
+                                                            <i class="feather-icon icon-trash-2"></i>
+                                                        </a>
+                                                    </td>
+
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <button type="submit" class="btn btn-soft-danger mb-2" name="bulkDelete">刪除勾選的店家</button>
+                            </form>
+
+
+                        </div>
+
+
+
+                    </div>
+                </div>
+
+             
+
+            </div>
+
+
+
+        </div>
+        
+
+    </section>
+</main>
+
+@section Scripts{
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script type="text/javascript">
+        document.getElementById('deleteForm').onsubmit = function (event) {
+            event.preventDefault(); // 防止表單立即提交
+
+            Swal.fire({
+                title: "確定刪除這些收藏店家嗎?",
+                text: "如欲恢復，請重新到首頁收藏喔",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#db3030",
+                cancelButtonColor: "#0aad0a",
+                confirmButtonText: "確定刪除"
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        title: "已刪除！",
+                        text: "您的文件已被刪除。",
+                        icon: "success",
+                        confirmButtonColor: "#00AA90",  /* 改OK按鈕 */
+                    }).then(() => {
+                        // 提交表單
+                        event.target.submit();
+                    });
+                }
+            });
+        };
+    </script>
+
+}
+
+

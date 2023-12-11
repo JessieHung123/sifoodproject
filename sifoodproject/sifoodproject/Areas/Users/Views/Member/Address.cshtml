@@ -1,0 +1,492 @@
+﻿@section Styles{
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+
+    <style>
+
+        .fixed-card {
+            height: 250px;
+            width: 280px;
+        }
+    </style>
+}
+@{
+    ViewData["Title"] = "UserAddresses";
+}
+
+<body>
+
+    <main id="userAddressesApp">
+        <!-- section -->
+        <section>
+            <!-- container -->
+            <div class="container">
+                <!-- row -->
+                <div class="row">
+                    <!-- col -->
+                    <div class="col-12">
+                        <div class="d-flex justify-content-between align-items-center d-md-none py-4">
+                            <!-- heading -->
+                            <h3 class="fs-5 mb-0">Account Setting</h3>
+                            <!-- button -->
+                            <button class="btn btn-outline-gray-400 text-muted d-md-none btn-icon btn-sm ms-3 " type="button"
+                                    data-bs-toggle="offcanvas" data-bs-target="#offcanvasAccount" aria-controls="offcanvasAccount">
+                                <i class="bi bi-text-indent-left fs-3"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <partial name="_MembershipPartial" />
+                    <!-- col -->
+                    <div class="col-lg-9 col-md-8 col-12">
+                        <div class="py-6 p-md-6 p-lg-10">
+                            <div class="d-flex justify-content-between mb-6">
+                                <!-- heading -->
+                                <h2 class="mb-0">地址管理</h2>
+                                <!-- button -->
+                                <a href="#" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#addAddressModal">
+                                    新增地址
+                                </a>
+                            </div>
+                            <div class="row">
+                                <!-- col -->
+                                <div class="col-lg-5 col-xxl-4 col-12 mb-4 " v-for="(item, index) in addresses">
+                                    <template v-if="item.Edit==true">
+                                        <!-- form -->
+                                        <div class="card fixed-card ">
+                                            <div class="card-body p-6">
+                                                @* <div class="form-check mb-4">
+                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="homeRadio" checked>
+                                                <label class="form-check-label text-dark fw-semi-bold" for="homeRadio">
+                                                住址{{index + 1}}
+                                                </label>
+                                                </div> *@
+                                                <strong class="d-block mb-2">住址{{index + 1}}</strong>
+                                                <!-- address --><p class="card-text"></p>
+                                                <p class="mb-6">
+                                                    {{item.userName}}<br>
+                                                    <input v-model="item.userDetailAddress" /><br>
+                                                    {{item.userPhone}}
+                                                </p>
+                                                <!-- btn -->
+                                                <a v-if="!item.isDefault" href="#" class="link-primary" @@click="setDefaultAddress(item)">設定為預設地址</a>
+                                                <a v-else href="#" class="btn btn-info btn-sm">預設地址</a>
+                                                <div class="mt-4">
+                                                    <a href="#" class="text-inherit" @@click="update(item)">修改 </a>
+                                                    <a href="#" class="text-danger ms-3" @@click="cancel(item)">取消</a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                    <template v-else>
+                                        <!-- form -->
+                                        <div class="card fixed-card ">
+                                            <div class="card-body p-6">
+                                                <strong class="d-block mb-2">住址{{index + 1}}</strong>
+                                                <!-- address -->
+                                                <p class="mb-6">
+                                                    {{item.userName}}<br>
+                                                    {{item.userDetailAddress}}<br>
+                                                    {{item.userPhone}}
+                                                </p>
+                                                <!-- btn -->
+                                                <a v-if="!item.isDefault" href="#" class="link-primary" @@click="setDefaultAddress(item)">設定為預設地址</a>
+                                                <a v-else href="#" class="btn btn-info btn-sm">預設地址</a>
+                                                <div class="mt-4">
+                                                    <a href="#" class="text-inherit" @@click="edit(item.userAddressId)">編輯 </a>
+                                                    <a href="#" class="text-danger ms-3" data-bs-toggle="modal" data-bs-target="#deleteModal" @@click="deleteAddressModal(item)">
+                                                        刪除
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </template>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Modal -->
+        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <!-- modal content -->
+                <div class="modal-content">
+                    <!-- modal header -->
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="deleteModalLabel">刪除地址</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <!-- modal body -->
+                    <div class="modal-body">
+                        <h6>是否確定刪除此地址?</h6>
+                        <p class="mb-6" v-if="addressToDelete">
+                            {{addressToDelete.userName}}<br>
+                            {{addressToDelete.userDetailAddress}}<br>
+                            {{addressToDelete.userPhone}}
+                        </p>
+                    </div>
+                    <!-- modal footer -->
+                    <div class="modal-footer">
+                        <!-- btn -->
+                        <button type="button" class="btn btn-outline-gray-400" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-danger" @@click="deleteAddress">刪除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
+        <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <!-- modal content -->
+                <div class="modal-content">
+                    <!-- modal body -->
+                    <div class="modal-body p-6">
+                        <div class="d-flex justify-content-between mb-5">
+                            <div>
+                                <!-- heading -->
+                                <h5 class="mb-1" id="addAddressModalLabel">新收件地址</h5>
+                                <p class="small mb-0">為您的訂單新增新的寄送地址</p>
+                            </div>
+                            <div>
+                                <!-- button -->
+                                <button class="btn btn-dark " style="margin-right: 16px;" @@click="getCurrentLocation">自動填入現在位置</button>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                        </div>
+                        <!-- row -->
+                        <div class="row g-3">
+                            <!-- col -->
+                            <div class="col-12">
+                                <!-- form select -->
+                                <select class="form-select" v-model="selectedCity">
+                                    <option value="" disabled selected>請選擇縣市</option>
+                                    <option v-for="(districts, city) in districts" :key="city" :value="city">{{city}}</option>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <!-- form select -->
+                                <select class="form-select" v-model="selectedRegion">
+                                    <option value="" disabled selected>請選擇行政區</option>
+                                    <option v-for="district in districts[selectedCity]" :key="district" :value="district">{{district}}</option>
+                                </select>
+                            </div>
+                            <!-- col -->
+                            <div class="col-12">
+                                <!-- input -->
+                                <input type="text" class="form-control" placeholder="請輸入地址" v-model="addressLine">
+                            </div>
+                            <div class="col-12">
+                                <!-- form check -->
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" v-model="isDefaultAddress">
+                                    <label class="form-check-label" for="flexCheckDefault">
+                                        設定為預設地址
+                                    </label>
+                                </div>
+                            </div>
+                            <!-- col -->
+                            <div class="col-12 text-end">
+                                <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">取消</button>
+                                <button class="btn btn-primary" type="button" @@click="insert" style="margin-left: 3px;">儲存地址</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    @section Scripts{
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB0x6KjO7MXibN-CgOFVpTv6ZsnMwLh5vg"></script>
+        <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+            const storeProductApp = Vue.createApp({
+                data: function () {
+                    return {
+                        addresses: [],
+                        addressToDelete: null,
+                        addressOriginal: "",
+                        addressLine: "",
+                        selectedRegion: "",
+                        selectedCity: "",
+                        isDefaultAddress: false,
+                        districts: {
+                            '台北市': ['中正區', '大同區', '中山區', '松山區', '大安區', '萬華區', '信義區', '士林區', '北投區', '內湖區', '南港區', '文山區'],
+                            '新北市': ['萬里區', '金山區', '板橋區', '汐止區', '深坑區', '石碇區', '瑞芳區', '平溪區', '雙溪區', '貢寮區', '新店區', '坪林區', '烏來區', '永和區', '中和區', '土城區', '三峽區', '樹林區', '鶯歌區', '三重區', '新莊區', '泰山區', '林口區', '蘆洲區', '五股區', '八里區', '淡水區', '三芝區', '石門區'],
+                        }
+                    }
+                },
+                computed: {
+                },
+                mounted: function () {
+                    let _this = this;
+                    _this.getUserAddresses();
+                },
+                methods: {
+                    setDefaultAddress(item) {
+                        let _this = this;
+                        axios.put(`/api/UserAddressesapi/${item.userAddressId}`, {
+                            UserAddressId: item.userAddressId,
+                            UserDetailAddress: item.userDetailAddress,
+                            UserCity: item.userCity,
+                            UserRegion: item.userRegion,
+                            UserName: item.userName,
+                            IsDefault: true
+                        }).then(response => {
+                            if (response.data && response.data === "更新成功!") {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '成功!',
+                                    text: response.data,
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: response.data,
+                                });
+                            }
+                            _this.getUserAddresses();
+                        }).catch(err => {
+                            Swal.fire({
+                                icon: 'error',
+                                text: "發生錯誤!"
+                            });
+                            console.error(err);
+                        });
+                    },
+                    update: function (item) {
+                        let _this = this;
+                        axios.put(`/api/UserAddressesapi/${item.userAddressId}`, {
+                            UserAddressId: item.userAddressId,
+                            UserDetailAddress: item.userDetailAddress,
+                            UserName: item.userName,
+                            UserCity: item.userCity,
+                            UserRegion: item.userRegion,
+                            IsDefault: item.isDefault
+                        }).then(response => {
+                            if (response.data === "更新成功!") {
+                                _this.getUserAddresses();
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '成功!',
+                                    text: response.data,
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: response.data,
+                                });
+                            }
+                        }).catch(err => {
+                            Swal.fire({
+                                icon: 'error',
+                                text: "地址更新發生錯誤!"
+                            });
+                            console.error(err);
+                        });
+                    },
+                    cancel: function (item) {
+                        let _this = this;
+                        item.Edit = false;
+                        item.userDetailAddress = _this.userAddressOriginal
+                    },
+                    edit: function (userAddressId) {
+                        let _this = this;
+                        for (var i = 0; i < _this.addresses.length; i++) {
+                            var item = _this.addresses[i];
+                            if (userAddressId == _this.addresses[i].userAddressId) {
+                                item.Edit = true;
+                                _this.userAddressOriginal = item.userDetailAddress;
+                            }
+                        }
+                    },
+                    deleteAddressModal: function (item) {
+                        this.addressToDelete = item;
+                    },
+                    deleteAddress: function () {
+                        let _this = this;
+                        if (this.addressToDelete) {
+                            axios.delete(`/api/UserAddressesapi/${this.addressToDelete.userAddressId}`).then(response => {
+                                if (response.data === "刪除地址成功!") {
+                                    _this.getUserAddresses();
+                                    $('#deleteModal').modal('hide');
+                                    $('.modal-backdrop').remove();
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: '成功!',
+                                        text: response.data,
+                                    });
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        text: "地址刪除發生錯誤!"
+                                    });
+                                }
+                            }).catch(err => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: response.data
+                                });
+                                console.error(err);
+                            })
+                        }
+                    },
+                    insert: function () {
+                        let _this = this;
+                        let missingFields = [];
+                        if (!_this.selectedCity) {
+                            missingFields.push("縣市");
+                        }
+                        if (!_this.selectedRegion) {
+                            missingFields.push("行政區");
+                        }
+                        if (!_this.addressLine) {
+                            missingFields.push("地址");
+                        }
+                        if (missingFields.length > 0) {
+                            Swal.fire({
+                                icon: 'error',
+                                text: "請填寫以下欄位: " + missingFields.join(", "),
+                            });
+                            return;
+                        }
+                        var form = new FormData();
+                        var combinedAddress = _this.selectedCity + _this.selectedRegion + _this.addressLine
+                        form.append("UserAddressId", 0)
+                        form.append("UserCity", _this.selectedCity)
+                        form.append("UserRegion", _this.selectedRegion)
+                        form.append("UserDetailAddress", combinedAddress)
+                        form.append("IsDefault", _this.isDefaultAddress)
+                        axios.post(`/api/UserAddressesapi`, form, {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        }).then(response => {
+                            if (response.data === "新增地址成功!") {
+                                $('#addAddressModal').modal('hide');
+                                $('.modal-backdrop').remove();
+                                _this.selectedCity = "";
+                                _this.selectedRegion = "";
+                                _this.addressLine = "";
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '成功!',
+                                    text: response.data,
+                                });
+                            } else {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: response.data,
+                                });
+                            }
+                            _this.getUserAddresses();
+                        }).catch(err => {
+                            Swal.fire({
+                                icon: 'error',
+                                text: "地址新增發生錯誤!"
+                            });
+                            console.log(err)
+                        })
+                    },
+                    getUserAddresses() {
+                        let _this = this;
+                        fetch(`/api/UserAddressesapi`, { method: "GET" })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                _this.addresses = data;
+                                for (var i = 0; i < _this.addresses.length; i++) {
+                                    var item = _this.addresses[i];
+                                    item.Edit = false;
+                                }
+                            }).catch(error => {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: "地址載入發生錯誤!"
+                                });
+                                console.log('error', error);
+                            });
+                    },
+                    getCurrentLocation: function () {
+                        let _this = this;
+                        if (navigator.geolocation) {
+                            navigator.geolocation.getCurrentPosition(
+                                function (position) {
+                                    const latlng = {
+                                        lat: position.coords.latitude,
+                                        lng: position.coords.longitude
+                                    };
+                                    const geocoder = new google.maps.Geocoder();
+                                    geocoder.geocode({ location: latlng, language: 'zh-TW' }, function (results, status) {
+                                        if (status === "OK") {
+                                            const addressComponents = results[0].address_components;
+                                            let city, region, addressLine;
+                                            for (const component of addressComponents) {
+                                                if (component.types.includes('administrative_area_level_1')) {
+                                                    city = component.long_name;
+                                                } else if (component.types.includes('administrative_area_level_2')) {
+                                                    region = component.long_name;
+                                                }
+                                            }
+                                            const addressParts = results[0].formatted_address.split('區');
+                                            if (addressParts.length > 1) {
+                                                addressLine = addressParts[1].trim();
+                                            }
+                                            _this.selectedCity = city || '';
+                                            _this.selectedRegion = region || '';
+                                            _this.addressLine = addressLine || '';
+                                        } else {
+                                            Swal.fire({
+                                                icon: 'error',
+                                                text: "無法自動填寫,請手動輸入地址"
+                                            });
+                                            console.error("Geocoding failed:", status);
+                                        }
+                                    });
+                                },
+                                function (error) {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        text: "無法自動填寫,請手動輸入地址"
+                                    });
+                                    console.error("Error getting current location:", error);
+                                }
+                            );
+                        } else {
+                            Swal.fire({
+                                icon: 'error',
+                                text: "無法自動填寫,請手動輸入地址"
+                            });
+                            console.error("Geolocation is not supported by this browser.");
+                        }
+                    },
+                }
+            }).mount("#userAddressesApp")
+        </script>
+    }
+</body>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

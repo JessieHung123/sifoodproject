@@ -1,0 +1,103 @@
+﻿@section Styles {
+    <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet" />
+    <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
+    <link href="~/assets/css/theme.css" rel="stylesheet" />
+    <link href="~/css/loginsite.css" rel="stylesheet" />
+}
+
+<div class="container" id="storeSetPasswordApp">
+    <template v-if="loading == true">
+        <div class="loading-overlay">
+            <div class="loading-spinner"></div>
+        </div>
+    </template>
+    <template v-else>
+        <div class="text-center">
+            <img src="~/images/sifood_logo_bgclear.png" style="width:350px" />
+            <div class="row justify-content-center align-items-center">
+                <div class="col-12 col-md-6 col-lg-4 order-lg-2 order-1">
+                    <div class="mb-lg-9 mb-5">
+                        <h1 class="mb-1 h2 fw-bold text-center">設定SiFood店家平台帳號</h1>
+                        <p class="text-center">恭喜您驗證成功，請設定您的密碼</p>
+                    </div>
+                    <div>
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <input type="email" class="form-control" placeholder="請輸入您的帳戶" required v-model="storeEmail">
+                            </div>
+                            <div class="col-12">
+                                <input type="password" class="form-control" placeholder="請輸入您要設定的密碼" required v-model="storePassword">
+                            </div>
+                            <div class="col-12">
+                                <div class="password-field position-relative">
+                                    <input type="password" placeholder="密碼確認" class="form-control" required v-model="confirmPassword">
+                                </div>
+                            </div>
+                            <div class="col-12 d-grid">
+                                <button class="btn btn-primary" @@click="setPassword">設定密碼</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+
+@section Scripts {
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
+    <script src="~/assets/js/theme.min.js"></script>
+    <script src="~/assets/js/dropdown.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        var baseAddress = "https://localhost:7042";
+        var setAccountApp = Vue.createApp({
+            data: function () {
+                return {
+                    storeEmail: "",
+                    storePassword: "",
+                    confirmPassword: "",
+                    loading: false,
+                }
+            },
+            methods: {
+                setPassword() {
+                    var _this = this;
+                    if (_this.storePassword != _this.confirmPassword) {
+                        alert("密碼輸入不一致");
+                    } else {
+                        _this.loading = true;
+                        var form = new FormData();
+                        form.append("StoreAccount", _this.storeEmail);
+                        form.append("SetPassword", _this.storePassword);
+                        axios.post(`/Account/SetPassword`, form, {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        }).then(response => {
+                            alert(response.data);
+                            var success = "密碼設定成功，請重新登入";
+                            if (response.data == success) {
+                                window.location.href = '/Stores/Account/Login'
+                            } else {
+                                _this.storeEmail = "";
+                                _this.storePassword = "";
+                                _this.confirmPassword = "";
+                            }
+                            _this.loading = false;
+                        }).catch(err => {
+                            alert(err);
+                        });
+                    }
+                },
+            },
+        }).mount("#storeSetPasswordApp")
+    </script>
+}

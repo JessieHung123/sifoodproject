@@ -1,0 +1,419 @@
+﻿@section Styles{
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+
+}
+@{
+    ViewData["Title"] = "RealTimeOrders";
+}
+
+<body>
+    <main>
+        <!-- section -->
+        <section id="orderApp">
+            <div class="container">
+                <!-- row -->
+                <div class="row">
+                    <!-- col -->
+                    <div>
+                        <div class="py-6 p-md-6 p-lg-10">
+                            <!-- heading -->
+                            <div class="d-flex justify-content-between">
+                                <h2 class="mb-6">即時訂單</h2>
+                                <div class="mb-2 mb-md-0">
+                                    <select class="form-select">
+                                        <option selected>Status</option>
+                                        <option value="Success">Success</option>
+                                        <option value="Pending">Pending</option>
+                                        <option value="Cancel">Cancel</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="table-responsive-xxl border-0">
+                                <!-- Table -->
+                                <table class="table mb-0 text-nowrap table-centered ">
+                                    <!-- Table Head -->
+                                    <thead class="bg-light">
+                                        <tr>
+                                            <th>訂單編號</th>
+                                            <th>訂單日期</th>
+                                            <th>數量</th>
+                                            <th>取餐方式</th>
+                                            <th>訂單狀態</th>
+                                            <th>訂購總額</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody v-for="item in orders">
+                                        <!-- Table body -->
+                                        <tr>
+                                            <td class="align-middle border-top-0">
+                                                <a href="#" class="text-inherit">{{item.orderId}}</a>
+
+                                            </td>
+                                            <td class="align-middle border-top-0">
+                                                {{item.orderDate}}
+
+                                            </td>
+                                            <td class="align-middle border-top-0">
+                                                {{item.totalQuantity}}
+
+                                            </td>
+                                            <td class="align-middle border-top-0">
+                                                {{item.deliveryMethod}}
+
+                                            </td>
+                                            <td class="align-middle border-top-0">
+                                                <template v-if="item.statusId === 1">
+                                                    <span class="badge bg-warning">{{item.status}}</span>
+                                                </template>
+                                                <template v-else-if="item.statusId === 2">
+                                                    <span class="badge bg-info">{{item.status}}</span>
+                                                </template>
+                                                <template v-else-if="item.statusId === 3 ">
+                                                    <span class="badge bg-secondary">{{item.status}}</span>
+                                                </template>
+                                                <template v-else-if="item.statusId === 4">
+                                                    <span class="badge bg-primary">{{item.status}}</span>
+                                                </template>
+                                            </td>
+                                            <td class="align-middle border-top-0">
+                                                ${{item.subtotal+item.shippingFee}}
+                                            </td>
+                                            @* eye collapse function *@
+                                            <td class="text-muted align-middle border-top-0">
+                                                <!-- collapse behavior to the eye button -->
+                                                <a href="#" class="text-inherit"
+                                                   data-bs-toggle="collapse"
+                                                   :data-bs-target="'#orderDetails' + item.orderId"
+                                                   data-bs-placement="top"
+                                                   data-bs-title="View">
+                                                    <i class="feather-icon icon-eye"></i>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        <!-- collapsible row for order details -->
+                                        <tr>
+                                            <td colspan="8" class="p-0">
+                                                <div class="collapse" :id="'orderDetails' + item.orderId">
+                                                    <div class="p-3">
+                                                        <!-- Order details 起點 -->
+                                                        <div class="row ">
+                                                            <div class="col-xl-12 col-12 mb-5">
+                                                                <!-- card -->
+                                                                <div class="card h-100 card-lg">
+                                                                    <div class="card-body p-6">
+                                                                        <div class="d-md-flex justify-content-between">
+                                                                            <div class="d-flex align-items-center mb-2 mb-md-0">
+                                                                                <h2 class="mb-0">訂單明細</h2>
+
+                                                                            </div>
+                                                                            <!-- select option -->
+                                                                            <div class="d-md-flex">
+
+                                                                                <!-- button -->
+                                                                                <div class="ms-md-3">
+                                                                                    <template v-if="item.statusId === 1&&item.orderDuration<=10">
+                                                                                        <a v-on:click="confirmCancelOrder(item)" href="#" class="btn btn-danger" data-bs-toggle="tooltip" data-bs-placement="top" :title="'取消時限: ' + (10-Math.round(item.orderDuration)) + '分鐘'">取消</a>
+                                                                                    </template>
+                                                                                    <template v-else-if="item.statusId === 3||item.statusId === 4">
+                                                                                        <a v-on:click="confirmCompleteOrder(item)" href="#" class="btn btn-success">完成訂單</a>
+                                                                                    </template>
+                                                                                    <a @@click="downloadOrderDetails(item.orderId)" class="btn btn-secondary" style="margin-left: 3px;">下載明細</a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="mt-8">
+                                                                            <div class="row">
+                                                                                <!-- address -->
+                                                                                <div class="col-lg-4 col-md-4 col-12">
+                                                                                    <div class="mb-6">
+                                                                                        <h6>顧客資訊</h6>
+                                                                                        <p class="mb-1 lh-lg">
+                                                                                            {{item.userName}}<br>
+                                                                                            {{item.userEmail}}<br>
+                                                                                            {{item.userPhone}}
+                                                                                        </p>
+                                                                                        <a href="#">View Profile</a>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- address -->
+                                                                                <div class="col-lg-4 col-md-4 col-12" v-if="item.deliveryMethod === '外送'">
+                                                                                    <div class="mb-6">
+                                                                                        <h6>收件地址</h6>
+                                                                                        <p class="mb-1 lh-lg" style="white-space: normal;">{{item.address}}</p>
+                                                                                    </div>
+                                                                                </div>
+                                                                                <!-- address -->
+                                                                                <div class="col-lg-4 col-md-4 col-12">
+                                                                                    <div class="mb-6">
+                                                                                        <h6>訂單資訊</h6>
+                                                                                        <p class="mb-1 lh-lg">
+                                                                                            訂單編號: <span class="text-dark">{{item.orderId}}</span><br>
+                                                                                            訂購日期: <span class="text-dark">{{item.orderDate}}</span><br>
+                                                                                            訂購時間: <span class="text-dark">{{item.orderTime}}</span><br>
+                                                                                            訂單金額: <span class="text-dark">${{item.subtotal+item.shippingFee}}</span>
+                                                                                        </p>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="row">
+                                                                        <div class="col-12">
+                                                                            <div class="table-responsive">
+                                                                                <!-- Table -->
+                                                                                <table class="table mb-0 text-nowrap table-centered">
+                                                                                    <!-- Table Head -->
+                                                                                    <thead class="bg-light">
+                                                                                        <tr>
+                                                                                            <th>商品</th>
+                                                                                            <th>單價</th>
+                                                                                            <th>數量</th>
+                                                                                            <th>總計</th>
+                                                                                        </tr>
+                                                                                    </thead>
+                                                                                    <!-- tbody -->
+                                                                                    <tbody>
+                                                                                        <tr v-for="product in item.orderDetails">
+                                                                                            <td>
+                                                                                                <a href="#" class="text-inherit">
+                                                                                                    <div class="d-flex align-items-center">
+                                                                                                        <div>
+                                                                                                            <img v-if="product.photoPath" :src="product.photoPath" alt="" class="icon-shape icon-lg">
+                                                                                                            <img v-else src="/images/Noimage.png" alt="Default Image" class="icon-shape icon-lg">
+                                                                                                        </div>
+                                                                                                        <div class="ms-lg-4 mt-2 mt-lg-0">
+                                                                                                            <h5 class="mb-0 h6">
+                                                                                                                {{product.productName}}
+                                                                                                            </h5>
+
+                                                                                                        </div>
+                                                                                                    </div>
+                                                                                                </a>
+                                                                                            </td>
+                                                                                            <td><span class="text-body">${{product.unitPrice}}</span></td>
+                                                                                            <td>{{product.quantity}}</td>
+                                                                                            <td>${{product.total}}</td>
+                                                                                        </tr>
+                                                                                        <template v-if="item.deliveryMethod === '外送'">
+                                                                                            <tr>
+                                                                                                <td class="border-bottom-0 pb-0"></td>
+                                                                                                <td class="border-bottom-0 pb-0"></td>
+                                                                                                <td colspan="1" class="fw-medium text-dark ">
+                                                                                                    <!-- text -->
+                                                                                                    小計
+                                                                                                </td>
+                                                                                                <td class="fw-medium text-dark ">
+                                                                                                    <!-- text -->
+                                                                                                    ${{item.subtotal}}
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                            <tr>
+                                                                                                <td class="border-bottom-0 pb-0"></td>
+                                                                                                <td class="border-bottom-0 pb-0"></td>
+                                                                                                <td colspan="1" class="fw-medium text-dark ">
+                                                                                                    <!-- text -->
+                                                                                                    運費
+                                                                                                </td>
+                                                                                                <td class="fw-medium text-dark  ">
+                                                                                                    <!-- text -->
+                                                                                                    ${{item.shippingFee}}
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        </template>
+                                                                                        <tr>
+                                                                                            <td></td>
+                                                                                            <td></td>
+                                                                                            <td colspan="1" class="fw-semi-bold text-dark ">
+                                                                                                <!-- text -->
+                                                                                                總額
+                                                                                            </td>
+                                                                                            <td class="fw-semi-bold text-dark ">
+                                                                                                <!-- text -->
+                                                                                                ${{item.subtotal+item.shippingFee}}
+                                                                                            </td>
+                                                                                        </tr>
+
+                                                                                    </tbody>
+                                                                                </table>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="card-body p-6">
+                                                                        <div class="row">
+                                                                            <div class="col-md-3 mb-4 mb-lg-0 " v-if="item.paymentDate">
+                                                                                <h6>付款資訊</h6>
+                                                                                <span class="d-block">{{item.paymentMethodＮame}}</span>
+                                                                                <span class="d-block">{{item.paymentDate}} {{item.paymentTime}}</span>
+                                                                            </div>
+                                                                            <div class="col-md-3 mb-4 mb-lg-0" v-if="item.deliveryMethod === '外送'">
+                                                                                <h6>外送員</h6>
+                                                                                <span class="d-block">{{item.driverFullName}}</span>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <!-- Order details 終點 -->
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+
+
+    @section Scripts{
+        <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+        <script>
+
+            const orderApp = Vue.createApp({
+                data: function () {
+                    return {
+                        orders: [],
+                        // orderDetails: [],
+                    }
+                },
+                computed: {
+
+                },
+                mounted: function () {
+                    let _this = this;
+                    _this.getOrder();
+
+                },
+                methods: {
+                    downloadOrderDetails(orderId) {
+                        window.location.href = `/api/RealTimeOrdersapi/DownloadOrderDetails/${orderId}`;
+                    },
+                    confirmCancelOrder(item) {
+                        const orderDateTime = new Date(item.orderDateTime);
+                        const currentTime = new Date();
+                        const orderDuration = Math.floor((currentTime - orderDateTime) / (1000 * 60));
+                        if (orderDuration <= 10) {
+                            Swal.fire({
+                                title: '訂單確認',
+                                text: '是否確定取消訂單?',
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                confirmButtonText: '確定取消'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    this.cancelOrder(item);
+                                }
+                            });
+
+                        }
+                        else {
+                            Swal.fire({
+                                icon: 'error',
+                                text: "取消時間已過"
+                            });
+                            item.orderDuration = orderDuration;
+                        }
+                    },
+                    confirmCompleteOrder(item) {
+                        Swal.fire({
+                            title: '訂單確認',
+                            text: '是否確定完成訂單?',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#3085d6',
+                            cancelButtonColor: '#d33',
+                            confirmButtonText: '確定完成'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                this.completeOrder(item);
+                            }
+                        });
+
+
+                    },
+                    cancelOrder(item) {
+
+                        this.updateOrderStatus(item, 7)
+                        item.statusId = 7;
+                        this.orders = this.orders.filter(order => order.orderId !== item.orderId);
+                        Swal.fire({
+                            icon: 'success',
+                            title: '成功!',
+                            text: "訂單已取消!"
+                        });
+                    },
+                    completeOrder(item) {
+                        if (item.statusId === 3) {
+                            this.updateOrderStatus(item, 6)
+                            item.statusId = 6;
+                        } else {
+                            this.updateOrderStatus(item, 5)
+                            item.statusId = 5;
+                        }
+                        this.orders = this.orders.filter(order => order.orderId !== item.orderId);
+                        Swal.fire({
+                            icon: 'success',
+                            title: '成功!',
+                            text: "訂單已完成!"
+                        });
+                    },
+                    // **asynchronous nature of the fetch operation**
+                    updateOrderStatus(item, newStatusId) {
+
+                        fetch(`/api/RealTimeOrdersapi/${item.orderId}`, {
+                            method: "PUT",
+                            headers: {
+                                "Content-Type": "application/json"
+                            },
+                            body: JSON.stringify({
+                                orderId: item.orderId,
+                                statusId: newStatusId,
+                            }),
+                        }).then(response => {
+                            if (!response.ok) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    text: "發生錯誤!"
+                                });
+                                throw new Error(`HTTP error! Status: ${response.status}`);
+                            }
+                        }).then(data => {
+                        }).catch(error => {
+                            console.error("PUT 請求發生錯誤:", error);
+                        });
+                    },
+                    getOrder() {
+                        let _this = this;
+                        fetch(`/api/RealTimeOrdersapi`, { method: "GET" })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`HTTP error! Status: ${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                _this.orders = data;
+                            }).catch(error => {
+                                console.log(error);
+                            });
+                    },
+                }
+            }).mount("#orderApp")
+        </script>
+
+    }
+
+</body>
+

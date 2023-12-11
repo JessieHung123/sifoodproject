@@ -1,0 +1,170 @@
+﻿@section Styles {
+    <link href="~/css/loginsite.css" rel="stylesheet" />
+}
+
+<div class="container text-center" id="registerApp">
+    <template v-if="loading == true">
+        <div class="loading-overlay">
+            <div class="loading-spinner"></div>
+        </div>
+    </template>
+    <template v-else>
+        <div class="row align-items-stretch">
+            <div class="col">
+                <div class="my-lg-8 my-8">
+                    <div class="container">
+                        <div class="row justify-content-center align-items-center">
+                            <div>
+                                <div>
+                                    <h1 class="mb-1 h2 fw-bold">註冊成為Sifood會員</h1>
+                                    <p>歡迎加入會員, 一起杜絕浪費!</p>
+                                </div>
+                                <div>
+                                    <div class="row g-4">
+                                        <div class="col-12">
+                                            <input type="email" v-model="vueAccount" class="form-control" id="inputEmail4" placeholder="Email" required="">
+                                        </div>
+                                        <div class="col-12">
+                                            <input type="text" v-model="vueUserName" class="form-control" id="inputEmail5" placeholder="UserName" required="">
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="password-field position-relative">
+                                                <input v-bind:type="registerPwdShowType" v-model="vuePassword" id="fakePassword" placeholder="Enter Password" class="form-control" required="">
+                                                <span><i id="passwordToggler" v-bind:class="registerPwdShowClass" @@click="registerPwdShow = !registerPwdShow"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="password-field position-relative">
+                                                <input v-bind:type="registerConfirmPwdShowType" v-model="vuePasswordConfirm" id="passwordConfirmed" placeholder="Password Confirmed" class="form-control" required="">
+                                                <span><i id="passwordToggler" v-bind:class="registerConfirmPwdShowClass" @@click="registerConfirmPwdShow = !registerConfirmPwdShow"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 d-grid">
+                                            <button id="registerSubmit" type="submit" class="btn btn-primary" @@click="register">註冊</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="my-lg-8 my-8">
+                    <div class="container">
+                        <div class="row justify-content-center align-items-center">
+                            <div>
+                                <div>
+                                    <h1 class="mb-1 h2 fw-bold">登入Sifood</h1>
+                                    <p>歡迎回來Sifood, 登入並開始享受美食!</p>
+                                </div>
+                                <form method="post">
+                                    <div class="row g-4">
+                                        <div class="col-12">
+                                            <input type="email" class="form-control" name="Account" placeholder="Email" required="">
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="password-field position-relative">
+                                                <input v-bind:type="loginPwdToggleType" id="fakePassword3" name="Password" placeholder="Enter Password" class="form-control" required="">
+                                                <span><i id="passwordToggler" v-bind:class="loginPwdToggleClass" @@click="loginPwdShow = !loginPwdShow"></i></span>
+                                            </div>
+                                        </div>
+                                        <div class="col-12">
+                                            <div class="d-flex justify-content-end">
+                                                <div>忘記密碼? <a asp-controller="Account" asp-action="ForgotPassword">重設密碼</a></div>
+                                            </div>
+                                        </div>
+                                        <div style="height:40px"></div>
+                                        <div style="height:3px"></div>
+                                        <div class="col-12 d-grid">
+                                            <button type="submit" class="btn btn-primary" style="height:43px" @@click="login">登入</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        var RegisterApp = Vue.createApp({
+            data: function () {
+                return {
+                    vueAccount: "",
+                    vueUserName: "",
+                    vuePassword: "",
+                    vuePasswordConfirm: "",
+                    loading: false,
+                    registerPwdShow: false,
+                    registerConfirmPwdShow: false,
+                    loginPwdShow: false,
+                }
+            },
+            methods: {
+                register() {
+                    var _this = this
+                    if (_this.vuePassword != _this.vuePasswordConfirm || _this.vueAccount == "" || _this.vueUserName == "" || _this.vuePassword == "") {
+                        alert("註冊失敗");
+                    } else if (/[a-zA-Z]/.test(_this.vueUserName)) {
+                        alert("使用者名稱不能包含英文");
+                    } else {
+                        _this.loading = true;
+                        var form = new FormData();
+                        form.append("EmailAccount", _this.vueAccount);
+                        form.append("Password", _this.vuePassword);
+                        form.append("UserName", _this.vueUserName);
+                        axios.post(`/Account/PostAccount`, form, {
+                            headers: {
+                                "Content-Type": "multipart/form-data"
+                            }
+                        }).then(response => {
+                            alert(response.data);
+                            var success = "帳號註冊成功, 即將進入驗證階段";
+                            if (response.data == success) {
+                                window.location.href = '/Users/Account/RegisterConfirmation'
+                            }
+                            else {
+                                _this.vueAccount = "";
+                                _this.vuePassword = "";
+                                _this.vuePasswordConfirm = "";
+                                _this.vueUserName = "";
+                            }
+                            _this.loading = false;
+                        }).catch(err => {
+                            alert(err);
+                        });
+                    }
+                },
+            },
+            computed: {
+                registerPwdShowClass() {
+                    return this.registerPwdShow ? "bi bi-eye" : "bi bi-eye-slash"
+                },
+                registerPwdShowType() {
+                    return this.registerPwdShow ? "text" : "password"
+                },
+                registerConfirmPwdShowClass() {
+                    return this.registerConfirmPwdShow ? "bi bi-eye" : "bi bi-eye-slash"
+                },
+                registerConfirmPwdShowType() {
+                    return this.registerConfirmPwdShow ? "text" : "password"
+                },
+                loginPwdToggleClass() {
+                    return this.loginPwdShow ? "bi bi-eye" : "bi bi-eye-slash"
+                },
+                loginPwdToggleType() {
+                    return this.loginPwdShow ? "text" : "password"
+                },
+            }
+        }).mount("#registerApp")
+    </script>
+}

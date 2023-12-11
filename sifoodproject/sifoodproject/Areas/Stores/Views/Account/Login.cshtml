@@ -1,0 +1,44 @@
+﻿@section Styles{
+    <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet" />
+    <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
+    <link href="~/assets/css/theme.css" rel="stylesheet" />
+}
+
+<div class="container">
+    <div class="text-center"><img src="~/images/sifood_logo_bgclear.png" alt="logo" width="200px" /></div>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-12 col-md-6 col-lg-4 order-lg-2 order-1">
+            <div class="mb-lg-9 mb-5">
+                <h1 class="mb-1 h2 fw-bold text-center">登入惜Food店家平台</h1>
+                <p class="text-center">歡迎回來!請輸入您的帳號。</p>
+            </div>
+            <form method="post">
+                <div class="row g-3">
+                    <div class="col-12">
+                        <input type="email" name="StoreAccount" class="form-control" placeholder="請輸入您的帳號" required>
+                    </div>
+                    <div class="col-12">
+                        <div class="password-field position-relative">
+                            <input type="password" name="SetPassword" placeholder="請輸入您的密碼" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="col-12 d-grid">
+                        <button type="submit" class="btn btn-primary">登入</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
+    <script src="~/assets/js/theme.min.js"></script>
+    <script src="~/assets/js/dropdown.js"></script>
+    <script src="~/assets/js/vendors/password.js"></script>
+    <partial name="_ValidationScriptsPartial" />
+}

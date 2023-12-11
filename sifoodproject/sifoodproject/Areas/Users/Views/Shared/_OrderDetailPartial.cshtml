@@ -1,0 +1,157 @@
+﻿@* @using SiFoodProjectFormal2._0.Areas.Users.Models.ViewModels
+@model HistoryOrderDetailVM
+
+<!-- Modal --> *@
+
+            <div class="modal-header">
+                <h3 class="modal-title" id="exampleModalScrollableTitle">明細&評論</h3>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <!--Modal Body-->
+            <div class="modal-body">
+                <!-- Modal從這div複製 -->
+                <div class="col-12 card py-3 p-md-4 p-lg-4">
+                    <div class="py-2 p-md-2 p-lg-2">
+                        <!-- heading -->
+                        <h2 class="mb-6">訂單明細</h2>
+                    </div>
+
+                    <!-- 訂單明細 -->
+                    <div class="row">
+                        <div class="col-12">
+                            <div class="mt-4 mt-lg-0 card shadow-sm">
+                                <h5 class="px-6 py-4 bg-transparent mb-0">訂單編號- {{ orderDetail.OrderId }}</h5>
+                                <div class="ms-6 mb-3">
+                                    商品種類：{{ orderDetail.Items.length }} 種
+                                </div>
+                                <div class="ms-6 mb-3">
+                                    運送方式：<span :class="getDeliveryMethodClass(orderDetail.DeliveryMethod)">{{ orderDetail.DeliveryMethod }}</span>
+                                            <!--依據不同運送方式給顏色-->
+                                           @*  @{
+                                                string badgeClass = Model.DeliveryMethod switch
+                                                {
+                                                    "外送" => "badge bg-light-info text-dark-info",
+                                                    "自取" => "badge bg-light-danger text-dark-danger",
+                                                };
+                                            }
+                                            <span class="@badgeClass">@Model.DeliveryMethod</span> *@
+                                </div>
+
+                                <!-- 列表渲染 -->
+                                <ul class="list-group list-group-flush">
+                                    <!-- list group item -->
+                                    <li class="list-group-item px-4 py-3" v-for="item in orderDetail.Items" :key="item.Id">
+                                        <div class="row align-items-center mb-3">
+                                            <div class="col-2 col-md-2">
+                                                <img :src="item.PhotoPath" alt="Product" class="img-fluid">
+                                            </div>
+                                            <div class="col-5 col-md-5 mb-3">
+                                                <h6>{{ item.ProductName }}</h6>
+                                            </div>
+                                            <div class="col-2 col-md-2 text-center text-muted mb-3">
+                                                <span>{{ item.Quantity }}</span>
+                                            </div>
+                                            <div class="col-3 text-lg-end text-start text-md-end col-md-3 mb-3">
+                                                <span class="fw-bold">${{ item.UnitPrice }}</span>
+                                            </div>
+                                        </div>
+                                        @* @foreach (var item in Model.Items)
+                                        {
+                                            <div class="row align-items-center mb-3">
+                                                <div class="col-2 col-md-2">
+                                                        <img src="@item.PhotoPath" alt="Product" class="img-fluid">
+                                                </div>
+                                                <div class="col-5 col-md-5 mb-3">
+                                                        <h6 class="">@item.ProductName</h6>
+                                                </div>
+                                                <!--商品數量-->
+                                                <div class="col-2 col-md-2 text-center text-muted mb-3">
+                                                        <span>@item.Quantity</span>
+                                                </div>
+                                                <!--商品單價-->
+                                                <div class="col-3 text-lg-end text-start text-md-end col-md-3 mb-3">
+                                                        <span class="fw-bold">$@Convert.ToInt32(item.UnitPrice)</span>
+                                                </div>
+                                            </div>
+                                        } *@
+                                    </li>
+
+                                    <!-- list group item -->
+                                    <li class="list-group-item px-4 py-3">
+                                        <div class="d-flex align-items-center justify-content-between   mb-2">
+                                            <div>
+                                                金額小計
+                                            </div>
+                                            <div class="fw-bold">
+                                                ${{ orderDetail.ItemsSubTotal }}
+                                                @* $@Convert.ToInt32(Model.ItemsSubTotal) *@
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center justify-content-between  ">
+                                            <div>
+                                                運費
+                                            </div>
+                                            <div class="fw-bold">
+                                                ${{ orderDetail.ShippingFee }}
+                                                @* $@Convert.ToInt32(Model.ShippingFee) *@
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <!-- list group item -->
+                                    <li class="list-group-item px-4 py-3">
+                                        <div class="d-flex align-items-center justify-content-between fw-bold">
+                                            <div>
+                                                總金額
+                                            </div>
+                                            <div>
+                                                ${{ orderDetail.TotalPrice }}
+                                                @* $@Convert.ToInt32(Model.TotalPrice) *@
+                                            </div>
+                                        </div>
+                                    </li>
+                                </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <!-- 星星區塊第二種 -->
+                    <div class="card py-3 p-md-4 p-lg-4 ">
+                        <div class="card-body">
+                            <!-- rating -->
+                            <h3 class="mb-5"><mark>請給店家評分<mark></h3>
+                            <div class="border-bottom py-4 mb-4">
+                                <div class="rating-box">
+                                    <div class="rating">
+                        <span v-for="star in 5" :class="getStarClass(star)" v-on:mouseover="setHoverRating(star)" v-on:mouseout="setHoverRating(0)" v-on:click="setCurrentRating(star)" style="font-size:35px;"></span>
+                                        @* <span class="fa fa-star-o text-warning" style="font-size:35px;"></span>
+                                        <span class="fa fa-star-o text-warning" style="font-size:35px;"></span>
+                                        <span class="fa fa-star-o text-warning" style="font-size:35px;"></span>
+                                        <span class="fa fa-star-o text-warning" style="font-size:35px;"></span>
+                                        <span class="fa fa-star-o text-warning" style="font-size:35px;"></span> *@
+                                    </div>
+                                    <h5 class="mt-4" {{ ratingText }}></h5>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class=" py-4 mb-4 ms-2">
+                        <!-- heading -->
+                        <h5>給店家的評語</h5>
+                        @* <textarea id="commentContent" class="form-control" rows="3" placeholder="請輸入您的評論"></textarea> *@
+                        <textarea v-model="comment" class="form-control" rows="3" placeholder="請輸入您的評論"></textarea>
+                    </div>
+                    <!--modal-body-->
+                </div>
+            </div>
+
+            <!--modal-footer-->
+            <div class="modal-footer">
+                <!-- button -->
+                <div class="d-flex justify-content-end">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+        <button type="button" class="btn btn-primary" v-on:click="submitRating()">送出評價</button>
+                </div>
+            </div>
+        

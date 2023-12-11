@@ -1,0 +1,365 @@
+﻿@using sifoodproject.Areas.Users.Models.ViewModels;
+@model JoinUsVM
+
+<!-- 引用Layout -->
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "加入我們";
+}
+
+<!-- CSS -->
+@section Styles{
+    <link href="~/assets/libs/dropzone/dist/min/dropzone.min.css" rel="stylesheet">
+}
+<main>
+    <!-- section -->
+    <section class="my-lg-14 my-8">
+        <!-- container -->
+        <div class="container">
+            <div class="row">
+                <!-- col -->
+                <div class="offset-lg-2 col-lg-8 col-12">
+                    <div class="mb-14">
+                        <!-- heading -->
+                        <h1 class="h3">加入我們</h1>
+                        <p class="lead mb-0">送出後，須待一至兩天審核，</p>
+                        <P class="lead mb-0">如審核成功，將寄出審核成功信件至信箱;</P>
+                        <P class="lead mb-0">未審核成功，我們也將會寄出信件告知，謝謝~</P>
+                    </div>
+                    <!-- form -->
+                    <form asp-controller="Home" asp-action="JoinUs" class="row" id="myForm" enctype="multipart/form-data">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ContactName" class="form-label">聯絡人姓名<span class="text-danger">*</span></label>
+                            <input asp-for="ContactName" class="form-control"  placeholder="請輸入一位負責聯繫的人員姓名" />
+                            <span asp-validation-for="ContactName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="StoreName" class="form-label" >店名<span class="text-danger">*</span></label>
+                            <input asp-for="StoreName" class="form-control" autocomplete="organization" placeholder="請輸入您在惜食平台欲顯示的店名名稱" />
+                            <span asp-validation-for="StoreName" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Phone" class="form-label">聯絡電話<span class="text-danger">*</span></label>
+                            <input asp-for="Phone" class="form-control" placeholder="0912345678" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="TaxId" class="form-label">公司統編<span class="text-danger">*</span></label>
+                            <input asp-for="TaxId" class="form-control" placeholder="請輸入統編" />
+                            <span asp-validation-for="TaxId" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="ClosingDay" class="form-label">公休日<span class="text-danger">*</span></label>
+                            <input asp-for="ClosingDay" class="form-control" placeholder="例:星期一" />
+                            <span asp-validation-for="ClosingDay" class="text-danger"></span>
+                        </div>
+                        <!-- 週間營業時間 -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="WeekdayStartTime" class="form-label">週間開始時間<span class="text-danger">*</span></label>
+                            <input asp-for="WeekdayStartTime" class="form-control" type="time" />
+                            <span asp-validation-for="WeekdayStartTime" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="WeekdayEndTime" class="form-label">週間結束時間<span class="text-danger">*</span></label>
+                            <input asp-for="WeekdayEndTime" class="form-control" type="time" />
+                            <span asp-validation-for="WeekdayEndTime" class="text-danger"></span>
+                        </div>
+
+                        <!-- 週末營業時間 -->
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="WeekendStartTime" class="form-label">週末開始時間<span class="text-danger">*</span></label>
+                            <input asp-for="WeekendStartTime" class="form-control" type="time" />
+                            <span asp-validation-for="WeekendStartTime" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="WeekendEndTime" class="form-label">週末結束時間<span class="text-danger">*</span></label>
+                            <input asp-for="WeekendEndTime" class="form-control" type="time" />
+                            <span asp-validation-for="WeekendEndTime" class="text-danger"></span>
+                        </div>
+
+                        <!-- City 改下拉選單 -->
+                        <div class="col-md-6 mb-3">
+                        <label asp-for="City" class="form-label">店家地址-市<span class="text-danger">*</span></label>
+                            <select asp-for="City" class="form-select" id="citySelect">
+                            <option value="" selected>選擇城市</option>
+                            <option value="臺北市">臺北市</option>
+                            <option value="新北市">新北市</option>
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </select>
+                        </div>
+
+                        <!--  區改下拉選單,並依照City動態改變 -->
+                       
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Region" class="form-label">店家地址-區<span class="text-danger">*</span></label>
+                            <select asp-for ="Region" id="regionSelect" class="form-select">
+                                <option value="">請先選擇城市</option>
+                            </select>
+                            <span asp-validation-for="Region" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="Address" class="form-label">店家地址<span class="text-danger">*</span></label>
+                            <input asp-for="Address" id="address" class="form-control" autocomplete="address-line3" placeholder="例:臺北市中正區重慶南路一段122號" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Latitude" class="form-label">經度<span class="text-danger">*</span></label>
+                            <input asp-for="Latitude" id="Latitude" class="form-control" autocomplete="address-line3"/>
+                            <span asp-validation-for="Latitude" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Longitude" class="form-label">緯度<span class="text-danger">*</span></label>
+                            <input asp-for="Longitude" id="Longitude" class="form-control" autocomplete="address-line3"/>
+                            <span asp-validation-for="Longitude" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <button class="btn btn-success btn-sm" id="calculate">按我算經緯度</button>
+                        </div>
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="Email" class="form-label">註冊信箱<span class="text-danger">*</span></label>
+                            <input asp-for="Email" class="form-control" id="emailContact" type="email" placeholder="請輸入email信箱地址" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-12 mb-3">
+                            <label asp-for="Description" class="form-label" >店家介紹<span class="text-danger">*(限制25字內)</span></label>
+                            <textarea asp-for="Description" class="form-control" placeholder="請輸入25字內的店家介紹" rows="3"></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="py-4 mb-4">
+                            <label asp-for="LogoPath"><h4 class="mb-5 h5">請上傳您的LOGO</h4></label>
+                            
+                            <div class="mb-4 d-flex">
+                                <div class="position-relative">
+                                    <img class="image  icon-shape icon-xxxl bg-light rounded-4"
+                                         src="~/images/joinus/uploadstorephoto.svg" alt="Image">
+                                    <div class="file-upload position-absolute end-0 top-0 mt-n2 me-n1">
+                                        
+                                        <input asp-for="LogoPath" type="file" accept="image/*"class="file-input ">
+                                        <span asp-validation-for="LogoPath" class="text-danger"></span>
+                                        <span class="icon-shape icon-sm rounded-circle bg-white">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                                fill="currentColor" class="bi bi-pencil-fill text-muted"
+                                                viewBox="0 0 16 16">
+                                                <path
+                                                    d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                            </svg>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            @* 店家照片上傳3張安排 *@
+                                                       
+                            <div class="border-bottom py-4 mb-4">
+                                <label><h4 class="mb-5 h5">請上傳您的店家照片</h4></label>
+                                <div class="row">
+                                    <!-- 第一個上傳元素 -->
+                                    <div class="col-md-4">
+                                        <div class="mb-4 d-flex">
+                                            <div class="position-relative">
+                                                <img class="image  icon-shape icon-xxxl bg-light rounded-4"
+                                                    src="~/assets/images/icons/bakery.svg" alt="Image">
+
+                                                <div class="file-upload position-absolute end-0 top-0 mt-n2 me-n1">
+                                                    <input asp-for="PhotosPath" type="file" accept="image/*" class="file-input ">
+                                                    <span class="icon-shape icon-sm rounded-circle bg-white">
+
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                                            fill="currentColor" class="bi bi-pencil-fill text-muted"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 第二個上傳元素 -->
+                                    <div class="col-md-4">
+                                        <div class="mb-4 d-flex">
+                                            <div class="position-relative">
+                                                <img class="image  icon-shape icon-xxxl bg-light rounded-4"
+                                                    src="~/assets/images/icons/bakery.svg" alt="Image">
+
+                                                <div class="file-upload position-absolute end-0 top-0 mt-n2 me-n1">
+                                                    <input asp-for="PhotosPath2" type="file" accept="image/*" class="file-input ">
+                                                    <span class="icon-shape icon-sm rounded-circle bg-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                                            fill="currentColor" class="bi bi-pencil-fill text-muted"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- 第三個上傳元素 -->
+                                    <div class="col-md-4">
+                                        <div class="mb-4 d-flex">
+                                            <div class="position-relative">
+                                                <img class="image  icon-shape icon-xxxl bg-light rounded-4"
+                                                    src="~/assets/images/icons/bakery.svg" alt="Image">
+
+                                                <div class="file-upload position-absolute end-0 top-0 mt-n2 me-n1">
+                                                    <input asp-for="PhotosPath3" type="file" accept="image/*" class="file-input ">
+                                                    <span class="icon-shape icon-sm rounded-circle bg-white">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
+                                                            fill="currentColor" class="bi bi-pencil-fill text-muted"
+                                                            viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                                        </svg>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                         <div class="col-md-6 mb-3">
+                            <!-- btn -->
+                            <button id="submitButton" type="submit" value="JoinUs" class="btn btn-primary">送出申請</button>
+                        </div>
+                    </form>
+
+                    <div>
+                        <a asp-action="Main">返回首頁</a>
+                    </div>
+
+                    <!--根據送出結果跳出Modal-->
+                    
+                    <!-- OK Modal -->
+                    <div class="modal fade" id="modalOK" tabindex="-1" role="dialog" aria-labelledby="okModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="okModalLabel">已成功送出申請!</h5>
+                                </div>
+                                <div class="modal-body">
+                                    請稍待一至二天審核，謝謝~
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='https://localhost:7042/Users/Home/Main'">好</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- NotOK Modal -->
+                    <div class="modal fade" id="modalNotOK" tabindex="-1" role="dialog" aria-labelledby="notOkModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title" id="notOkModalLabel">未成功送出申請!</h5>
+                                </div>
+                                <div class="modal-body">
+                                    請重新確認您填寫的資料~
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div> 
+            </div>
+        </div>
+        </div>
+
+    </section>
+</main>
+
+@section Scripts{
+
+    <!-- jQuery驗證 -->
+    <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN9KFcDFxucoV9IglJyqQSd_d1GLWHiYI&callback=initMap" async defer></script>
+    <!-- Region下拉選單 -->
+    <script>
+        document.getElementById('citySelect').addEventListener('change', function () {
+            var city = this.value;
+            var regionSelect = document.getElementById('regionSelect');
+            // 清空 Region 下拉選單
+            regionSelect.innerHTML = '';
+            // 添加一個提示選擇的預設選項
+            var defaultOption = document.createElement('option');
+            defaultOption.value = "";
+            defaultOption.text = "選擇區域";
+            defaultOption.disabled = true;
+            defaultOption.selected = true;
+            regionSelect.appendChild(defaultOption);
+
+            // 根據選擇的城市填充 Region 下拉選單
+            if (city == "臺北市") {
+                var regions = ["中正區", "大同區", "中山區", "松山區", "大安區", "萬華區", "信義區", "士林區", "北投區", "內湖區", "南港區", "文山區"];
+            } else if (city == "新北市") {
+                var regions = ["板橋區", "新莊區", "中和區", "永和區", "土城區", "樹林區", "三峽區", "鶯歌區", "三重區", "蘆洲區", "五股區", "泰山區", "林口區", "八里區", "淡水區", "三芝區", "石門區", "金山區", "萬里區", "汐止區", "瑞芳區", "貢寮區", "平溪區", "雙溪區", "新店區", "深坑區", "石碇區", "坪林區", "烏來區", "新店區"];
+            } else {
+                var regions = [];
+            }
+
+            // 將各個區域作為選項添加到 Region 下拉選單
+            regions.forEach(function (region) {
+                var option = document.createElement('option');
+                option.value = region;
+                option.text = region;
+                regionSelect.appendChild(option);
+            });
+        });
+    </script>
+    <script>
+        document.getElementById('calculate').addEventListener('click', function (event) {
+            var storeAddress = document.getElementById('address').value;
+            var storeFullAddress =storeAddress;
+            event.preventDefault();
+            event.stopPropagation();
+            var geocoder = new google.maps.Geocoder();
+            geocoder.geocode({ 'address': storeFullAddress }, function (results, status) {
+                console.log(results);
+                var latLng = { lat: results[0].geometry.location.lat(), lng: results[0].geometry.location.lng() };
+                console.log(latLng);
+                document.getElementById("Latitude").value = latLng.lat;
+                document.getElementById("Longitude").value = latLng.lng;
+            });
+        });
+    </script>
+    <script>
+        document.getElementById('myForm').addEventListener('submit', function (e) {
+            e.preventDefault(); 
+            // 阻止表單的默認提交行為:驗證沒過不要亂送出
+
+            // 使用 FormData 來獲取表單數據
+            const formData = new FormData(this);
+
+            // 發送 AJAX 請求
+            fetch('/Users/Home/JoinUsSubmit', {
+                method: 'POST',
+                body: formData,
+            })
+                .then(response => response.text()) // 將響應轉換為 JSON
+                .then(data => {
+                    if (data=="成功") {
+                        // 如果後端返回成功，顯示成功的 Modal
+                        $('#modalOK').modal('show');
+                    } else {
+                        // 如果後端返回失敗，顯示失敗的 Modal
+                        $('#modalNotOK').modal('show');
+                    }
+                })
+                .catch(error => {
+                    console.error('錯誤:', error);
+                    // 這裡可以處理網路錯誤等問題
+                });
+        });
+    </script>
+    }
+       

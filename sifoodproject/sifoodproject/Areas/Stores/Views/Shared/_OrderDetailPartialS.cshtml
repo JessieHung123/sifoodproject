@@ -1,0 +1,124 @@
+﻿@using sifoodproject.Areas.Stores.Models
+@model storeHistoryOrderDetailVM
+
+<!-- Modal -->
+
+<div class="modal-header">
+    <h3 class="modal-title" id="exampleModalScrollableTitle">訂單明細</h3>
+    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+</div>
+<!--Modal Body-->
+<div class="modal-body">
+    <!-- Modal從這div複製 -->
+@*     <div class="col-12 card py-3 p-md-4 p-lg-4">
+        <div class="py-2 p-md-2 p-lg-2">
+            <!-- heading -->
+            <h2 class="mb-6">訂單明細</h2>
+        </div> *@
+        <!-- 訂單明細 -->
+        <div class="row">
+            <div class="col-12">
+                <div class="mt-4 mt-lg-0">
+                    <div class="card shadow-sm">
+                        <h4 class="px-6 py-4 bg-transparent mb-2">訂單編號  @Model.OrderId</h4>                       
+                        <div class="ms-6 mb-3">
+                            商品種類：@Model.Items.Count 種
+                        </div>
+                        <ul class="list-group list-group-flush">
+                            <!-- list group item -->
+                            <li class="list-group-item px-4 py-3">
+                                @foreach (var item in Model.Items)
+                                {
+                                    <div class="row align-items-center mb-3">
+                                        <div class="col-2 col-md-2">
+                                            <img src="@item.PhotoPath" alt="Product" class="img-fluid">
+                                        </div>
+                                        <div class="col-5 col-md-5 mb-3">
+                                            <h6 class="">@item.ProductName</h6>
+                                        </div>
+                                        <!--商品數量-->
+                                        <div class="col-2 col-md-2 text-center text-muted mb-3">
+                                            <span>@item.Quantity</span>
+                                        </div>
+                                        <!--商品單價-->
+                                        <div class="col-3 text-lg-end text-start text-md-end col-md-3 mb-3">
+                                            <span class="fw-bold">$@item.UnitPrice</span>
+                                        </div>
+                                    </div>
+                                }
+                            </li>
+
+                            <!-- list group item -->
+                            <li class="list-group-item px-4 py-3">
+                                <div class="d-flex align-items-center justify-content-between   mb-2">
+                                    <div>
+                                        金額小計
+                                    </div>
+                                    <div class="fw-bold">
+
+                                    $@Convert.ToInt32(Model.ItemsSubTotal)
+                                    </div>
+                                </div>
+                                <div class="d-flex align-items-center justify-content-between">
+                                    <div>
+                                    運費<i class="feather-icon icon-info text-muted" data-bs-toggle="tooltip"
+                                         title="依距離不同"></i>
+                                    </div>
+                                    <div class="fw-bold">
+                                    $@Convert.ToInt32(Model.ShippingFee)
+                                    </div>
+                                </div>
+                            </li>
+                            <!-- list group item -->
+                            <li class="list-group-item px-4 py-3">
+                                <div class="d-flex align-items-center justify-content-between fw-bold">
+                                    <div>
+                                        總金額
+                                    </div>
+                                    <div>
+                                    $@Convert.ToInt32(Model.TotalPrice)
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="card shadow-sm">
+        
+            <h4 class="px-6 py-4 bg-transparent mb-2 mt-3">訂購資訊</h4>
+            <div class="border-bottom py-4 mb-4">
+                @* <ul class="ms-6 mb-3">
+                    <li class="fw-bold">訂購人: <p class="fst-normal">@Model.UserName</p></li>
+                    <li class="fw-bold">聯絡電話: <p class="fst-normal">@Model.UserPhone</p></li>
+                    <li class="fw-bold">運送方式: <p class="fst-normal">@Model.DeliveryMethod</p></li>
+                 </ul>
+ *@
+
+            <dl class="row ms-6 mb-3">
+                    <dt class="col-sm-3">訂購人:</dt>
+                    <dd class="col-sm-9">@Model.UserName</dd>
+                    <dt class="col-sm-3">聯絡電話:</dt>
+                    <dd class="col-sm-9">@Model.UserPhone</dd>
+                    <dt class="col-sm-3">運送方式:</dt>
+                    <dd class="col-sm-9">@Model.DeliveryMethod</dd>
+                </dl>
+            </div>
+        
+        </div>
+    
+        <!--modal-body-->
+    @* </div> *@
+</div>
+
+<!--modal-footer-->
+<div class="modal-footer">
+    <!-- button -->
+    <div class="d-flex justify-content-end">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">OK</button>
+        @* <button type="button" class="btn btn-primary" onclick="submitRating()">送出評價</button> *@
+    </div>
+</div>
+

@@ -1,0 +1,431 @@
+﻿
+<body>
+    <div class="main-wrapper" id="productapp">
+        <main class="main-content-wrapper">
+            <div class="container">
+                <div class="row mb-8">
+                    <div class="col-md-12">
+                        <div class="d-md-flex justify-content-between align-items-center">
+                            <div>
+                                <h2>商品管理</h2>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-xl-12 col-12 mb-5">
+                        <div class="card h-100 card-lg">
+                            <div class="px-6 py-6 ">
+                                <div class="row justify-content-between">
+                                    <div class="col-lg-4 col-md-6 col-12 mb-2 mb-lg-0">
+                                        <div class="d-flex" role="search">
+                                            <input class="form-control" type="search" placeholder="搜尋名稱/種類" aria-label="Search" v-model.lazy="searchText" @@keyup.enter="startSeach">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-4 col-12">
+                                        <div>
+                                            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#insertModal">
+                                                新增商品
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body p-0">
+                                <div class="table-responsive">
+                                    <table class="table table-centered table-hover text-nowrap table-borderless mb-0 table-with-checkbox">
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th>商品圖片</th>
+                                                <th>商品名稱</th>
+                                                <th>商品種類</th>
+                                                <th>上架數量</th>
+                                                <th>已訂購數量</th>
+                                                <th>商品單價</th>
+                                                <th>上架時間</th>
+                                                <th></th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="item in filterList">
+                                                <td>
+                                                    <a href="#!">
+                                                        <img :src="item.photoPath" alt=""
+                                                             class="icon-shape icon-md">
+                                                    </a>
+                                                </td>
+                                                <td><a href="#" class="text-reset">{{item.productName}}</a></td>
+                                                <td>{{item.categoryName}}</td>
+                                                <td>{{item.releasedQty}}</td>
+                                                <td>{{item.orderedQty}}</td>
+                                                <td>${{item.unitPrice}}</td>
+                                                <td>{{item.realeasedTime}}</td>
+                                                <td>
+                                                    <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#updateModal" v-on:click="editProduct(item)">編輯</button>&ensp;
+                                                    <button type="button" class="btn btn-danger btn-sm" onclick='return confirm("確定要刪除嗎?")' v-on:click="softDelete(item.productId)">刪除</button>
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class=" border-top d-md-flex justify-content-between align-items-center px-6 py-6">
+                                <span>
+                                    顯示第 {{ Math.min((page.countPerPage * (page.pageNumber - 1)) + 1, itemCount) }}
+                                    至 {{ Math.min(page.countPerPage * page.pageNumber, itemCount) }} 項，共 {{ itemCount }} 個商品
+                                </span>
+                                <nav class="mt-2 mt-md-0">
+                                    <paginate :page-count="total"
+                                              :click-handler="pageClick"
+                                              :force-page="page.pageNumber"
+                                              :prev-text="'<'"
+                                              :next-text="'>'"
+                                              :page-link-class="'page-link mx-1'"
+                                              :prev-link-class="'page-link mx-1'"
+                                              :next-link-class="'page-link mx-1'"
+                                              :container-class="'pagination justify-content-center'">
+                                    </paginate>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        <div class="modal fade" id="insertModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #B0E0E6;">
+                        <h5 class="modal-title" id="modalTitleId">新增商品種類</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="mb-3 col-lg-6 form-group">
+                                    <label class="form-label">商品名稱</label>
+                                    <input type="text" class="form-control" v-model="productName" placeholder="請輸入名稱" required>
+                                </div>
+                                <div class="mb-3 col-lg-6">
+                                    <label class="form-label">商品種類</label>
+                                    <select class="form-select" v-model="categoryId">
+                                        <option selected>商品種類</option>
+                                        <option :value="1">生鮮</option>
+                                        <option :value="2">飲料</option>
+                                        <option :value="3">甜點麵包</option>
+                                        <option :value="4">便當</option>
+                                        <option :value="5">素食</option>
+                                        <option :value="6">異國料理</option>
+                                        <option :value="7">其他</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-lg-6 form-group">
+                                    <label class="form-label">商品單價</label>
+                                    <input type="text" class="form-control" v-model="unitPrice" placeholder="請輸入價格" required>
+                                </div>
+                                <div class="mb-3 col-lg-6 form-group">
+                                    <label class="form-label">上架數量</label>
+                                    <input type="text" class="form-control" v-model="releasedQty" placeholder="請輸入數量" required>
+                                </div>
+                                <div class="mb-3 col-lg-6 form-group">
+                                    <label class="form-label">建議取貨起時</label>
+                                    <input type="time" class="form-control" v-model="suggestPickUpTime" placeholder="請輸入價格" required>
+                                </div>
+                                <div class="mb-3 col-lg-6 form-group">
+                                    <label class="form-label">建議取貨迄時</label>
+                                    <input type="time" class="form-control" v-model="suggestPickEndTime" placeholder="請輸入數量" required>
+                                </div>
+                                <div class="form-group">
+                                    <img id="insertFilePreview" :src="photoPriview" title="待上傳" style="width:300px;width:240px" />
+                                    <input type="file" id="insertFile" class="form-control" @@change="insertFileChange($event.target)" accept="image/*" />
+                                </div>
+                                <div class="mb-3 col-lg-12 mt-5 form-group">
+                                    <h4 class="mb-3 h5">商品描述</h4>
+                                    <div class="mb-3">
+                                        <textarea class="form-control" v-model="description" rows="3" placeholder="請輸入文字敘述"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                            <button type="button" class="btn btn-primary" onclick='return confirm("確定要新增嗎?")' data-bs-dismiss="modal" @@click="insertProduct">確定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="updateModal" tabindex="-1" data-bs-backdrop="static" data-bs-keyboard="false" role="dialog" aria-labelledby="modalTitleId" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-scrollable modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="background-color: #B0E0E6;">
+                        <h5 class="modal-title" id="modalTitleId">編輯商品種類</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="container">
+                            <div class="row">
+                                <div class="mb-3 col-lg-6">
+                                    <label class="form-label">商品名稱</label>
+                                    <input type="text" class="form-control" v-model="selectedToEdit.productName" required>
+                                </div>
+                                <div class="mb-3 col-lg-6">
+                                    <label class="form-label">商品種類</label>
+                                    <select class="form-select" v-model="selectedToEdit.categoryId">
+                                        <option :value="1">生鮮</option>
+                                        <option :value="2">飲料</option>
+                                        <option :value="3">甜點麵包</option>
+                                        <option :value="4">便當</option>
+                                        <option :value="5">素食</option>
+                                        <option :value="6">異國料理</option>
+                                        <option :value="7">其他</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3 col-lg-6">
+                                    <label class="form-label">商品單價</label>
+                                    <input type="text" class="form-control" v-model="selectedToEdit.unitPrice" required>
+                                </div>
+                                <div class="mb-3 col-lg-6">
+                                    <label class="form-label">上架數量</label>
+                                    <input type="text" class="form-control" v-model="selectedToEdit.releasedQty" required>
+                                </div>
+                                <div class="mb-3 col-lg-6 form-group">
+                                    <label class="form-label">建議取貨起時</label>
+                                    <input type="time" class="form-control" v-model="selectedToEdit.suggestPickUpTime" placeholder="請輸入價格" required>
+                                </div>
+                                <div class="mb-3 col-lg-6 form-group">
+                                    <label class="form-label">建議取貨迄時</label>
+                                    <input type="time" class="form-control" v-model="selectedToEdit.suggestPickEndTime" placeholder="請輸入數量" required>
+                                </div>
+                                <div class="form-group">
+                                    <img id="updateFilePreview" :src="selectedToEdit.photoPath" title="待上傳" style="width:300px;width:240px" />
+                                    <input type="file" id="updateFile" class="form-control" @@change="insertFileChange($event.target)" accept="image/*" />
+                                </div>
+                                <div class="mb-3 col-lg-12 mt-5">
+                                    <h4 class="mb-3 h5">商品描述</h4>
+                                    <div class="mb-3">
+                                        <textarea class="form-control" rows="3" v-model="selectedToEdit.description"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                            <button type="button" class="btn btn-primary" onclick='return confirm("確定要修改嗎?")' data-bs-dismiss="modal" @@click="updateProduct">確定</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+@section Scripts
+    {
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/assets/js/theme.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuejs-paginate-next@latest/dist/vuejs-paginate-next.umd.js"></script>
+    <script>
+        const StoreMainApp = Vue.createApp({
+            data: function () {
+                return {
+                    ProductInfo: [],
+                    searchText: "",
+                    selectedToEdit: {},
+                    productName:"",
+                    categoryName:"",
+                    unitPrice:null,
+                    releasedQty:null,
+                    description:"",
+                    photoPriview: "/images/Noimage.png",
+                    categoryId:null,
+                    suggestPickUpTime:null,
+                    suggestPickEndTime:null,
+                    itemCount:0,
+                    page: {
+                        countPerPage: 6,
+                        pageNumber: 1,
+                    },
+                }
+            },
+            computed: {
+                total() {
+                    return Math.ceil(this.itemCount / this.page.countPerPage);
+                },
+                filterList() {
+                    var start = (this.page.pageNumber - 1) * this.page.countPerPage;
+                    var end = start + this.page.countPerPage;
+                    return this.ProductInfo.slice(start, end);
+                }
+            },
+            mounted: function () {
+                let _this = this;
+                _this.startSeach();
+            },
+            methods: {
+                pageClick(num) {
+                    this.page.pageNumber = num;
+                },
+                startSeach() {
+                    var isLoggedIn = ('@User.Identity.IsAuthenticated' == "True");
+                    if (!isLoggedIn) {
+                        alert("請先登入")
+                        window.location.href = "/Stores/Account/Login";
+                    }
+                    else {
+                        let _this = this;
+                        _this.page.pageNumber = 1;
+                        fetch(`/api/ProductManageapi/Filter?text=${_this.searchText}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                _this.ProductInfo = data;
+                                _this.page.pageNumber = 1;
+                                _this.itemCount = _this.ProductInfo.length;
+
+                            })
+                            .catch(error => console.log(error));
+                    }
+
+                },
+                editProduct(item) {
+                    this.selectedToEdit = item
+                    console.log(item)
+                },
+                readURL: function (fileInput, img) {
+                    if (fileInput.files && fileInput.files[0]) {
+                        var allowType = "image.*";
+                        if (fileInput.files[0].type.match(allowType)) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                img.src = e.target.result;
+                            };
+                            reader.readAsDataURL(fileInput.files[0]);
+                        }
+                        else {
+                            alert("不支援的檔案上傳格式");
+                        }
+                    }
+                },
+                insertFileChange: function (inputFile) {
+                    let _this = this;
+                    _this.readURL(inputFile, inputFile.previousElementSibling);
+                },
+                insertProduct(produt) {
+                    let _this = this;
+                    let isDuplicate = false;
+                    for (let i = 0; i < _this.ProductInfo.length; i++) {
+                        if (_this.ProductInfo[i].productName == _this.productName) {
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+                    if (isDuplicate == true) {
+                        _this.startSeach();
+                        return alert("不可重複上架相同產品!")
+                    }
+                    else if (_this.suggestPickUpTime >= _this.suggestPickEndTime) {
+                        _this.startSeach();
+                        return alert("建議取貨迄時不可早於建議取貨起時!");
+                    }
+                    else {
+                        var form = new FormData();
+                        form.append("ProductId", -1);
+                        form.append("ProductName", _this.productName);
+                        form.append("CategoryId", _this.categoryId);
+                        form.append("Description", _this.description);
+                        form.append("ReleasedQty", _this.releasedQty);
+                        form.append("UnitPrice", _this.unitPrice);
+                        form.append("SuggestPickEndTime", _this.suggestPickEndTime);
+                        form.append("SuggestPickUpTime", _this.suggestPickUpTime);
+                        form.append("ImageFile", document.querySelector("#insertFile").files[0]);
+                        console.log(Object.fromEntries(form.entries()));
+                        fetch(`/api/ProductManageapi/postProduct`, { method: "Post", body: form })
+                            .then(response => {
+                                if (response.ok) {
+                                    _this.startSeach();
+                                    _this.productName = "";
+                                    _this.categoryId = null;
+                                    _this.unitPrice = null;
+                                    _this.releasedQty = null;
+                                    _this.suggestPickUpTime = null;
+                                    _this.suggestPickEndTime = null;
+                                    _this.description = "";
+                                    document.getElementById("insertFilePreview").src = "/images/Noimage.png";
+                                    document.querySelector("#insertFile").value = ""; // 清空檔案輸入
+                                    alert("新增商品成功");
+                                    return response.text(); // 將回傳結果轉為文字
+                                } else {
+                                    _this.startSeach()
+                                    alert("更新失敗，請確認資料是否完整");
+                                    return response.text();
+                                }
+                            }).then(data => {
+                                console.log(data);
+                            }).catch(err => {
+                                console.log(err)
+                            });
+                    }
+                },
+                softDelete(productId) {
+                    let _this = this;
+                    fetch(`/api/ProductManageapi/softDelete/${productId}`,
+                        { method: "Put" })
+                        .then(response => {
+                            if (response.ok) {
+                                _this.startSeach();
+                                alert("刪除成功");
+                            } else {
+                                alert("刪除失敗");
+                            }
+                        })
+                        .catch(error => console.log(error));
+                },
+                updateProduct(produt) {
+                    let _this = this;
+                    if (_this.selectedToEdit.orderedQty > _this.selectedToEdit.releasedQty) {
+                        _this.startSeach();
+                        return alert("上架數量不可低於已訂購數量!");
+                    }
+                    else if (_this.selectedToEdit.suggestPickUpTime >= _this.selectedToEdit.suggestPickEndTime) {
+                        _this.startSeach();
+                        return alert("建議取貨迄時不可早於建議取貨起時!");
+                    }
+                    else {
+                        var form = new FormData();
+                        form.append("ProductId", _this.selectedToEdit.productId);
+                        form.append("ProductName", _this.selectedToEdit.productName);
+                        form.append("CategoryId", _this.selectedToEdit.categoryId);
+                        form.append("Description", _this.selectedToEdit.description);
+                        form.append("ReleasedQty", _this.selectedToEdit.releasedQty);
+                        form.append("UnitPrice", _this.selectedToEdit.unitPrice);
+                        form.append("SuggestPickEndTime", _this.selectedToEdit.suggestPickEndTime);
+                        form.append("SuggestPickUpTime", _this.selectedToEdit.suggestPickUpTime);
+                        form.append("ImageFile", document.querySelector("#updateFile").files[0]);
+                        console.log(Object.fromEntries(form.entries()));
+                        fetch(`/api/ProductManageapi/putProduct/${_this.selectedToEdit.productId}`, { method: "Put", body: form })
+                            .then(response => {
+                                if (response.ok) {
+                                    _this.startSeach();
+                                    document.getElementById("insertFilePreview").src = "/images/Noimage.png";
+                                    document.querySelector("#insertFile").value = ""; // 清空檔案輸入
+                                    alert("更新商品成功!");
+                                    return response.text(); // 將回傳結果轉為文字
+                                } else {
+                                    _this.startSeach()
+                                    alert("更新失敗，請確認資料是否完整");
+                                    return response.text();
+                                }
+                            }).then(data => {
+                                console.log(data);
+                            }).catch(err => {
+                                console.log(err)
+                            });
+                    }
+                },
+            }
+        }).component("paginate", VuejsPaginateNext).mount("#productapp")
+    </script>
+}

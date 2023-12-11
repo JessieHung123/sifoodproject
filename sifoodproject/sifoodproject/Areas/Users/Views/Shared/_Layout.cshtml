@@ -1,0 +1,400 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - sifoodprojectformal2._0</title>
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SiFoodProjectFormal2.0.styles.css" asp-append-version="true" />
+    <link href="~/assets/libs/slick-carousel/slick/slick.css" asp-append-version="true" rel="stylesheet" />
+    <link href="~/assets/libs/slick-carousel/slick/slick-theme.css" asp-append-version="true" rel="stylesheet" />
+    <link href="~/assets/libs/tiny-slider/dist/tiny-slider.css" asp-append-version="true" rel="stylesheet" />
+    <!-- Favicon icon-->
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/favicon.ico" />
+    <!-- Libs CSS -->
+    <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet" />
+    <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="~/assets/css/theme.min.css" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body>
+    <header id="header">
+        <div class=" border-bottom ">
+            <div class=" py-1 container">
+                @await Html.PartialAsync("~/Areas/Users/Views/Shared/_LoginPartial.cshtml")
+            </div>
+            <!--左側邊攔-->
+            <nav class="navbar navbar-expand-lg navbar-light navbar-default py-0 pb-lg-0 " aria-label="Offcanvas navbar large">
+                <div class="container">
+                    <div class="offcanvas offcanvas-start" tabindex="-1" id="navbar-default" aria-labelledby="navbar-defaultLabel">
+                        <div class="offcanvas-header pb-1">
+                            <img style="height:75px;width:100px" src="~/images/SiFood_logo BGclear.png" alt="SiFood">
+                            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                        </div>
+                        <div class="d-block d-lg-none mb-4">
+                            <div class="offcanvas-body ps-lg-2 pt-lg-0">
+                                <div class="mb-8">
+                                    <!-- title -->
+                                    <h5 class="mb-3">選單</h5>
+                                    <!-- nav -->
+                                    <ul class="nav nav-category ">
+                                        <li class="nav-item border-bottom w-100 ">
+                                            <a asp-area="Users" asp-controller="Home" asp-action="MapFind" class="nav-link" style="color:#6c757d;font-weight: bold">
+                                                地圖探索
+                                            </a>
+                                        </li>
+                                        <li class="nav-item border-bottom w-100 ">
+                                            <a asp-area="Users" asp-controller="Home" asp-action="RealTimeOrders" class="nav-link" style="color:#6c757d;font-weight: bold">
+                                                訂單查詢
+                                            </a>
+                                        </li>
+                                        <li class="nav-item border-bottom w-100 ">
+                                            <a asp-area="Users" asp-controller="Home" asp-action="FAQ" class="nav-link " style="color:#6c757d;font-weight: bold">
+                                                常見問題
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mb-8">
+                                    <!-- title -->
+                                    <h5 class="mb-3">依種類探索</h5>
+                                    <!-- nav -->
+                                    <ul class="nav nav-category">
+                                        <li class="nav-item border-bottom w-100 ">
+                                            <a href="#!!" class="nav-link" style="color:#6c757d;font-weight: bold">
+                                                便當
+                                            </a>
+                                        </li>
+                                        <li class="nav-item border-bottom w-100 ">
+                                            <a href="#" class="nav-link" style="color:#6c757d;font-weight: bold">
+                                                甜點麵包
+                                            </a>
+                                        </li>
+                                        <li class="nav-item border-bottom w-100 ">
+                                            <a href="#" class="nav-link" style="color:#6c757d;font-weight: bold">
+                                                生鮮
+                                            </a>
+                                        </li>
+                                        <li class="nav-item border-bottom w-100 ">
+                                            <a href="#" class="nav-link " style="color:#6c757d;font-weight: bold">
+                                                異國料理
+                                            </a>
+                                        </li>
+                                        <li class="nav-item border-bottom w-100 ">
+                                            <a href="#" class="nav-link" style="color:#6c757d;font-weight: bold">
+                                                素食
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="mb-8">
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" style="color:#6c757d;border: 2px solid" type="checkbox" value="" id="DealShare">
+                                        <label class="form-check-label" style="color:#6c757d;font-weight: bold" for="DealShare">
+                                            營業中
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-2">
+                                        <input class="form-check-input" style="color:#6c757d;border: 2px solid" type="checkbox" value="" id="Dmart">
+                                        <label class="form-check-label" style="color:#6c757d;font-weight: bold" for="Dmart">
+                                            尚有剩食庫存
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Shop Cart -->
+        <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+            <div class="offcanvas-header border-bottom">
+                <div class="text-start">
+                    <h5 id="offcanvasRightLabel" class="mb-0 fs-4">購物車</h5>
+                </div>
+                <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+            </div>
+            <div class="offcanvas-body">
+                <div>
+                    <!-- alert -->
+                    <ul class="list-group list-group-flush" id="cartItemContainer">
+                        <!-- list group -->
+                        <li class="list-group-item py-3 ps-0 border-top">
+                            <!-- row -->
+
+                            <div class="row align-items-center py-2" v-for="item in carts" :id=item.productId>
+
+                                <div class="col-6 col-md-6 col-lg-7">
+                                    <div class="d-flex">
+                                        <a :href="'/Users/Home/Products/'+item.productId" class="text-inherit">
+                                            <img :src="item.photoPath" alt="Ecommerce" class="icon-shape icon-xxl">
+                                        </a>
+                                        <div class="ms-3">
+                                            <!-- title -->
+                                            <a :href="'/Users/Home/Products/'+item.productId" class="text-inherit">
+                                                @* 照片網址帶處李 *@
+                                                <h6 class="mb-1">{{item.productName}}</h6>
+                                            </a>
+                                            <h6>{{item.storeName}}</h6>
+                                            <!-- text -->
+                                            <div class="mt-2 small lh-1">
+                                                <div class="text-decoration-none text-inherit">
+                                                    <span class="me-1 align-text-bottom" @@click="deleteCartItem(item)">
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2 text-success">
+                                                            <polyline points="3 6 5 6 21 6"></polyline>
+                                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2">
+                                                            </path>
+                                                            <line x1="10" y1="11" x2="10" y2="17"></line>
+                                                            <line x1="14" y1="11" x2="14" y2="17"></line>
+                                                        </svg>
+                                                    </span><span class="text-muted">Remove</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal -->
+                                <div class="modal fade" id="deleteCartModal" tabindex="-1" aria-labelledby="deleteCartLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h1 class="modal-title fs-5" id="deleteCartLabel">確定要刪除嗎?</h1>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                                <button type="button" class="btn btn-primary" @@click="deleteConfirm(item)">確定</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Modal -->
+                                <!-- input group -->
+                                <div class="col-4 col-md-3 col-lg-3">
+                                    <div class="input-group input-spinner  ">
+                                        <input type="button" value="-" v-on:click="clickMinus(item)" class="button-minus  btn  btn-sm " data-field="quantity">
+                                        <input type="number" readonly step="1" max="10" v-model="item.quantity" name="quantity" class="quantity-field form-control-sm form-input">
+                                        @*  <input type="number" step="1" max="10" v-model.lazy="item.quantity" name="quantity" class="quantity-field form-control-sm form-input   ">*@
+                                        <input type="button" value="+" v-on:click="clickAdd(item)" class="button-plus btn btn-sm " data-field="quantity">
+                                    </div>
+                                    <small>庫存剩餘:{{item.remainingStock}}</small>
+                                </div>
+                                <!-- price -->
+                                <div class="col-2 text-lg-end text-start text-md-end col-md-2">
+                                    <span class="fw-bold">${{item.unitPrice*item.quantity}}</span>
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                    <!-- btn -->
+                    <div class="d-flex justify-content-end mt-4">
+                        <a href="/Users/Transaction/CheckOut"><button class="btn btn-success" type="button">前往結帳</button></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    <div class="wrapper container-fluid">
+        <main role="main" class="pb-3">
+            @RenderBody()
+        </main>
+    </div>
+    <!-- footer -->
+    <footer class="footer" style="padding:unset">
+        <div class="row justify-content-between container-fluid">
+            <div class="row py-4">
+                <div class="p-4 col-12 col-md-12 col-lg-12">
+                    <div class="row justify-content-evenly">
+                        <div class="d-none d-sm-block d-flex col-sm-6 col-md-6  align-items-center text-center ">
+                            <img style="height:120px;width:160px" src="~/images/SiFood_logo BGclear.png" alt="SiFood" />
+                        </div>
+                        <div class=" d-flex col-xs-4 col-3 col-sm-3 col-md-3  align-items-center ">
+                            <!-- list -->
+                            <ul class="nav flex-column align-items-center">
+                                <li class="nav-item nav-link fw-bold" style="font-size: 20px;">Contact Us</li>
+                                <li class="nav-item"><a asp-area="Users" asp-controller="Home" asp-action="JoinUs" class="nav-link fw-bold" style="font-size: 14px;">加入我們</a></li>
+                                <li class="nav-item"><a asp-area="Users" asp-controller="Home" asp-action="FAQ" class="nav-link fw-bold" style="font-size: 14px;">常見問題</a></li>
+                                <li class="nav-item"><a href="#!" class="nav-link fw-bold" style="font-size: 14px;">成為外送夥伴</a></li>
+                            </ul>
+                        </div>
+                        <div class="d-flex col-3 col-xs-4 col-sm-3 col-md-3  align-items-center">
+                            <ul class="nav flex-column align-items-center">
+                                <!-- list -->
+                                <li class="nav-item nav-link fw-bold" style="font-size: 20px;">About Us</li>
+                                <li class="nav-item"><a href="#!" class="nav-link fw-bold" style="font-size: 14px;">關於我們</a></li>
+                                <li class="nav-item"><a href="#!" class="nav-link fw-bold" style="font-size: 14px;">工作機會</a></li>
+                                <li class="nav-item"><a href="#!" class="nav-link fw-bold" style="font-size: 14px;">願景展望</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-top py-4">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <span class="small text-muted" style="font-size: 10px;display:flex;flex-wrap: wrap">
+                            © 2022 <span id="copyright">
+                                -
+                                <script>document.getElementById('copyright').appendChild(document.createTextNode(new Date().getFullYear()))</script>
+                            </span>All rights reserved. Powered by THM103.
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <!-- OK Modal -->
+    <div class="modal fade" id="deleteOK" tabindex="-1" role="dialog" aria-labelledby="okModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="okModalLabel">商品項目刪除成功!</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- NotOK Modal -->
+    <div class="modal fade" id="deleteNotOK" tabindex="-1" role="dialog" aria-labelledby="notOkModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="notOkModalLabel">商品項目刪除失敗!</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- moreQty Modal -->
+    <div class="modal fade" id="moreQty" tabindex="-1" role="dialog" aria-labelledby="moreQtyLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="moreQtyLabel">必須小於庫存數量!</h5>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <!-- Javascript-->
+    <!-- Libs JS -->
+    <script src="~/assets/libs/jquery/dist/jquery.min.js" asp-append-version="true"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js" asp-append-version="true"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Theme JS -->
+    <script src="~/assets/js/theme.min.js"></script>
+    <script src="~/assets/libs/jquery-countdown/dist/jquery.countdown.min.js" asp-append-version="true"></script>
+    <script src="~/assets/js/vendors/countdown.js" asp-append-version="true"></script>
+    <script src="~/assets/libs/slick-carousel/slick/slick.min.js" asp-append-version="true"></script>
+    <script src="~/assets/js/vendors/slick-slider.js" asp-append-version="true"></script>
+    <script src="~/assets/libs/tiny-slider/dist/min/tiny-slider.js" asp-append-version="true"></script>
+    <script src="~/assets/js/vendors/tns-slider.js" asp-append-version="true"></script>
+    <script src="~/assets/js/vendors/zoom.js" asp-append-version="true"></script>
+    <script src="~/assets/js/vendors/increment-value.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+    <script>
+        var isLogin = ('@User.Identity.IsAuthenticated' == "True");
+        var shoppingCart = Vue.createApp({
+            data: function () {
+                return {
+                    ProductName: [],
+                    UnitPrice: [],
+                    StoreName: [],
+                    carts: [],
+                    cartCount: "",
+                    currentDeleteItem:null,
+                }
+            },
+            mounted: function () {
+                if (isLogin) {
+                    this.getCart();
+                }
+            },
+
+            methods: {
+                async getCart() {
+                    await fetch(`/api/CartVMapi/GetCarts`, { method: "GET" })
+                        .then(response => response.json())
+                        .then(data => {
+                            this.carts = data;
+                            this.cartCount = this.carts.length > 0 ? this.carts.length : 0;
+                        })
+                },
+                async clickMinus(item) {
+                    item.quantity = item.quantity <= 1 ? item.quantity = 1 : item.quantity - 1;
+                    await fetch(`/api/CartVMapi/ChangeQty`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(item)
+                    }).then(response => response)
+                },
+                async clickAdd(item) {
+
+                    if (item.quantity >= item.remainingStock) { $('#moreQty').modal('show'); }
+                    else { item.quantity = item.quantity + 1; }
+                    await fetch(`/api/CartVMapi/ChangeQty`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(item)
+                    }).then(response => response)
+                },
+                deleteCartItem(item) {
+                    this.currentDeleteItem = item;
+                    $('#deleteCartModal').modal('show');
+                    $('.modal-backdrop').remove();
+                },
+                async deleteConfirm(item) {
+                    await fetch(`/api/CartVMapi/DeleteCartItem`,
+                        {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(this.currentDeleteItem)
+                        }).then(response => {
+                            if (response.ok) {
+                                $('#deleteCartModal').modal('hide');
+                                const indexToRemove = this.carts.findIndex(cartItem => cartItem.productId === this.currentDeleteItem.productId);
+                                if (indexToRemove !== -1) {
+                                    this.carts.splice(indexToRemove, 1);
+                                }
+                                this.cartCount = this.carts.length;
+                                $('#deleteOK').modal('show');
+                                this.currentDeleteItem = null;
+                            }
+                        });
+                },
+                async logout(){
+                    await fetch(`/Account/Logout`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        credentials: 'include',
+                    }).then(response => {
+                        if (response.ok) {
+                            setTimeout(() => {
+                                window.location.href="/Users/Home/Main"
+                            }, 1000);
+                        }
+                    }).catch(error => alert("發生錯誤"));
+                },
+            }
+        }).mount("#header")
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
+
+

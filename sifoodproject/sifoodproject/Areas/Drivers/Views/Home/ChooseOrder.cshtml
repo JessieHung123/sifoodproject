@@ -1,0 +1,198 @@
+﻿@{
+    ViewData["Title"] = "外送員首頁";
+}@{
+    Layout = "~/Areas/Drivers/Views/Shared/_Layout.cshtml";
+}
+
+<div class="box2 border border-success rounded" id="chooseOrder">
+    <div>
+        <section id="map"></section>
+    </div>
+    <div>
+        <h4 font-weight><span class="badge bg-info text-dark">訂單編號:{{waitForDeliveryOrder.orderId}}</span></h4>
+                <div>
+                    預估完成時間：{{expectedtime}}分鐘<br>
+                    取餐餐廳：{{waitForDeliveryOrder.storeName}}<br>
+                    取餐地址：{{waitForDeliveryOrder.storeAddress}}<br>
+                    配送地址：{{waitForDeliveryOrder.address}}<br>
+                    總路程距離：{{expecteddistance}}公里<br>
+                    顧客姓名：{{waitForDeliveryOrder.userName}}<br>
+                </div>
+                <hr />
+                取餐明細:<br>
+                <div v-for="item in waitForDeliveryOrder.orderDetails">
+                    {{item.productName}}&emsp;數量:{{item.quantity}}
+                </div>
+                <template v-if="waitForDeliveryOrder.statusId==4||isAccept==true">
+                    <div class="text-center">
+                <button type="button" class="btn btn-primary btn-group-lg" @@click="direction">導航</button>&emsp;&emsp;&emsp;&emsp;<button type="button" class="btn btn-danger btn-group-lg" data-bs-toggle="modal" data-bs-target="finishModal" @@click="finishOrder">送達完成</button>&emsp;&emsp;&emsp;&emsp;<button type="button" class="btn btn-primary btn-group-lg" @@click="directToPage">回首頁</button>
+                    </div>
+                </template>
+                <template v-else>
+                    <div class="text-center">
+                <button type="button" class="btn btn-primary btn-group-lg" @@click="accept">接受</button>&emsp;&emsp;&emsp;&emsp;<a href="/Drivers/Home/OrderList"><button type="button" class="btn btn-danger btn-group-lg" @@click="directToPage">取消</button></a>
+                    </div>
+                </template>
+            </div>
+    <!--Modal-->
+    <div class="modal" tabindex="-1" id="finishModal" aria-labelledby="finishModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <p>感謝!已送達完成</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btn-sm" data-bs-dismiss="modal" @@click="directToPage">回首頁</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!--Modal-->
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAN9KFcDFxucoV9IglJyqQSd_d1GLWHiYI" async defer></script>
+<script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+<script>
+    var chooseOrder = Vue.createApp({
+        data: function () {
+            return {
+                map: null,
+                waitForDeliveryOrder: {},
+                toStorelocation: "",
+                arrivingLocation:"",
+                expectedtime:null,
+                isAccept:false,
+            }
+        },
+        mounted: async function () {
+            navigator.geolocation.getCurrentPosition(this.showPosition);
+            window.addEventListener('load', () => {
+                this.setMap();
+                setInterval(() => {
+                    navigator.geolocation.getCurrentPosition(this.showPosition);
+                    this.setMap();
+                }, 60000)
+            });
+            await this.getWaitForDeliveryOrder();
+            await this.AllGetDistanceToStore();
+        },
+        methods: {
+            showPosition(position) {
+                this.current = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                }
+            },
+            setMap() {
+                let location = {
+                    lat: 25.0520749,
+                    lng: 121.5430955
+                };
+                this.map = new google.maps.Map(document.getElementById('map'), {
+                    center: this.current == null ? location : this.current,
+                    zoom: 16,
+                    mapTypeId: 'terrain',
+                    mapTypeControl: false,
+                    fullscreenControl: false
+                });
+                let currentLocation = new google.maps.Marker({
+                    position: this.current == null ? location : this.current,
+                    icon: "https://img.onl/195tB0",
+                    map: this.map
+                });
+            },
+            async getWaitForDeliveryOrder() {
+                var orderId = window.location.pathname.slice("26");
+                await fetch(`/api/DeliveryOrderapi/WaitForDeliveryOrderDetails/${orderId}`, { method: "GET" })
+                    .then(response => response.json())
+                    .then(data => {
+                        this.waitForDeliveryOrder = data[0];
+                        this.toStorelocation = data[0].storeAddress;
+                        this.arrivingLocation = data[0].address;
+                    }).catch(error => alert("此訂單已運送完成!"));
+            },
+            AllGetDistanceToStore() {
+                var service = new google.maps.DistanceMatrixService();
+                var oridinArray = [this.current, this.toStorelocation];
+                var destinationArray = [this.toStorelocation, this.arrivingLocation];
+                service.getDistanceMatrix(
+                    {
+                        origins: oridinArray,//陣列
+                        destinations: destinationArray,//陣列
+                        travelMode: 'DRIVING',
+                        avoidHighways: true,
+                        avoidTolls: true
+                    }, this.AllGetDistanceToStoreResult);
+            },
+            AllGetDistanceToStoreResult(response, status) {
+                if (status !== google.maps.DistanceMatrixStatus.OK) {
+                    alert("發生錯誤，請洽系統管理員");
+                } else {
+                    this.waitForDeliveryOrder.distancetexttostore = response.rows[0].elements[0].distance.text;
+                    this.waitForDeliveryOrder.distancetimetostore = response.rows[0].elements[0].duration.text;
+                    this.waitForDeliveryOrder.distancetext = response.rows[1].elements[1].distance.text;
+                    this.waitForDeliveryOrder.distancetime = response.rows[1].elements[1].duration.text;
+                }
+                this.expectedFinishTimeAndDistance();
+            },
+            expectedFinishTimeAndDistance() {
+                this.expectedtime = Number(this.waitForDeliveryOrder.distancetimetostore.slice(0, -3)) + Number(this.waitForDeliveryOrder.distancetime.slice(0, -3));
+                this.expecteddistance = Number(this.waitForDeliveryOrder.distancetext.slice(0, -3)) + Number(this.waitForDeliveryOrder.distancetexttostore.slice(0, -3));
+            },
+            async accept() {//狀態要變
+                let directionsService = new google.maps.DirectionsService();
+                var orderId = window.location.pathname.slice("26");
+                directionsService.route(
+                    {
+                        origin: this.current,//字串
+                        destination: this.arrivingLocation.toString(),//字串
+                        travelMode: 'DRIVING',
+                        waypoints: [
+                            {
+                                location: this.toStorelocation.toString(),//字串
+                                stopover: true
+                            }],
+                        avoidHighways: true,
+                    }, this.getRoute);
+
+                await fetch(`/api/DeliveryOrderapi/UpdateOrderStatus/${orderId}`, {
+                    method: "PUT",
+                }).then(response => response).catch(error => alert(error));
+            },
+            getRoute(response, status) {
+                if (status == 'OK') {
+                    let directionsDisplay = new google.maps.DirectionsRenderer({
+                        map: this.map,
+                        directions: response,
+                    });
+                    this.isAccept = true;
+                };
+            },
+            direction() {
+                let directionsService = new google.maps.DirectionsService();
+                directionsService.route(
+                    {
+                        origin: this.current,//字串
+                        destination: this.arrivingLocation.toString(),//字串
+                        travelMode: 'DRIVING',
+                        waypoints: [
+                            {
+                                location: this.toStorelocation.toString(),//字串
+                                stopover: true
+                            }],
+                        avoidHighways: true,
+                    }, this.getRoute);
+            },
+            directToPage(){
+                window.location.href = '../OrderList';
+            },
+            async finishOrder() {
+                var orderId = window.location.pathname.slice("26");
+                await fetch(`/api/DeliveryOrderapi/FinishOrder/${orderId}`, {
+                    method: "PUT",
+                }).then(response => response).catch(error => alert(error));
+                $("#finishModal").modal("show");
+            },
+        }
+    }).mount("#chooseOrder")
+</script>
+

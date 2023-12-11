@@ -1,0 +1,163 @@
+﻿@{
+    Layout = "~/Areas/Drivers/Views/Shared/_Layout.cshtml";
+}
+@{
+    ViewData["Title"] = "歷史訂單";
+}
+@section Styles {
+    <style>
+        .sorted-label {
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            color: #333;
+            white-space: nowrap;
+            margin-top: 9px;
+        }
+    </style>
+}
+
+<div class="order-category" id="finishOrderApp">
+    <div class="row">
+        <div class="col-md-2 d-flex justify-content-start align-items-between">
+            <button class="btn btn-primary" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">歷史訂單列表</button>
+        </div>
+        <div class="col-md-7 d-flex justify-content-center align-items-between">
+            <input type="text" class="form-control" placeholder="輸入關鍵字搜尋訂單" v-model="searchWord" style="width:450px" />
+        </div>
+        <div class="col-md-3 d-flex justify-content-end align-items-between">
+            <label for="sortOrder" class="sorted-label">排序方式：</label>
+            <select class="form-select" v-model="sortOrder">
+                <option value="newToOld">由新到舊</option>
+                <option value="oldToNew">由舊到新</option>
+            </select>
+        </div>
+    </div>
+    <div class="collapse"  id="collapseExample">
+        <div class="order-details1" v-if="completeDatas.length > 0" v-for="item in completeDatas" :key="item.orderId">
+            <p>
+                <div>訂單編號：{{item.orderId}}</div>
+                <div>訂單日期：{{formatDate(item.orderDate)}}</div>
+                <div>外送地址:{{item.address}}</div>
+                <div>顧客:{{item.userName}}</div>
+                <div>店家:{{item.storeName}}</div>
+                <div>外送費:{{item.shippingFee}}</div>
+                <div>總價:{{item.shippingFee}}</div>
+                <div>訂單狀態:{{item.statusName}}</div>
+            </p>
+        </div>
+        <div class="order-details1" v-else>
+            <p>
+                <div colspan="8">沒有符合條件的訂單。</div>
+            </p>
+        </div>
+    </div>
+   
+</div>
+    <div class="row mt-6">
+        <div class="col">
+            <nav>
+                <paginate :page-count="totalPages"
+                          :click-handler="pageClick"
+                          :force-page="page.pageNumber"
+                          :prev-text="'<'"
+                          :next-text="'>'"
+                          :page-link-class="'page-link mx-1'"
+                          :prev-link-class="'page-link mx-1'"
+                          :next-link-class="'page-link mx-1'"
+                          :container-class="'pagination justify-content-center'">
+                </paginate>
+            </nav>
+        </div>
+    </div>
+</div>
+@section Scripts {
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/assets/js/theme.min.js"></script>
+    <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+    <script src="https://unpkg.com/vuejs-paginate-next@latest/dist/vuejs-paginate-next.umd.js"></script>
+
+    <script>
+        var finishOrderApp = Vue.createApp({
+            data() {
+                return {
+                    orderDatas: [],
+                    searchWord: "",
+                    sortOrder: "newToOld",
+                    orderQty: 0,
+                    prevSearchWord: "",
+                    page: {
+                        countPerPage: 6,
+                        pageNumber: 1
+                    },
+                };
+            },
+            computed: {
+                filteredOrderDatas() {
+                    if (this.searchWord !== this.prevSearchWord) {
+                        this.page.pageNumber = 1;
+                        this.prevSearchWord = this.searchWord;
+                    }
+                    return this.orderDatas.filter((item) => {
+                        return (
+                            item.orderId.toString().includes(this.searchWord) ||
+                            item.orderDate.includes(this.searchWord) ||
+                            item.address.includes(this.searchWord) ||
+                            item.userName.includes(this.searchWord) ||
+                            item.storeName.includes(this.searchWord) ||
+                            item.shippingFee.toString().includes(this.searchWord) ||
+                            item.totalPrice.toString().includes(this.searchWord) ||
+                            item.statusName.includes(this.searchWord)
+                        );
+                    });
+                },
+                sortedOrderDatas() {
+                    const sorted = this.filteredOrderDatas.slice();
+                    if (this.sortOrder === "newToOld") {
+                        return sorted.sort(
+                            (a, b) => new Date(b.orderDate) - new Date(a.orderDate)
+                        );
+                    } else {
+                        return sorted.sort(
+                            (a, b) => new Date(a.orderDate) - new Date(b.orderDate)
+                        );
+                    }
+                },
+                totalPages() {
+                    return Math.ceil(this.filteredOrderDatas.length / this.page.countPerPage);
+                },
+                completeDatas() {
+                    var start = (this.page.pageNumber - 1) * this.page.countPerPage;
+                    var end = start + this.page.countPerPage;
+                    return this.sortedOrderDatas.slice(start, end);
+                },
+            },
+            methods: {
+                getOrderData() {
+                    var _this = this;
+                    axios
+                        .get(`/Home/FinishOrderData`)
+                        .then((response) => {
+                            _this.orderDatas = response.data;
+                        })
+                        .catch((err) => {
+                            alert(err);
+                        });
+                },
+                formatDate(date) {
+                    return moment(date).format("YYYY-MM-DD");
+                },
+                pageClick(num) {
+                    this.page.pageNumber = num;
+                },
+            },
+            mounted() {
+                var _this = this;
+                _this.getOrderData();
+            },
+        }).component("paginate", VuejsPaginateNext).mount("#finishOrderApp");
+    </script>
+}
+

@@ -1,0 +1,600 @@
+﻿@section Styles{
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+   
+                        @* Carousel *@
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+                        @* <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          rel="stylesheet" /> *@
+    <!-- MDB -->
+                        @* <link href="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.css"
+    rel="stylesheet" /> *@
+    <style>
+        .custom-button,
+        .share-button,
+        .navigate-button {
+            padding: 0.2rem 0.4rem;
+            font-size: 0.8rem;
+            margin-right: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .custom-button {
+            background-color: #0aad0a;
+            color: #fff;
+            border: 1px solid #0aad0a;
+            border-radius: 0.2rem;
+        }
+
+            .custom-button:hover {
+                background-color: #099309;
+            }
+
+        .share-button {
+            background-color: #f0f3f2;
+            color: #000;
+            border: 1px solid #f0f3f2;
+            border-radius: 0.2rem;
+        }
+
+            .share-button:hover {
+                background-color: #cccfce;
+            }
+
+        .navigate-button {
+            background-color: #001e2b;
+            color: #fff;
+            border: 1px solid #001e2b;
+            border-radius: 0.2rem;
+        }
+
+            .navigate-button:hover {
+                background-color: #26404b;
+            }
+    </style>
+}
+
+@{
+    ViewData["Title"] = "Stores";
+}
+
+<body>
+
+    <!-- section-->
+    <main id="storeProductsApp">
+        <div class="mt-4">
+            <div class="container">
+                <!-- row -->
+                <div class="row">
+                    <!-- col -->
+                    <div class="col-12">
+                        <!-- breadcrumb -->
+                        <nav aria-label="breadcrumb">
+                            <ol class="breadcrumb mb-0">
+                                <li class="breadcrumb-item"><a href="#!">首頁</a></li>
+                                <li class="breadcrumb-item active" aria-current="page">
+                                    {{stores.storeName}}
+                                </li>
+                            </ol>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- section -->
+        <section class="mb-lg-14 mb-8 mt-8">
+            <div class="container">
+                <!-- row -->
+                <div class="row">
+                    <div class="col-12 col-lg-3 col-md-4 mb-4 mb-md-0">
+                        <div class="d-flex flex-column">
+                            <div>
+                                <!-- img -->
+                                <img :src="stores.logoPath"
+                                     alt=""
+                                     class="rounded-circle icon-shape icon-xxl"
+                                     style="height:150px; width:auto" />
+                            </div>
+                            <!-- heading -->
+                            <div class="mt-4">
+                                <h1 class="mb-1 h4">{{stores.storeName}}</h1>
+                                <div class="small text-muted">
+                                    <span v-for="storeCategory in storeCategoryList">{{storeCategory}}&nbsp;</span>
+                                </div>
+                                <!-- Store Address -->
+                                <div>
+                                    {{stores.address}}
+                                </div>
+                                <!-- Phone Number -->
+                                <div>
+                                    {{stores.phone}}
+                                </div>
+                                <div>
+                                    <small v-if="stores.openForBusiness" style="color: #0aad0a;">
+                                        <a>{{ stores.weekdayOpeningTime }}</a>
+                                    </small>
+                                    <small v-else style="color: red;">
+                                        <a>{{ stores.weekdayOpeningTime }}</a>
+                                    </small>
+                                    <br />
+                                    <small v-if="stores.openForBusiness" style="color: #0aad0a;">
+                                        <a>{{ stores.weekendOpeningTime }}</a>
+                                    </small>
+                                    <small v-else style="color: red">
+                                        <a>{{ stores.weekendOpeningTime }}</a>
+                                    </small>
+                                    <br />
+                                    <small v-if="stores.openForBusiness" style="color: #0aad0a;">
+                                        <a>(營業中)</a>
+                                    </small>
+                                    <small v-else style="color: red;">
+                                        <a>(休息中)</a>
+                                    </small>
+                                </div>
+                                <!-- rating -->
+                                <div class="mt-2">
+                                    <!-- rating -->
+                                    <small class="text-warning">
+                                        
+                                            <span v-if="stores.commentRank / stores.commentCount >= 1" class="bi bi-star-fill text-warning"></span>
+                                            <span v-else-if="stores.commentRank / stores.commentCount >= 0.5" class="bi bi-star-half text-warning"></span>
+
+                                            <span v-if="stores.commentRank / stores.commentCount >= 2" class="bi bi-star-fill text-warning"></span>
+                                            <span v-else-if="stores.commentRank / stores.commentCount >= 1.5" class="bi bi-star-half text-warning"></span>
+
+                                            <span v-if="stores.commentRank / stores.commentCount >= 3" class="bi bi-star-fill text-warning"></span>
+                                            <span v-else-if="stores.commentRank / stores.commentCount >= 2.5" class="bi bi-star-half text-warning"></span>
+
+                                            <span v-if="stores.commentRank / stores.commentCount >= 4" class="bi bi-star-fill text-warning"></span>
+                                            <span v-else-if="stores.commentRank / stores.commentCount >= 3.5" class="bi bi-star-half text-warning"></span>
+
+                                            <span v-if="stores.commentRank / stores.commentCount >= 5" class="bi bi-star-fill text-warning"></span>
+                                            <span v-else-if="stores.commentRank / stores.commentCount >= 4.5" class="bi bi-star-half text-warning"></span>
+                                       
+                                    </small><span class="ms-2">{{isNaN(this.stores.commentRank / this.stores.commentCount) ? '0' : Math.round(this.stores.commentRank / this.stores.commentCount * 10) / 10}}</span>
+                                    <!-- text --><span class="text-muted ms-1">({{stores.commentCount}} reviews)</span>
+                                </div>
+                                <div class="mt-2">
+                                    <button class="custom-button" @@click="removeFromFavorites" v-if="this.isFavorite">
+                                        <strong>取消收藏</strong>
+                                    </button>
+                                    <button class="custom-button" @@click="saveToFavorites" v-else>
+                                        <strong>收藏</strong>
+                                    </button>
+                                    <button href="#" class="share-button">
+                                        <strong>
+                                            <a class="twitter-share-button"
+                                               :href="getTwitterIntentText()"
+                                               data-size="large">
+                                                分享
+                                            </a>
+                                        </strong>
+                                    </button>
+                                    <button @@click="showDirections" class="navigate-button"><strong>導航</strong></button>
+                                </div>
+                            </div>
+                        </div>
+                        <hr />
+                        <div>
+                            <ul class="nav flex-column nav-links">
+                                <!-- nav item -->
+                                <li class="nav-item" v-for="categoryItem in stores.categoryList" v-on:click="categoriesFilter(categoryItem)">
+                                    <a href="#!" class="nav-link">{{categoryItem}}</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-9 col-md-8">
+
+                        <div class="mb-8 d-lg-flex justify-content-lg-between rounded">
+
+                            <div class="p-8">
+                                <!-- img -->
+                                <img :src="stores.photosPath" alt="Store image" class="img-fluid rounded" style="width: 600px;">
+                            </div>
+                            <div class="align-self-center p-8">
+                                <div class="mb-3">
+                                    <h5>{{stores.description}}</h5>
+                                </div>
+                                <div class="position-relative">
+                                    <input v-model.lazy="keyWords" type="search" class="form-control" placeholder="搜尋店家商品" @@keyup.enter="searchProducts">
+                                    <span class="position-absolute end-0 top-0 mt-2 me-3">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-search" style="cursor: pointer;" @@click="searchProducts">
+                                            <circle cx="11" cy="11" r="8"></circle>
+                                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                        </svg>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-md-flex justify-content-between mb-3 align-items-center">
+                            <div>
+                                <p class="mb-3 mb-md-0">{{productsQty}}項商品</p>
+                            </div>
+                            <div class="d-flex justify-content-md-between align-items-center">
+                                <div class="me-2">
+                                    <!-- select option -->
+                                    <select class="form-select">
+                                        <option selected>Show: 50</option>
+                                        <option value="10">10</option>
+                                        <option value="20">20</option>
+                                        <option value="30">30</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <!-- select option -->
+                                    <select class="form-select" v-model="sortingOptions">
+                                        @* <option value="Featured">Sort by: Featured</option> *@
+                                        <option value="PriceLowToHigh">價格: 低到高</option>
+                                        <option value="PriceHighToLow">價格: 高到低</option>
+                                        <option value="QtyHighToLow">剩餘數量: 多到少</option>
+                                        <option value="QtyLowToHigh">剩餘數量: 少到多</option>
+                                        <option value="ReleasedTime">最新上架</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- row -->
+                        <div class="row g-4 row-cols-xl-3 row-cols-lg-3 row-cols-2 row-cols-md-2 mt-2">
+                            <div class="col  align-items-stretch" v-for="item in productsCards">
+
+                                <!-- card -->
+                                <div class="card card-product">
+                                    <div class="card-body">
+                                        <div class="text-center position-relative">
+                                            <a :href="'/Users/Home/Products/' + item.productId">
+                                                <!-- img --><img :src="item.photoPath"
+                                                                 alt="Grocery Ecommerce Template"
+                                                                 class="mb-3 img-fluid rounded" />
+                                            </a>
+                                            <!-- btn action -->
+                                        </div>
+                                        <div class="text-small mb-1">
+                                            <a href="#!" class="text-decoration-none text-muted"><small>{{item.categoryName}}</small></a>
+                                        </div>
+                                        <h2 class="fs-6">
+                                            <a href="#!" class="text-inherit text-decoration-none">{{item.productName}}</a>
+                                        </h2>
+                                        <!-- Remaining Quantity -->
+                                        <div class="mb-1">
+                                            <small>剩餘數量: {{item.avalibleQty>0?item.avalibleQty:0 }}</small>
+                                        </div>
+                                        <!-- Estimated Pickup Time -->
+                                        <div class="mb-1">
+                                            <small>取貨期限: {{item.suggestPickUpTime}}</small>
+                                        </div>
+
+                                        <!-- price -->
+                                        <div class="d-flex justify-content-between align-items-center mt-3">
+                                            <div>
+                                                <span class="text-dark">${{item.unitPrice}}</span>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                        <!-- row -->
+                        <div class="row mt-8">
+                            <div class="col">
+                                <!-- nav -->
+                                <nav>
+                                    <paginate :page-count="total"
+                                              :click-handler="pageClick"
+                                              :force-page="page.pageNumber"
+                                              :prev-text="'<'"
+                                              :next-text="'>'"
+                                              :page-link-class="'page-link mx-1'"
+                                              :prev-link-class="'page-link mx-1'"
+                                              :next-link-class="'page-link mx-1'"
+                                              :container-class="'pagination justify-content-center'">
+                                    </paginate>
+                                </nav>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Carousel wrapper -->
+                <div id="carouselMultiItemExample" class="carousel slide carousel-dark text-center mt-15" data-mdb-ride="carousel">
+                    <!-- Controls -->
+                    <div class="d-flex justify-content-center mb-4">
+                        <button class="carousel-control-prev position-relative" type="button"
+                                data-mdb-target="#carouselMultiItemExample" data-mdb-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Previous</span>
+                        </button>
+                        <button class="carousel-control-next position-relative" type="button"
+                                data-mdb-target="#carouselMultiItemExample" data-mdb-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="visually-hidden">Next</span>
+                        </button>
+                    </div>
+                    <!-- Inner -->
+                    <div class="carousel-inner py-4">
+                        <!-- Single item -->
+                        <div v-for="(group, groupIndex) in groupedPeople" :key="groupIndex" class="carousel-item" :class="{ 'active': groupIndex === 0 }">
+
+                            <div class="container">
+                                <div class="row">
+                                    <div class="col-lg-4" v-for="(person, personIndex) in group">
+
+                                        <h5 class="mb-3">{{person.user}}</h5>
+                                        <p>{{person.deliveryMethod}}</p>
+                                        <p class="text-muted">
+                                            <i class="fas fa-quote-left pe-2"></i>
+                                            {{person.contents}}
+                                        </p>
+                                        <ul class="list-unstyled d-flex justify-content-center text-warning mb-0">
+                                            {{person.commentRank}}
+                                            <li v-if="person.commentRank >= 1" class="bi bi-star-fill text-warning"></li>
+                                            <li v-if="person.commentRank >= 2" class="bi bi-star-fill text-warning"></li>
+                                            <li v-if="person.commentRank >= 3" class="bi bi-star-fill text-warning"></li>
+                                            <li v-if="person.commentRank >= 4" class="bi bi-star-fill text-warning"></li>
+                                            <li v-if="person.commentRank >= 5" class="bi bi-star-fill text-warning"></li>
+                                        </ul>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <!-- Inner -->
+                </div>
+                <!-- Carousel wrapper -->
+            </div>
+        </section>
+    </main>
+
+
+
+    @section Scripts{
+        <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+
+        @* Carousel *@
+        <!-- MDB -->
+        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mdb-ui-kit/6.4.2/mdb.min.js"></script>
+        <script src="https://unpkg.com/vuejs-paginate-next@latest/dist/vuejs-paginate-next.umd.js"></script>
+        @* <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places"></script> *@
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+        <script>
+            var isLoggedIn = ('@User.Identity.IsAuthenticated' == "True");
+            const storeProductApp = Vue.createApp({
+                data: function () {
+                    return {
+                        products: [],
+                        stores: [],
+                        storeName: "",
+                        comment: [],
+                        selectedCategory: null,
+                        storeCategoryList: [],
+                        sortingOptions: 'PriceLowToHigh',
+                        productsQty: 0,
+                        isFavorite: false,
+                        searchKeyWords: "",
+                        page: {
+                            countPerPage: 6,
+                            pageNumber: 1
+                        },
+                    }
+                },
+                computed: {
+                    total() {
+                        return Math.ceil(this.productsQty / this.page.countPerPage);
+                    },
+                    productsCards() {
+                        var start = (this.page.pageNumber - 1) * this.page.countPerPage;
+                        var end = start + this.page.countPerPage;
+                        return this.filteredProducts.slice(start, end);
+                    },
+                    groupedPeople() {
+                        const groupSize = 3;
+                        const grouped = [];
+                        for (let i = 0; i < this.comment.length; i += groupSize) {
+                            grouped.push(this.comment.slice(i, i + groupSize));
+                        }
+                        return grouped;
+                    },
+
+                    filteredProducts() {
+                        // let filteredProducts = [...this.products];
+                        let filteredProducts = this.products;
+                        // filtering based on selected category
+                        if (this.selectedCategory && this.selectedCategory !== "全部") {
+                            filteredProducts = filteredProducts.filter(item => item.categoryName === this.selectedCategory);
+                        }
+                        //search filter
+                        if (this.searchKeyWords && this.searchKeyWords.trim() !== "") {
+                            const searchQuery = this.searchKeyWords.toLowerCase();
+                            filteredProducts = filteredProducts.filter(item =>
+                                item.productName.toLowerCase().includes(searchQuery) ||
+                                item.categoryName.toLowerCase().includes(searchQuery)
+                            );
+                        }
+                        // Sorting based on sortingOptions
+                        switch (this.sortingOptions) {
+                            case "PriceLowToHigh":
+                                filteredProducts.sort((a, b) => a.unitPrice - b.unitPrice);
+                                break;
+                            case "PriceHighToLow":
+                                filteredProducts.sort((a, b) => b.unitPrice - a.unitPrice);
+                                break;
+                            case "QtyLowToHigh":
+                                filteredProducts.sort((a, b) => a.avalibleQty - b.avalibleQty);
+                                break;
+                            case "QtyHighToLow":
+                                filteredProducts.sort((a, b) => b.avalibleQty - a.avalibleQty);
+                                break;
+                            case "ReleasedTime":
+                                filteredProducts.sort((a, b) => new Date(a.realeasedTime) - new Date(b.realeasedTime));
+                                break;
+                        }
+                        this.page.pageNumber = 1;
+                        this.productsQty = filteredProducts.length;
+                        return filteredProducts;
+                    }
+                },
+                mounted: function () {
+                    let _this = this;
+                    _this.getStoreInfo();
+                },
+                methods: {
+                    showDirections() {
+                        const destination = encodeURI(this.stores.address);
+                        const directionsUrl = `https://www.google.com/maps/dir/?api=1&destination=${destination}`;
+
+                        window.open(directionsUrl, '_blank');
+                    },
+
+                    getTwitterIntentText() {
+                        let storeLink = window.location.pathname;
+                        let encodedHashTag = encodeURIComponent("#減少食物浪費 #剩食餐廳 #綠色生活");
+                        return `https://twitter.com/intent/tweet?text=大家好🌍！今天想跟大家分享一家很不錯的剩食餐廳：${this.stores.storeName} 🍽️。這家位於${this.stores.address}的餐廳不僅提供美味的食物，還致力於減少食物浪費。絕對是個愛地球又愛美食的好選擇！🌱💚 ${storeLink} ${encodedHashTag}`;
+                    },
+                    pageClick(num) {
+                        this.page.pageNumber = num;
+                    },
+                    categoriesFilter(category) {
+                        this.searchKeyWords = "";
+                        this.selectedCategory = category;
+                    },
+                    searchProducts() {
+                        this.selectedCategory = "";
+                        this.searchKeyWords = this.keyWords;
+                    },
+                    getFavoriteStatus() {
+                        let _this = this;
+                        let storeId = window.location.pathname.slice("19");
+                        fetch(`/api/StoreProductsapi/favorite/status/${storeId}`)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`${response.status}`);
+                                }
+                                return response.json()
+                            })
+                            .then(result => {
+                                _this.isFavorite = result.isFavorite;
+                            })
+                            .catch(error => {
+                                console.error('Error', error);
+                            });
+                    },
+                    saveToFavorites() {
+                        if (isLoggedIn) {
+                            let storeId = window.location.pathname.slice("19");
+                            let raw = {
+                                storeId: storeId,
+                            }
+                            var requestOptions = {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify(raw),
+                            };
+                            fetch(`/api/StoreProductsapi/favorite/add`,
+                                requestOptions
+                            )
+                                .then(response => {
+                                    if (!response.ok) {
+                                        throw new Error(`${response.status}`);
+                                    }
+                                    return response.text();
+                                })
+                                .then(result => {
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: '成功!',
+                                        text: result
+                                    });
+                                    this.isFavorite = true;
+                                })
+                                .catch(error => {
+                                    console.error('Error', error);
+                                });
+                        }
+                        else {
+                            Swal.fire({
+                                title: "請先登入",
+                                text: "是否前往登入註冊畫面？",
+                                icon: "info",
+                                showCancelButton: true,
+                                confirmButtonText: "前往",
+                                cancelButtonText: "取消",
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '/Users/Account/LoginRegister';
+                                } else {
+                                    Swal.fire("取消操作", "", "info");
+                                }
+                            });
+                        }
+
+                    },
+                    removeFromFavorites() {
+                        let storeId = window.location.pathname.slice("19");
+                        var raw = JSON.stringify({storeId});
+                        const requestOptions = {
+                            method: 'DELETE',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: raw,
+                        };
+                        fetch(`/api/StoreProductsapi/favorite/remove`, requestOptions)
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`${response.status}`);
+                                }
+                                return response.text();
+                            })
+                            .then(result => {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '成功!',
+                                    text: result
+                                });
+                                this.isFavorite = false;
+                            })
+                            .catch(error => {
+                                console.error('Error', error);
+                            });
+                    },
+                    getStoreInfo() {
+                        let _this = this;
+                        let storeId = window.location.pathname.slice("19");
+                        
+                        fetch(`/api/StoreProductsapi/${storeId}`, { method: "GET" })
+                            .then(response => {
+                                if (!response.ok) {
+                                    throw new Error(`${response.status}`);
+                                }
+                                return response.json();
+                            })
+                            .then(data => {
+                                _this.stores = data[0];
+                                _this.products = data[0].products;
+                                _this.comment = data[0].comment;
+                                _this.storeCategoryList = [..._this.stores.categoryList].filter(category => category !== "其他")
+                                _this.stores.categoryList.unshift("全部");
+                                if (isLoggedIn) {
+                                    _this.getFavoriteStatus();
+                                }
+                            }).catch(error => {
+                                console.log('error', error);
+                            });
+                    },
+                }
+            }).component("paginate", VuejsPaginateNext).mount("#storeProductsApp")
+        </script>
+
+    }
+
+</body>
+

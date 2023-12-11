@@ -1,0 +1,187 @@
+﻿
+<body>
+    <!-- main wrapper-->
+    <div class="main-wrapper">
+        <!-- navbar vertical -->
+        <!-- main -->
+        <main class="main-content-wrapper">
+            <div class="container" id="reviewapp">
+                <div class="row mb-8">
+                    <div class="col-md-12">
+                        <div>
+                            <!-- page header -->
+                            <h2>客戶評論</h2>
+                            <!-- breacrumb -->
+                        </div>
+                    </div>
+                </div>
+                <!-- row -->
+                <div class="row ">
+                    <div class="col-xl-12 col-12 mb-5">
+                        <!-- card -->
+                        <div class="card h-100 card-lg">
+                            <div class="p-6 ">
+                                <div class="row justify-content-between">
+                                    <div class="col-md-4 col-12 mb-2 mb-md-0">
+                                        <!-- form -->
+                                        <div class="d-flex" role="search">
+                                            <input class="form-control" type="search" placeholder="搜尋評論" aria-label="Search" v-model.lazy="searchText" @@keyup.enter="startSeach">
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-2 col-md-4 col-12">
+                                        <!-- main -->
+                                        <select class="form-select" v-model="starNum" @@change="selectStars">
+                                            <option :value="0">篩選評分</option>
+                                            <option :value="1">一星</option>
+                                            <option :value="2">二星</option>
+                                            <option :value="3">三星</option>
+                                            <option :value="4">四星</option>
+                                            <option :value="5">五星</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- card body -->
+                            <div class="card-body p-0">
+                                <!-- table -->
+                                <div class="table-responsive">
+                                    <table class="table table-centered table-hover table-borderless mb-0 table-with-checkbox text-nowrap" >
+                                        <thead class="bg-light">
+                                            <tr>
+                                                <th>客戶名稱</th>
+                                                <th>評論內容</th>
+                                                <th>評分</th>
+                                                <th>日期</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody v-for="item in filterList">
+                                            <tr>
+                                                <td>{{item.userName}}</td>
+                                                <td>
+                                                    <span class="text-truncate">{{item.contents}}</span>
+                                                </td>
+                                                <td>
+                                                    <span :class="{'bi bi-star-fill text-warning': item.commentRank >= 1, 'bi bi-star-fill text-light': item.commentRank < 1}"></span>
+                                                    <span :class="{'bi bi-star-fill text-warning': item.commentRank >= 2, 'bi bi-star-fill text-light': item.commentRank < 2}"></span>
+                                                    <span :class="{'bi bi-star-fill text-warning': item.commentRank >= 3, 'bi bi-star-fill text-light': item.commentRank < 3}"></span>
+                                                    <span :class="{'bi bi-star-fill text-warning': item.commentRank >= 4, 'bi bi-star-fill text-light': item.commentRank < 4}"></span>
+                                                    <span :class="{'bi bi-star-fill text-warning': item.commentRank >= 5, 'bi bi-star-fill text-light': item.commentRank < 5}"></span>
+                                                </td>
+                                                <td>
+                                                    {{item.commentTime}}
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="border-top d-md-flex justify-content-between align-items-center p-6">
+                                    <span>
+                                        顯示第 {{ Math.min((page.countPerPage * (page.pageNumber - 1)) + 1, itemCount) }}
+                                        至 {{ Math.min(page.countPerPage * page.pageNumber, itemCount) }} 項，共 {{ itemCount }} 筆評論
+                                    </span>
+                                    <nav class="mt-2 mt-md-0">
+                                        <paginate :page-count="total"
+                                                  :click-handler="pageClick"
+                                                  :force-page="page.pageNumber"
+                                                  :prev-text="'<'"
+                                                  :next-text="'>'"
+                                                  :page-link-class="'page-link mx-1'"
+                                                  :prev-link-class="'page-link mx-1'"
+                                                  :next-link-class="'page-link mx-1'"
+                                                  :container-class="'pagination justify-content-center'">
+                                        </paginate>
+                                    </nav>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+@section scripts{
+    <script src="/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="/assets/js/theme.min.js"></script>
+    <script type="text/javascript" src="/_vs/browserLink" async="async" id="__browserLink_initializationData" data-requestid="2f5a7dd90325443196819a586f019be1" data-requestmappingfromserver="false" data-connecturl="http://localhost:61567/549414066c8c4b829972c6f5055a8617/browserLink"></script>
+    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
+    <script type="text/javascript" src="/_vs/browserLink" async="async" id="__browserLink_initializationData" data-requestid="3089df0821034d5c9bccdfdb59cbdbac" data-requestmappingfromserver="false" data-connecturl="http://localhost:61567/549414066c8c4b829972c6f5055a8617/browserLink"></script>
+    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script src="https://unpkg.com/vuejs-paginate-next@latest/dist/vuejs-paginate-next.umd.js"></script>
+    <script>
+        var baseAddress = "https://localhost:7042";
+        const StoreMainApp = Vue.createApp({
+            data: function () {
+                return {
+                    ReviewInfo: [],
+                    searchText:"",
+                    userName:"",
+                    contents:"",
+                    commentTime:null,
+                    commentRank:null,
+                    starNum:0,
+                    itemCount: 0,
+                    page: {
+                        countPerPage: 6,
+                        pageNumber: 1,
+                    },
+                }
+            },
+            computed: {
+                total() {
+                    return Math.ceil(this.ReviewInfo.length / this.page.countPerPage);
+                },
+                filterList() {
+                    var start = (this.page.pageNumber - 1) * this.page.countPerPage;
+                    var end = start + this.page.countPerPage;
+                    return this.ReviewInfo.slice(start, end);
+                }
+            },
+            mounted: function () {
+                let _this = this;
+                _this.startSeach();
+            },
+            methods: {
+                startSeach() {
+                    var isLoggedIn = ('@User.Identity.IsAuthenticated' == "True");
+                    if (!isLoggedIn) {
+                        alert("請先登入")
+                        window.location.href = "/Stores/Account/Login";
+                    }
+                    else {
+                        let _this = this;
+                        console.log(`Search Text: ${_this.searchText}`);
+                        fetch(`/api/Reviewapi/Filter?text=${_this.searchText}`)
+                            .then(response => response.json())
+                            .then(data => {
+                                _this.ReviewInfo = data;
+                                _this.page.pageNumber = 1;
+                                _this.itemCount = _this.ReviewInfo.length;
+                            })
+                            .catch(error => alert(error));
+
+                    }
+                },
+                selectStars() {
+                    let _this = this;
+                    console.log(`Star Number: ${_this.starNum}`);
+                    fetch(`/api/Reviewapi/SelectStars?num=${_this.starNum}`)
+                        .then(response => response.json())
+                        .then(data => _this.ReviewInfo = data)
+                        .catch(error => alert(error));
+                },
+                // getReviewAPI: function () {
+                //     let _this = this;
+                //     fetch(`/api/Reviewapi/getAll`)
+                //         .then(response => response.json())
+                //         .then(data => _this.ReviewInfo = data)
+                //         .catch(error => alert(error));
+                // }
+            },
+        }).component("paginate", VuejsPaginateNext).mount("#reviewapp")
+    </script>
+    }

@@ -1,0 +1,316 @@
+﻿
+
+<body>
+    <main>
+        <section>
+            <div class="container" id="modifyapp">
+                <div class="row">
+                    <div class="col-lg-10 col-md-12 col-12">
+                        <div class="py-6 p-md-6 p-lg-10">
+                            <div class="mb-6">
+                                <h2 class="mb-0">資料修改</h2>
+                            </div>
+                            <div class="col-lg-12">
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="mb-3 col-lg-6">
+                                            <label class="form-label" style="font-weight: bold;">商家名稱</label>
+                                            <input type="text" class="form-control" v-model="ModifyInfo.storeName" required>
+                                        </div>
+                                        <div class="mb-3 col-lg-6">
+                                            <label class="form-label" style="font-weight: bold;">負責人名稱</label>
+                                            <input type="text" class="form-control" v-model="ModifyInfo.contactName" required>
+                                        </div>
+                                        <div class="mb-3 col-lg-6">
+                                            <label class="form-label" style="font-weight: bold;">店家電話</label>
+                                            <input type="number" class="form-control" v-model="ModifyInfo.phone" required>
+                                        </div>
+                                        <div class="mb-3 col-lg-6">
+                                            <label class="form-label" style="font-weight: bold;">公休時間</label>
+                                            <input type="text" class="form-control" v-model="ModifyInfo.closingDay" required>
+                                        </div>
+                                        <div class="mb-3 col-lg-6 form-group">
+                                            <label class="form-label" style="font-weight: bold;">平日開始營業時間</label>~
+                                            <input type="time" class="form-control" v-model="ModifyInfo.weekdayOpen" required>
+                                        </div>
+                                        <div class="mb-3 col-lg-6 form-group">
+                                            <label class="form-label" style="font-weight: bold;">平日結束營業時間</label>
+                                            <input type="time" class="form-control" v-model="ModifyInfo.weekdayClose" required>
+                                        </div>
+                                        <div class="mb-3 col-lg-6 form-group">
+                                            <label class="form-label" style="font-weight: bold;">周末開始營業時間</label>~
+                                            <input type="time" class="form-control" v-model="ModifyInfo.weekendOpen" required>
+                                        </div>
+                                        <div class="mb-3 col-lg-6 form-group">
+                                            <label class="form-label" style="font-weight: bold;">周末結束營業時間</label>
+                                            <input type="time" class="form-control" v-model="ModifyInfo.weekendClose" required>
+                                        </div>
+                                        <div class="mb-3 col-lg-6">
+                                            <label class="form-label" style="font-weight: bold;">縣市</label>
+                                            <select class="form-select" v-model="ModifyInfo.city">
+                                                <option value="臺北市">臺北市</option>
+                                                <option value="新北市">新北市</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3 col-lg-6">
+                                            <label class="form-label" style="font-weight: bold;">地區</label>
+                                            <select class="form-select" v-model="ModifyInfo.region">
+                                                <option v-for="item in RegionOptions" :value="item.id">{{item.name}}</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3 col-lg-12">
+                                            <label class="form-label" style="font-weight: bold;">地址</label>
+                                            <input type="text" class="form-control" v-model="ModifyInfo.address" required>
+                                        </div>
+                                        <div class="mb-3 col-lg-12">
+                                            <label class="form-label" style="font-weight: bold;">電子郵件</label>
+                                            <input type="email" class="form-control" v-model="ModifyInfo.email" required>
+                                        </div>
+                                        <div class="mb-3 col-lg-12 mt-5">
+                                            <h4 class="mb-3 h5" style="font-weight: bold;">店家敘述</h4>
+                                            <div class="mb-3">
+                                                <textarea class="form-control" rows="3" v-model="ModifyInfo.description"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="container">
+                                    <div class="row">
+                                        <div class="mb-3 col-lg-6 mt-5 d-flex justify-content-center">
+                                            <div class="card" style="height: 300px;">
+                                                <div class="form-group fallback ">
+                                                    <div class="p-3" style="background-color: #B0E0E6;">
+                                                        <h3 class="mb-0 fs-5">店家Logo</h3>
+                                                    </div>
+                                                    <img id="insertFilePreview" :src="getPath(ModifyInfo.logoPath)" title="待上傳" style="width: 300px; height: 240px; display: block; margin-left: auto; margin-right: auto;" />
+                                                    <input type="file" id="updateFile1" class="form-control" @@change="insertFileChange($event.target)" accept="image/*" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 col-lg-6 mt-5 d-flex justify-content-center">
+                                            <div class="card" style="height: 300px;">
+                                                <div class="form-group fallback ">
+                                                    <div class="p-3" style="background-color: #B0E0E6;">
+                                                        <h3 class="mb-0 fs-5">店家照片1</h3>
+                                                    </div>
+                                                    <img id="insertFilePreview" :src="getPath(ModifyInfo.photosPath)" title="待上傳" style="width: 300px; height: 240px; display: block; margin-left: auto; margin-right: auto;" />
+                                                    <input type="file" id="updateFile2" class="form-control" @@change="insertFileChange($event.target)" accept="image/*" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 col-lg-6 mt-5 d-flex justify-content-center">
+                                            <div class="card" style="height: 300px;">
+                                                <div class="form-group fallback ">
+                                                    <div class="p-3" style="background-color: #B0E0E6;">
+                                                        <h3 class="mb-0 fs-5">店家照片2</h3>
+                                                    </div>
+                                                    <img id="insertFilePreview" :src="getPath(ModifyInfo.photosPath2)" title="待上傳" style="width: 300px; height: 240px; display: block; margin-left: auto; margin-right: auto;" />
+                                                    <input type="file" id="updateFile3" class="form-control" @@change="insertFileChange($event.target)" accept="image/*" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3 col-lg-6 mt-5 d-flex justify-content-center">
+                                            <div class="card" style="height: 300px;">
+                                                <div class="form-group fallback ">
+                                                    <div class="p-3" style="background-color: #B0E0E6;">
+                                                        <h3 class="mb-0 fs-5">店家照片3</h3>
+                                                    </div>
+                                                    <img id="insertFilePreview" :src="getPath(ModifyInfo.photosPath3)" title="待上傳" style="width: 300px; height: 240px; display: block; margin-left: auto; margin-right: auto;" />
+                                                    <input type="file" id="updateFile4" class="form-control" @@change="insertFileChange($event.target)" accept="image/*" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-center">
+                    <button type="button" class="btn btn-secondary" onclick='return confirm("確定取消這次修改嗎?")' @@click="getModifyAPI">取消修改</button>&ensp;
+                    <button type="button" onclick='return confirm("確定要修改嗎?")' class="btn btn-primary" @@click="updateStore">確定修改</button>
+                </div>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
+@section Scripts
+    {
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/assets/js/theme.min.js"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+        const ModifyApp = Vue.createApp({
+            data: function () {
+                return {
+                    ModifyInfo: {},
+                    regionOptions: [],
+                }
+            },
+            computed: {
+            },
+            mounted: function () {
+                let _this = this;
+                _this.getModifyAPI();
+                _this.getRegion(_this.ModifyInfo.city);
+            },
+            watch: {
+                'ModifyInfo.city': function (newCity, oldCity) {
+                    this.getRegion(newCity);
+                }
+            },
+            methods: {
+                readURL: function (fileInput, img) {
+                    if (fileInput.files && fileInput.files[0]) {
+                        var allowType = "image.*";
+                        if (fileInput.files[0].type.match(allowType)) {
+                            var reader = new FileReader();
+                            reader.onload = function (e) {
+                                img.src = e.target.result;
+                            };
+                            reader.readAsDataURL(fileInput.files[0]);
+                        }
+                        else {
+                            alert("不支援的檔案上傳格式");
+                        }
+                    }
+                },
+                getRegion: function (city) {
+                    let _this = this;
+                    // 配合縣市給地區
+                    if (city == '臺北市') {
+                        _this.RegionOptions = [
+                            { id: "中正區", name: '中正區' },
+                            { id: "大同區", name: '大同區' },
+                            { id: "中山區", name: '中山區' },
+                            { id: "松山區", name: '松山區' },
+                            { id: "大安區", name: '大安區' },
+                            { id: "萬華區", name: '萬華區' },
+                            { id: "信義區", name: '信義區' },
+                            { id: "士林區", name: '士林區' },
+                            { id: "北投區", name: '北投區' },
+                            { id: "內湖區", name: '內湖區' },
+                            { id: "南港區", name: '南港區' },
+                            { id: "文山區", name: '文山區' },
+                        ];
+                    } else if (city == '新北市') {
+                        _this.RegionOptions = [
+                            { id: "板橋區", name: '板橋區' },
+                            { id: "土城區", name: '土城區' },
+                            { id: "樹林區", name: '樹林區' },
+                            { id: "三峽區", name: '三峽區' },
+                            { id: "鶯歌區", name: '鶯歌區' },
+                            { id: "中和區", name: '中和區' },
+                            { id: "永和區", name: '永和區' },
+                            { id: "三重區", name: '三重區' },
+                            { id: "蘆洲區", name: '蘆洲區' },
+                            { id: "新莊區", name: '新莊區' },
+                            { id: "五股區", name: '五股區' },
+                            { id: "泰山區", name: '泰山區' },
+                            { id: "林口區", name: '林口區' },
+                            { id: "淡水區", name: '淡水區' },
+                            { id: "八里區", name: '八里區' },
+                            { id: "三芝區", name: '三芝區' },
+                            { id: "石門區", name: '石門區' },
+                            { id: "金山區", name: '金山區' },
+                            { id: "萬里區", name: '萬里區' },
+                            { id: "瑞芳區", name: '瑞芳區' },
+                            { id: "平溪區", name: '平溪區' },
+                            { id: "雙溪區", name: '雙溪區' },
+                            { id: "貢寮區", name: '貢寮區' },
+                            { id: "新店區", name: '新店區' },
+                            { id: "深坑區", name: '深坑區' },
+                            { id: "石碇區", name: '石碇區' },
+                            { id: "坪林區", name: '坪林區' },
+                            { id: "烏來區", name: '烏來區' },
+                        ];
+                    } else {
+                        // 若其他縣市，清空地區選項
+                        _this.RegionOptions = [];
+                    }
+                    return _this.RegionOptions;
+                    console.log(_this.RegionOptions);
+
+                },
+                getPath: function (path) {
+                    if (path == null) {
+                        path = "/images/Noimage.png"
+                    }
+                    return path
+                },
+                updateStore(store) {
+                    // alert("修改")
+                    let _this = this;
+                    var form = new FormData();
+                    form.append("StoreId", _this.ModifyInfo.storeId);
+                    form.append("StoreName", _this.ModifyInfo.storeName);
+                    form.append("ContactName", _this.ModifyInfo.contactName);
+                    form.append("Email", _this.ModifyInfo.email);
+                    form.append("Phone", _this.ModifyInfo.phone);
+                    form.append("City", _this.ModifyInfo.city);
+                    form.append("Region", _this.ModifyInfo.region);
+                    form.append("Address", _this.ModifyInfo.address);
+                    form.append("Description", _this.ModifyInfo.description);
+                    form.append("OpeningTime", `平日 ${_this.ModifyInfo.weekdayOpen} - ${_this.ModifyInfo.weekdayClose}，週末 ${_this.ModifyInfo.weekendOpen} - ${_this.ModifyInfo.weekendClose}`);
+                    form.append("ClosingDay", _this.ModifyInfo.closingDay);
+                    form.append("LogoImageFile", document.querySelector("#updateFile1").files[0]);
+                    form.append("PhotoImageFile1", document.querySelector("#updateFile2").files[0]);
+                    form.append("PhotoImageFile2", document.querySelector("#updateFile3").files[0]);
+                    form.append("PhotoImageFile3", document.querySelector("#updateFile4").files[0]);
+                    console.log(Object.fromEntries(form.entries()));
+                    fetch(`/api/InfoModifyapi/PutInfoModify/${_this.ModifyInfo.storeId}`, { method: "Put", body: form })
+                        .then(response => {
+                            if (response.ok) {
+                                alert("商家資料更新成功!");
+                                return response.text(); // 將回傳結果轉為文字
+                            } else {
+                                alert("更新失敗，請確認資料欄位是否完整");
+                                return response.text(); // 將回傳結果轉為文字
+                            }
+                        })
+                        .then(data => {
+                            console.log(data);
+                            _this.getModifyAPI();
+                        }).catch(err => {
+                            console.log(err);
+                        });
+                    // $("#insertModal").modal('hide')
+                },
+                insertFileChange: function (inputFile) {
+                    // alert("加入圖片")
+                    let _this = this;
+                    _this.readURL(inputFile, inputFile.previousElementSibling);
+                },
+                getModifyAPI: function () {
+                    var isLoggedIn = ('@User.Identity.IsAuthenticated' == "True");
+                    if (!isLoggedIn) {
+                        alert("請先登入")
+                        window.location.href = "/Stores/Account/Login";
+                    }
+                    else {
+                        let _this = this; /* test */
+                        var uri = `/api/InfoModifyapi/GetAll`;
+                        fetch(uri, { method: "GET" })
+                            .then(response => {
+                                if (response.ok) {
+                                    return response.json();
+                                }
+                                throw new Error(`HTTP error! Status: ${response.status}`)
+                            })
+                            .then(data => {
+                                _this.ModifyInfo = data[0];
+                                console.log(data);
+                            })
+                            .catch(error => {
+                                console.log(error)
+                            });
+
+                    }
+                }
+            },
+        }).mount("#modifyapp")
+    </script>
+    }
