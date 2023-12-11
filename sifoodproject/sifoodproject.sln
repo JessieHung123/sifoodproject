@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sifoodproject", "sifoodproject\sifoodproject.csproj", "{4908E8DF-73B6-4FE4-8543-B47E6FB46EBD}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4908E8DF-73B6-4FE4-8543-B47E6FB46EBD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4908E8DF-73B6-4FE4-8543-B47E6FB46EBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4908E8DF-73B6-4FE4-8543-B47E6FB46EBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4908E8DF-73B6-4FE4-8543-B47E6FB46EBD}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E156EC64-D9CF-4364-9926-8DBB364E5CA3}
+	EndGlobalSection
+EndGlobal
