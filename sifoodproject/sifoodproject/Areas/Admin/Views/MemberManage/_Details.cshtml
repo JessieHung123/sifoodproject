@@ -1,0 +1,64 @@
+﻿@model sifoodproject.Models.User
+
+<div class="modal fade" id="DetailUser-@Model.UserId" tabindex="-1" role="dialog" aria-labelledby="DetailUserLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DetailUserLabel">顧客資料明細</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-dialog">
+                <dl class="row">
+                    <dt class="col-sm-3" style="text-align: right;">
+                        顧客ID
+                    </dt>
+                    <dd class="col-sm-9" style="text-align: left;">
+                        @Html.DisplayFor(model => model.UserId)
+                    </dd>
+                    <dt class="col-sm-3" style="text-align: right;">
+                        顧客姓名
+                    </dt>
+                    <dd class="col-sm-9" style="text-align: left;">
+                        @Html.DisplayFor(model => model.UserName)
+                    </dd>
+                    <dt class="col-sm-3" style="text-align: right;">
+                        信箱
+                    </dt>
+                    <dd class="col-sm-9" style="text-align: left;">
+                        @Html.DisplayFor(model => model.UserEmail)
+                    </dd>
+                    <dt class="col-sm-3" style="text-align: right;">
+                        電話號碼
+                    </dt>
+                    <dd class="col-sm-9" style="text-align: left;">
+                        @Html.DisplayFor(model => model.UserPhone)
+                    </dd>
+                    <dt class="col-sm-3" style="text-align: right;">
+                        生日
+                    </dt>
+                    <dd class="col-sm-9" style="text-align: left;">
+                        @Html.DisplayFor(model => model.UserBirthDate)
+                    </dd>
+                    <dt class="col-sm-3" style="text-align: right;">
+                        訂單總額
+                    </dt>
+                    <dd class="col-sm-9" style="text-align: left;">
+                        @Html.DisplayFor(model => model.TotalOrderAmount)
+                    </dd>
+                    <dt class="col-sm-3" style="text-align: right;">
+                        註冊日期
+                    </dt>
+                    <dd class="col-sm-9" style="text-align: left;">
+                        @Html.DisplayFor(model => model.UserEnrollDate)
+                    </dd>
+                    <dt class="col-sm-3" style="text-align: right;">
+                        最新登入日期
+                    </dt>
+                    <dd class="col-sm-9" style="text-align: left;">
+                        @Html.DisplayFor(model => model.UserLatestLogInDate)
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

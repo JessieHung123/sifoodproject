@@ -1,0 +1,145 @@
+﻿@model sifoodproject.Models.Store
+
+<div class="modal fade" id="EditStore-@Model.StoreId" tabindex="-1" role="dialog" aria-labelledby="EditStoreLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="EditStoreLabel">商家資料修改</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    <form asp-action="Edit" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="StoreId" />
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="StoreName" class="control-label">商店名稱</label>
+                            <input asp-for="StoreName" class="form-control" />
+                            <span asp-validation-for="StoreName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="ContactName" class="control-label">聯絡人姓名</label>
+                            <input asp-for="ContactName" class="form-control" />
+                            <span asp-validation-for="ContactName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="TaxId" class="control-label">統一編號</label>
+                            <input asp-for="TaxId" class="form-control" />
+                            <span asp-validation-for="TaxId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="Email" class="control-label">信箱</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="Phone" class="control-label">聯絡電話</label>
+                            <input asp-for="Phone" class="form-control" />
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="City" class="control-label">城市</label>
+                            <input asp-for="City" class="form-control" />
+                            <span asp-validation-for="City" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="Region" class="control-label">區</label>
+                            <input asp-for="Region" class="form-control" />
+                            <span asp-validation-for="Region" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="Address" class="control-label">地址</label>
+                            <input asp-for="Address" class="form-control" />
+                            <span asp-validation-for="Address" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="Description" class="control-label">簡介</label>
+                            <input asp-for="Description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <input type="hidden" asp-for="PasswordHash" class="form-control" />
+                            <span asp-validation-for="PasswordHash" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <input type="hidden" asp-for="PasswordSalt" class="form-control" />
+                            <span asp-validation-for="PasswordSalt" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="EnrollDate" class="control-label">註冊日期</label>
+                            <input asp-for="EnrollDate" class="form-control" />
+                            <span asp-validation-for="EnrollDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="OpeningTime" class="control-label">開店時間</label>
+                            <input asp-for="OpeningTime" class="form-control" />
+                            <span asp-validation-for="OpeningTime" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="ClosingDay" class="control-label">關店時間</label>
+                            <input asp-for="ClosingDay" class="form-control" />
+                            <span asp-validation-for="ClosingDay" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="LogoPath" class="control-label">商家照片</label>
+                            <br />
+                            @if (!string.IsNullOrEmpty(Model.PhotosPath))
+                            {
+                                <img src="@Model.PhotosPath" width="300" height="200" alt="Logo" />
+                            }
+                            else
+                            {
+                                <img src="~/images/Noimage.png"
+                                     width="300" height="200" alt="Default Logo" />
+                            }
+                            <input type="hidden" asp-for="PhotosPath" class="form-control" />
+                            @if (!string.IsNullOrEmpty(Model.PhotosPath2))
+                            {
+                                <img src="@Model.PhotosPath2" width="300" height="200" alt="Logo" />
+                            }
+                            else
+                            {
+                                <img src="~/images/Noimage.png" width="300" height="200" alt="Default Logo" />
+                            }
+                            <input type="hidden" asp-for="PhotosPath2" class="form-control" />
+                            @if (!string.IsNullOrEmpty(Model.PhotosPath3))
+                            {
+                                <img src="@Model.PhotosPath3" width="300" height="200" alt="Logo" />
+                            }
+                            else
+                            {
+                                <img src="~/images/Noimage.png" width="300" height="200" alt="Default Logo" />
+                            }
+                            <input type="hidden" asp-for="PhotosPath3" class="form-control" />
+                            <span asp-validation-for="PhotosPath" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <label asp-for="LogoPath" class="control-label">商家Logo</label>
+                            <br />
+                            <img src="@Model.LogoPath" width="300" height="300" alt="Logo" />
+                            <input type="hidden" asp-for="LogoPath" class="form-control" />
+                            <span asp-validation-for="LogoPath" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <input type="hidden" asp-for="Latitude" class="form-control" />
+                            <span asp-validation-for="Latitude" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <input type="hidden" asp-for="Longitude" class="form-control" />
+                            <span asp-validation-for="Longitude" class="text-danger"></span>
+                        </div>
+                        <div class="form-group" style="text-align: left;">
+                            <input type="hidden" asp-for="StoreIsAuthenticated" class="form-control" />
+                            <span asp-validation-for="StoreIsAuthenticated" class="text-danger"></span>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="form-group">
+                                <input type="submit" value="儲存" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

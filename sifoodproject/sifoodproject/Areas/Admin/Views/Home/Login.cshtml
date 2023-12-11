@@ -1,0 +1,43 @@
+﻿@{
+    Layout = "Index";
+}
+@section Styles{
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/SiFoodProjectFormal2._0.styles.css" asp-append-version="true" />
+    <link href="~/assets/css/theme.css" rel="stylesheet" />
+}
+<div class="container">
+    <div class="text-center"><img src="~/images/sifood_logo_bgclear.png" style="width:200px" /></div>
+    <div class="row justify-content-center align-items-center">
+        <div class="col-12 col-md-6 col-lg-4 order-lg-2 order-1">
+            <div class="mb-lg-9 mb-5">
+                <h1 class="mb-1 h2 fw-bold text-center">惜Food後台登入</h1>
+            </div>
+            <form method="post"> 
+                <div class="row g-3">
+                    <div class="col-12">
+                        <input type="email" class="form-control" name="Account" id="inputEmail4" placeholder="請輸入您的帳號" required>
+                    </div>
+                    <div class="col-12">
+                        <div class="password-field position-relative">
+                            <input type="password" id="fakePassword" name="Password" placeholder="請輸入您的密碼" class="form-control" required>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                    </div>
+                    <div class="col-12 d-grid">
+                        <button type="submit" class="btn btn-primary">登入</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section Scripts{
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/assets/js/main.js"></script>
+    <script src="~/assets/js/vendors/password.js"></script>
+}

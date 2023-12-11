@@ -1,0 +1,139 @@
+﻿@model sifoodproject.Models.Store
+
+<div class="modal fade" id="DetailStore-@Model.StoreId" tabindex="-1" role="dialog" aria-labelledby="DetailStoreLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="DetailStoreLabel">店家資料明細</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-dialog">
+                <dl class="row">
+                    <dt class="col-sm-3" style="text-align: right;">
+                        商店編號
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.StoreId)
+                    </dd>
+                    <dt class="col-sm-3" style="text-align: right;">
+                        商店名稱
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.StoreName)
+                    </dd>
+                    <dt class="col-sm-3"style="text-align: right;">
+                        聯絡人姓名
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.ContactName)
+                    </dd>
+                    <dt class="col-sm-3"style="text-align: right;">
+                        統一編號
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.TaxId)
+                    </dd>
+                    <dt class="col-sm-3"style="text-align: right;">
+                        信箱
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.Email)
+                    </dd>
+                    <dt class="col-sm-3"style="text-align: right;">
+                        電話
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.Phone)
+                    </dd>
+                    <dt class="col-sm-3"style="text-align: right;">
+                        城市
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.City)
+                    </dd>
+                    <dt class="col-sm-3"style="text-align: right;">
+                        區
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.Region)
+                    </dd>
+                    <dt class="col-sm-3"style="text-align: right;">
+                        地址
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.Address)
+                    </dd>
+                    <dt class="col-sm-3"style="text-align: right;">
+                        簡介
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.Description)
+                    </dd>
+                    <dt class="col-sm-3"style="text-align: right;">
+                        註冊日期
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.EnrollDate)
+                    </dd>
+                    <dt class="col-sm-3"style="text-align: right;">
+                        開店時間
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.OpeningTime)
+                    </dd>
+                    <dt class="col-sm-3" style="text-align: right;">
+                        關店時間
+                    </dt>
+                    <dd class="col-sm-9" style="text-align:left;">
+                        @Html.DisplayFor(model => model.ClosingDay)
+                    </dd>                    
+                    <dt class="col-sm-3"style="text-align: right;">
+                        商家照片
+                    </dt>
+                    <dd class="col-sm-9">
+                        @if (!string.IsNullOrEmpty(Model.PhotosPath))
+                        {
+                            <img src="@Model.PhotosPath" width="300" height="200" alt="Logo" />
+                        }
+                        else
+                        {
+                            <img src="~/images/Noimage.png"
+                                 width="300" height="200" alt="Default Logo" />
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.PhotosPath2))
+                        {
+                            <img src="@Model.PhotosPath2" width="300" height="200" alt="Logo" />
+                        }
+                        else
+                        {
+                            <img src="~/images/Noimage.png" width="300" height="200" alt="Default Logo" />
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.PhotosPath3))
+                        {
+                            <img src="@Model.PhotosPath3" width="300" height="200" alt="Logo" />
+                        }
+                        else
+                        {
+                            <img src="~/images/Noimage.png" width="300" height="200" alt="Default Logo" />
+                        }
+                    </dd>
+                    <dt class="col-sm-3" style="text-align: right;">
+                        商家Logo
+                    </dt>
+                    <dd class="col-sm-9">
+                        @if (!string.IsNullOrEmpty(Model.LogoPath))
+                        {
+                            <img src="@Model.LogoPath" width="300" height="200" alt="Logo" />
+                        }
+                        else
+                        {
+                            <img src="~/images/Noimage.png" width="300" height="200" alt="Default Logo" />
+                        }
+                    </dd>
+                </dl>
+            </div>
+        </div>
+    </div>
+</div>

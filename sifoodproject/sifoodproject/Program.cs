@@ -1,3 +1,7 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using sifoodproject.Models;
+
 namespace sifoodproject
 {
     public class Program
@@ -6,7 +10,40 @@ namespace sifoodproject
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            // Add services to the container.
+            builder.Services.AddResponseCaching();
+            builder.Services.AddDbContextPool<Sifood3Context>(options =>
+            {
+                options.UseLazyLoadingProxies().UseSqlServer(builder.Configuration.GetConnectionString("Sifood"));
+            });
+
+            //builder.Services.AddHangfire(configuration => configuration
+            //               .SetDataCompatibilityLevel(CompatibilityLevel.Version_180)
+            //               .UseSimpleAssemblyNameTypeSerializer()
+            //               .UseRecommendedSerializerSettings()
+            //               .UseSqlServerStorage(builder.Configuration.GetConnectionString("Sifood")));
+            //builder.Services.AddHangfireServer();
+
+            builder.Services.AddControllersWithViews();
+            builder.Services.AddHttpContextAccessor();
+            //builder.Services.AddTransient<IUserIdentityService, UserIdentityService>();
+            //builder.Services.AddTransient<IStoreIdentityService, StoreIdentityService>();
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.LoginPath = "/Users/Account/LoginRegister";
+                options.AccessDeniedPath = "/Account/LoginRegister";
+                options.Events = new CookieAuthenticationEvents
+                {
+                    OnRedirectToLogin = context =>
+                    {
+                        var loginPath = "/Users/Account/LoginRegister";
+                        context.Response.Redirect(loginPath);
+                        return Task.CompletedTask;
+                    }
+                };
+            });
+
+
             builder.Services.AddControllersWithViews();
 
             var app = builder.Build();
@@ -22,13 +59,16 @@ namespace sifoodproject
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
+
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllerRoute(
-                name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}");
+                name: "areas",
+                pattern: "{area=Users}/{controller=Home}/{action=Main}/{id?}"
+            );
 
             app.Run();
         }

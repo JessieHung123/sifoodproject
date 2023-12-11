@@ -1,0 +1,196 @@
+﻿@model IEnumerable<sifoodproject.Models.Store>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="container" id="StoreConfirmApp">
+    <div class="row mb-8">
+        <div class="col-md-12">
+            <div>
+                <div>
+                    <h2 style="text-align:center;">商家審核</h2>
+                    <!-- breacrumb -->
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb mb-0">
+                            <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="OrderManage" asp-action="Index" class="text-inherit">首頁</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">商家審核</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row ">
+        <div class="col-xl-12 col-12 mb-5">
+            <div class="card h-100 card-lg">
+                <div class="p-6">
+                    <div class="row justify-content-between">
+                        <div class="col-md-4 col-12">
+                            <form class="d-flex" role="search">
+                                <input class="form-control" type="search" name="searchStores" value="@ViewBag.searchStores" placeholder="Search Stores" aria-label="Search">
+                            </form>
+                        </div>
+
+                    </div>
+                </div>
+                <div class="card-body p-0 ">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th style="text-align: center;">
+                                    商店名稱
+                                </th>
+                                <th style="text-align: center;">
+                                    聯絡人
+                                </th>
+                                <th style="text-align: center;">
+                                    Email
+                                </th>
+                                <th style="text-align: center;">
+                                    電話
+                                </th>
+                                <th style="text-align: center;">
+                                    城市
+                                </th>
+                                <th style="text-align: center;">
+                                    開店時間
+                                </th>
+                                <th style="text-align: center;">
+                                    關店時間
+                                </th>
+                                <th style="text-align: center;">
+                                    功能
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                @if (item.StoreIsAuthenticated == 0)
+                                {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.StoreName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ContactName)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Email)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Phone)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.City)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.OpeningTime)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ClosingDay)
+                                        </td>
+                                        <td>
+                                            <button type="button" class="dropdown-item" v-on:click="openModal('@item.Email')">
+                                                <i class="bi bi-pencil-square me-3"></i>確認
+                                            </button>
+                                            <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="@("#DetailStore-" + item.StoreId)" data-url="@Url.Action($"Details/{item.StoreId}")">
+                                                <i class="bi bi-info-circle me-3"></i>明細
+                                            </button>
+                                            @await Html.PartialAsync("_DetailsPartialView", item)
+                                            <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="@("#DeleteStore-" + item.StoreId)" data-url="@Url.Action($"Delete/{item.StoreId}")">
+                                                <i class="bi bi-trash me-3"></i>拒絕
+                                            </button>
+                                            @await Html.PartialAsync("_DeletePartialView", item)
+                                        </td>
+                                    </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                    <div class="border-top d-md-flex justify-content-between align-items-center p-6">
+                        <span>顯示 @ViewBag.EntriesStart 到 @ViewBag.EntriesEnd 筆資料，共 @ViewBag.TotalEntries 筆資料。</span>
+                        <nav class="mt-2 mt-md-0">
+                            <ul class="pagination mb-0">
+                                @if (ViewBag.Page > 1)
+                                {
+                                    <li class="page-item"><a class="page-link" href="@Url.Action("StoreConfirm", new { page = ViewBag.Page - 1, searchStores = ViewBag.searchStores })">上一頁</a></li>
+                                }
+
+                                @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                                {
+                                    <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                        <a class="page-link" href="@Url.Action("StoreConfirm", new { page = i, pageSize = ViewBag.PageSize, searchStores = TempData["SearchStores"] })">@i</a>
+                                    </li>
+                                }
+
+                                @if (ViewBag.Page < ViewBag.TotalPages)
+                                {
+                                    <li class="page-item"><a class="page-link" href="@Url.Action("StoreConfirm", new { page = ViewBag.Page + 1, searchStores = ViewBag.searchStores })">下一頁</a></li>
+                                }
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" id="storeModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">商家審核</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>確認讓此商家加入?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">關閉</button>
+                    <button type="button" class="btn btn-primary" @@click="SendEmailBack()">寄送驗證碼</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+@section Scripts {
+    <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+    <script>
+        var StoreConfirmApp = Vue.createApp({
+            data: function () {
+                return {
+                    SendBackEmail: "",
+                }
+            },
+            methods: {
+                SendEmailBack() {
+                    var _this = this;
+                    axios.post(`/StoreManage/SendSetPasswordEmail`, {
+                        StoreEmail: _this.SendBackEmail
+                    }, {
+                        headers: {
+                            "Content-Type": "application/json"
+                        }
+                    }).then(response => {
+                        alert(response.data);
+                        $('#storeModal').modal('hide');
+                    }).catch(err => {
+                        alert(err);
+                    })
+                },
+                openModal(item) {
+                    var _this = this;
+                    this.SendBackEmail = item;
+                    $('#storeModal').modal('show');
+                },
+            },
+        }).mount("#StoreConfirmApp")
+    </script>
+}

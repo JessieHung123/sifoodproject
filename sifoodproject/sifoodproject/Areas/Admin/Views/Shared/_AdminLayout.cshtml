@@ -1,0 +1,122 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta content="Codescandy" name="author">
+
+
+    <title>@ViewData["Title"] - sifoodprojectformal2.0</title>
+    <!-- Favicon icon-->
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/sifood_logo_bgclear.png">
+
+    <!-- Libs CSS -->
+    <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet">
+    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet">
+    <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet">
+
+    <link rel="shortcut icon" type="image/x-icon" href="~/images/favicon.ico" />
+    <!-- Theme CSS -->
+    <link rel="stylesheet" href="~/assets/css/theme.min.css">
+    @RenderSection("Styles", required: false)
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/sifoodprojectformal.styles2.0.css" asp-append-version="true" />
+</head>
+<body>
+    <div class="border-bottom ">
+        <div class="py-1">
+            <div class="container">
+                <div class="row w-100 align-items-center gx-lg-2 gx-0">
+                    <div class="col-xxl-2 col-lg-3">
+                        <a class="navbar-brand d-none d-lg-block" asp-area="Admin" asp-controller="OrderManage" asp-action="Index">
+                            <img src="~/images/sifood_logo_bgclear.png" max-width="50" height="50">
+                        </a>
+                        <div class="d-flex justify-content-between w-100 d-lg-none">
+                            <a class="navbar-brand" asp-area="Admin" asp-controller="OrderManage" asp-action="Index">
+                                <img src="~/images/sifood_logo_bgclear.png" max-width="50" height="50">
+                            </a>
+                            <ul class="navbar-nav flex-column" id="sideNavbar">
+                                <li class="nav-item">
+                                    <a class="nav-link  active" role="button" asp-controller="OrderManage" asp-action="Index">
+                                        訂單管理
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link  active" role="button" asp-controller="MemberManage" asp-action="Index">
+                                        顧客管理
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link  active" role="button" role="button" data-bs-toggle="dropdown" aria-expanded="false">商家管理</a>
+                                    <ul class="dropdown-menu">
+                                        <li><a class="dropdown-item" asp-controller="Storemanage" asp-action="StoreConfirm">商家審核</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Storemanage" asp-action="Index">商家資料</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <nav class="navbar navbar-expand-lg navbar-light navbar-default py-0 pb-lg-4 " aria-label="Offcanvas navbar large">
+                <div class="container">
+                    <div class="offcanvas offcanvas-start" tabindex="-1" id="navbar-default" aria-labelledby="navbar-defaultLabel">
+                        <div class="">
+                            <div class="">
+                                <ul class="navbar-nav align-items-center ">
+                                    <li class="nav-item dropdown w-100 w-lg-auto">
+                                        <a class="nav-link fw-bolder" role="button" asp-controller="OrderManage" asp-action="Index">
+                                            訂單管理
+                                        </a>
+                                    </li>
+                                   
+                                    <li class="nav-item w-100 w-lg-auto">
+                                        <a class="nav-link fw-bolder" role="button" asp-controller="MemberManage" asp-action="Index">
+                                            顧客管理
+                                        </a>
+                                    </li>
+                                    <li class="nav-item dropdown w-100 w-lg-auto">
+                                        <a class="nav-link dropdown-toggle fw-bolder" href="#" role="button" data-bs-toggle="dropdown"
+                                           aria-expanded="false">商家</a>
+                                        <ul class="dropdown-menu">
+                                            <li><a class="dropdown-item" asp-controller="Storemanage" asp-action="StoreConfirm">商家審核</a></li>
+                                            <li><a class="dropdown-item" asp-controller="Storemanage" asp-action="Index">商家管理</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+            <div class="container">
+                <main class="">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+    </div>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    <!-- Libs JS -->
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/lib/datatables/js/jquery.datatables.js"></script>
+    <script src="~/lib/datatables/js/jquery.datatables.min.js"></script>
+    <script src="~/lib/datatables/js/datatables.datatables.min.js"></script>
+
+    <!-- Theme JS -->
+    <script src="~/assets/js/theme.min.js"></script>
+    <script src="~/assets/libs/jquery-countdown/dist/jquery.countdown.min.js"></script>
+    <script src="~/assets/js/vendors/countdown.js"></script>
+    <script src="~/assets/libs/slick-carousel/slick/slick.min.js"></script>
+    <script src="~/assets/js/vendors/tns-slider.js"></script>
+    <script src="~/assets/js/vendors/increment-value.js"></script>
+
+
+</body>
+</html>

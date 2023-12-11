@@ -1,0 +1,102 @@
+﻿@model IEnumerable<OrderManageVM>
+@{
+    Layout = "_AdminLayout";
+}
+@section Styles
+ {
+    <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet" />
+    <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
+    <link href="~/assets/css/theme.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
+  }
+  <div class="text-center">
+    <div class="container">
+        <div>
+            <h2>訂單管理</h2>
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb mb-0">
+                    <li class="breadcrumb-item"><a asp-area="Admin" asp-controller="OrderManage" asp-action="Index">首頁</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">訂單管理</li>
+                </ol>
+            </nav>
+        </div>
+    </div>
+</div>
+<table id="orderTable" class="table table-centered table-hover text-nowrap table-borderless mb-0 table-with-checkbox">
+    <thead class="bg-light" height="68px">
+        <tr class="text-center">
+            <th>訂單編號</th>
+            <th>訂單日期</th>
+            <th>客戶姓名</th>
+            <th>商品名稱</th>
+            <th>商品數量</th>
+            <th>金額</th>
+            <th>訂單狀態</th>
+            <th>編輯</th>
+        </tr>
+    </thead>
+    <tbody id="orderTableBody">
+@foreach (var item in Model) {
+            <tr class="text-center">
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UserName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(ModelItem => item.Total)
+                </td>
+             <td>
+                    @Html.DisplayFor(modelItem => item.StatusName)
+             </td>
+            <td>      
+                    <a asp-controller="OrderManage" asp-action="Edit" asp-route-OrderId="@item.OrderId" asp-route-ProductId="@item.ProductId"><button type="button" class="btn btn-warning">修改</button></a> |
+                    <a asp-controller="OrderManage" asp-action="Details" asp-route-OrderId="@item.OrderId" asp-route-ProductId="@item.ProductId"><button type="button" class="btn btn-info">明細</button></a> |
+                    <a asp-controller="OrderManage" asp-action="Delete" asp-route-OrderId="@item.OrderId" asp-route-ProductId="@item.ProductId"><button type="button" class="btn btn-danger">刪除</button></a>                          
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@section Scripts {
+    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
+    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
+    <script src="~/assets/js/theme.min.js"></script>    
+     <script>
+         $(document).ready(function () {
+             $("#orderTable").DataTable({
+                "iDisplayLength": 5,
+                "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],
+                "bSort": false,
+                "sPaginationType": "full_numbers",
+                "dom": `<'row'<'col-sm-12 col-md-6'l><'col-sm-12 col-md-6'f>>
+                    <'row'<'col-sm-12'tr>>
+                    <'row'<'col-sm-12 col-md-5'i><'col-sm-12 col-md-7'p>>`,
+                "language": {
+                    "sLengthMenu": "顯示 _MENU_ 項結果",
+                    "zeroRecords": "沒有符合的結果",
+                    "info": "顯示第 _START_ 至 _END_ 項結果，共 _TOTAL_ 項",
+                    "search": "搜尋", 
+                    "oPaginate": {
+                        "sFirst": "首頁",
+                        "sPrevious":"前一頁" ,
+                        "sNext":"後一頁",
+                        "sLast": "末頁"
+                   },
+                },
+               });
+        });            
+     </script>
+}

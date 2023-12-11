@@ -1,0 +1,106 @@
+﻿@model OrderManageVM
+
+@{
+    ViewData["Title"] = "刪除訂單";
+    Layout = "_AdminLayout";
+    <link rel="shortcut icon" href="~/images/sifood_logo_bgclear.png">
+    <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet" />
+    <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
+    <link href="~/assets/css/theme.min.css" rel="stylesheet" />
+
+    <style>
+        .col-sm-2 {
+            background-color: forestgreen;
+            color: #fff;
+            text-align: center;
+        }
+    </style>
+}
+
+<h2>刪除</h2>
+
+
+<div>
+    <h4>訂單資料</h4>
+    <hr />
+    <div class="mt-8">
+        <div class="row">
+
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="mb-6">
+                    <h6 style="color: forestgreen;">顧客資料</h6>
+                    <p class="mb-1 lh-lg">
+                        @Html.DisplayFor(model => model.UserName)<br>
+                        @Html.DisplayFor(model => model.UserPhone)<br>
+                        @Html.DisplayFor(model => model.OrderAddress)
+                    </p>
+
+                </div>
+            </div>
+
+            <div class="col-lg-4 col-md-4 col-12">
+                <div class="mb-6">
+                    <h6 style="color: forestgreen;">店家資料</h6>
+                    <p class="mb-1 lh-lg">
+                        @Html.DisplayFor(model => model.StoreName)<br>
+                        @Html.DisplayFor(model => model.StorePhone)<br>
+                        @Html.DisplayFor(model => model.StoreAddress)
+                    </p>
+
+                </div>
+            </div>
+
+            <table class="table table-centered table-hover text-nowrap table-borderless mb-0 table-with-checkbox">
+                <thead class="bg-light">
+                    <tr class="text-center">
+                        <th>訂單編號</th>
+                        <th>訂單日期</th>
+                        <th>商品名稱</th>
+                        <th>商品數量</th>
+                        <th>產品編號</th>
+                        <th>商品單價</th>
+                        <th>訂單狀態</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="text-center">
+                        <td>
+                            @Html.DisplayFor(model => model.OrderId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.OrderDate)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.ProductName)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.Quantity)
+                        </td>
+
+                        <td>
+                            @Html.DisplayFor(model => model.ProductId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.ProductUnitPrice)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(model => model.StatusName)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <form asp-action="Delete">
+                <input type="hidden" asp-for="OrderId" />
+                <input type="hidden" asp-for="ProductId" />
+                <input type="submit" onclick='return confirm("確定要刪除嗎?")' value="刪除" class="btn btn-danger" /> |
+                <a asp-action="Index">回上頁</a>
+            </form>
+        </div>
+
+        @section Scripts {
+            @{
+                await Html.RenderPartialAsync("_ValidationScriptsPartial");
+            }
+           }

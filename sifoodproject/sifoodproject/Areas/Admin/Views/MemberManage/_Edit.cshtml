@@ -1,0 +1,80 @@
+﻿@model sifoodproject.Models.User
+
+<div class="modal fade" id="EditUser-@Model.UserId" tabindex="-1" role="dialog" aria-labelledby="EditUserLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="EditUserLabel">顧客資料修改</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="col">
+                    <form asp-action="Edit1" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                        <input type="hidden" asp-for="UserId" />
+                        <div class="form-group" style="text-align:left;">
+                            <label asp-for="UserName" class="control-label">顧客姓名</label>
+                            <input asp-for="UserName" class="form-control" />
+                            <span asp-validation-for="UserName" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <label asp-for="UserEmail" class="control-label">顧客信箱</label>
+                            <input asp-for="UserEmail" class="form-control" />
+                            <span asp-validation-for="UserEmail" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <input asp-for="UserPasswordHash" type="hidden" class="form-control" />
+                            <span asp-validation-for="UserPasswordHash" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <label asp-for="UserPhone" class="control-label">顧客電話</label>
+                            <input asp-for="UserPhone" class="form-control" />
+                            <span asp-validation-for="UserPhone" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <label asp-for="UserBirthDate" class="control-label">生日</label>
+                            <input asp-for="UserBirthDate" class="form-control" />
+                            <span asp-validation-for="UserBirthDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <label asp-for="TotalOrderAmount" class="control-label">訂單總額</label>
+                            <input asp-for="TotalOrderAmount" class="form-control" />
+                            <span asp-validation-for="TotalOrderAmount" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <label asp-for="UserEnrollDate" class="control-label">註冊日期</label>
+                            <input asp-for="UserEnrollDate" class="form-control" />
+                            <span asp-validation-for="UserEnrollDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <label asp-for="UserLatestLogInDate" class="control-label">最新登入日期</label>
+                            <input asp-for="UserLatestLogInDate" class="form-control" />
+                            <span asp-validation-for="UserLatestLogInDate" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <input asp-for="UserPasswordSalt" type="hidden" class="form-control" />
+                            <span asp-validation-for="UserPasswordSalt" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <input asp-for="UserAuthenticated" type="hidden" class="form-control" />
+                            <span asp-validation-for="UserAuthenticated" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <input asp-for="UserVerificationCode" type="hidden" class="form-control" />
+                            <span asp-validation-for="UserVerificationCode" class="text-danger"></span>
+                        </div>
+                        <div class="form-group"style="text-align:left;">
+                            <input asp-for="ForgotPasswordRandom" type="hidden" class="form-control" />
+                            <span asp-validation-for="ForgotPasswordRandom" class="text-danger"></span>
+                        </div>
+                        <div class="modal-footer" style="text-align:right;">
+                            <div class="form-group">
+                                <input type="submit" value="儲存" class="btn btn-primary" />
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
