@@ -1,4 +1,4 @@
-﻿namespace sifoodproject._0.Areas.Users.Models.ViewModels
+﻿namespace sifoodproject.Areas.Users.Models.ViewModels
 {
     public class RealTimeOrderVM
     {
