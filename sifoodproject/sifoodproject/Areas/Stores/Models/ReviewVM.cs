@@ -8,7 +8,7 @@
 
         public short CommentRank { get; set; }
 
-        public DateTime CommentTime { get; set; }
+        public string CommentTime { get; set; }
 
         public string? Contents { get; set; }
 

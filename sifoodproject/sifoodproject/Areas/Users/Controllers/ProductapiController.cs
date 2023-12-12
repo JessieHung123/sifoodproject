@@ -40,6 +40,7 @@ namespace sifoodproject.Areas.Users.Controllers
                     SuggestPickEndTime = p.SuggestPickEndTime.ToString().Substring(0, 5),
                     ReleasedQty = p.ReleasedQty,
                     OrderedQty = p.OrderedQty,
+                    Description=p.Description
                 }).ToListAsync();
             }
 
