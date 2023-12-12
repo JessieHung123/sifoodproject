@@ -439,7 +439,7 @@
                     },
 
                     getTwitterIntentText() {
-                        let storeLink = window.location.pathname;
+                        let storeLink = window.location.href;
                         let encodedHashTag = encodeURIComponent("#減少食物浪費 #剩食餐廳 #綠色生活");
                         return `https://twitter.com/intent/tweet?text=大家好🌍！今天想跟大家分享一家很不錯的剩食餐廳：${this.stores.storeName} 🍽️。這家位於${this.stores.address}的餐廳不僅提供美味的食物，還致力於減少食物浪費。絕對是個愛地球又愛美食的好選擇！🌱💚 ${storeLink} ${encodedHashTag}`;
                     },

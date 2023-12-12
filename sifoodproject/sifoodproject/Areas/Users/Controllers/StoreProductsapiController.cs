@@ -32,8 +32,13 @@ namespace sifoodproject.Areas.Users.Controllers
         [HttpGet("{id}")]
         public async Task<List<StoreProductsVM>> GetStore(string id)
         {
-            var today = DateTime.Today;
-            var currentTime = DateTime.Now.TimeOfDay;
+
+            TimeZoneInfo taiwanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
+            DateTime utcNow = DateTime.UtcNow;
+            DateTime taiwanTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, taiwanTimeZone);
+            var today = taiwanTime.Date;
+            var currentTime = taiwanTime.TimeOfDay;
+
             return await _context.Stores.AsNoTracking()
                 .Include(x => x.Products)
                 .Include(x => x.Orders)
