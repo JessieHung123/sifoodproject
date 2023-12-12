@@ -64,10 +64,6 @@
                                             <label class="form-label" style="font-weight: bold;">地址</label>
                                             <input type="text" class="form-control" v-model="ModifyInfo.address" required>
                                         </div>
-                                        <div class="mb-3 col-lg-12">
-                                            <label class="form-label" style="font-weight: bold;">電子郵件</label>
-                                            <input type="email" class="form-control" v-model="ModifyInfo.email" required>
-                                        </div>
                                         <div class="mb-3 col-lg-12 mt-5">
                                             <h4 class="mb-3 h5" style="font-weight: bold;">店家敘述</h4>
                                             <div class="mb-3">
@@ -129,21 +125,16 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-secondary" onclick='return confirm("確定取消這次修改嗎?")' @@click="getModifyAPI">取消修改</button>&ensp;
-                    <button type="button" onclick='return confirm("確定要修改嗎?")' class="btn btn-primary" @@click="updateStore">確定修改</button>
+                    <button type="button" class="btn btn-secondary"  @@click="confirmCancel">取消修改</button>&ensp;
+                    <button type="button"  class="btn btn-primary" @@click="confirmUpdateInfo">確定修改</button>
                 </div>
             </div>
         </section>
     </main>
 </body>
-</html>
+
 @section Scripts
     {
-    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
-    <script src="~/assets/js/theme.min.js"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
         const ModifyApp = Vue.createApp({
             data: function () {
@@ -179,6 +170,32 @@
                             alert("不支援的檔案上傳格式");
                         }
                     }
+                },
+                confirmUpdateInfo(Info) {
+                    Swal.fire({
+                        title: "確定修改資料?",
+                        icon: "info",
+                        showCancelButton: true,
+                        confirmButtonText: "確定",
+                        cancelButtonText: "取消",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.updateStore();
+                        }
+                    });
+                },
+                confirmCancel(Info) {
+                    Swal.fire({
+                        title: "取消修改資料?",
+                        icon: "info",
+                        showCancelButton: true,
+                        confirmButtonText: "確定",
+                        cancelButtonText: "取消",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.getModifyAPI();
+                        }
+                    });
                 },
                 getRegion: function (city) {
                     let _this = this;
@@ -266,10 +283,20 @@
                     fetch(`/api/InfoModifyapi/PutInfoModify/${_this.ModifyInfo.storeId}`, { method: "Put", body: form })
                         .then(response => {
                             if (response.ok) {
-                                alert("商家資料更新成功!");
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '成功!',
+                                    text: "商家資料更新成功!"
+                                });
+                                // alert("商家資料更新成功!");
                                 return response.text(); // 將回傳結果轉為文字
                             } else {
-                                alert("更新失敗，請確認資料欄位是否完整");
+                                Swal.fire({
+                                    icon: 'fail',
+                                    title: '失敗!',
+                                    text: "更新失敗，請確認資料欄位是否完整!"
+                                });
+                                // alert("更新失敗，請確認資料欄位是否完整");
                                 return response.text(); // 將回傳結果轉為文字
                             }
                         })
@@ -289,7 +316,7 @@
                 getModifyAPI: function () {
                     var isLoggedIn = ('@User.Identity.IsAuthenticated' == "True");
                     if (!isLoggedIn) {
-                        alert("請先登入")
+                        // alert("請先登入")
                         window.location.href = "/Stores/Account/Login";
                     }
                     else {
