@@ -24,7 +24,7 @@
                             <!-- breacrumb -->
                             <nav aria-label="breadcrumb">
                                 <ol class="breadcrumb mb-0">
-                                    <li class="breadcrumb-item"><a href="#">店家</a></li>
+                                    <li class="breadcrumb-item"><a href="/Stores/Home/Main">店家</a></li>
                                     <li class="breadcrumb-item active" aria-current="page">即時訂單</li>
                                 </ol>
                             </nav>
@@ -148,14 +148,6 @@
                                                                                 <div class="d-flex align-items-center mb-2 mb-md-0">
                                                                                     <h2 class="mb-0">訂單明細</h2>
 
-                                                                                </div>
-                                                                                <!-- select option -->
-                                                                                <div class="d-md-flex">
-
-                                                                                    <!-- button -->
-                                                                                    <div class="ms-md-3">
-                                                                                        <a href="#" class="btn btn-secondary">下載明細</a>
-                                                                                    </div>
                                                                                 </div>
                                                                             </div>
                                                                             <div class="mt-8">
@@ -411,7 +403,7 @@
                             text: "訂單已接受!"
                         });
                     },
-                    // **asynchronous nature of the fetch operation**
+
                     updateOrderStatus(item, newStatusId) {
 
                         fetch(`/api/StoreRealTimeOrdersapi/${item.orderId}`, {

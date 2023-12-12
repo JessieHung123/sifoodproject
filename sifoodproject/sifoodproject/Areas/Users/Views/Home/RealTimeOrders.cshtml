@@ -283,7 +283,6 @@
                 data: function () {
                     return {
                         orders: [],
-                        // orderDetails: [],
                     }
                 },
                 computed: {
@@ -369,7 +368,7 @@
                             text: "訂單已完成!"
                         });
                     },
-                    // **asynchronous nature of the fetch operation**
+                    
                     updateOrderStatus(item, newStatusId) {
 
                         fetch(`/api/RealTimeOrdersapi/${item.orderId}`, {
