@@ -463,7 +463,14 @@
                 createDeliverOrder(ChannelID) {
                     var _this = this;
                     if (_this.selectAddress == "") {
-                        alert("請先選擇地址，若無地址，請先至會員專區加入您想運送的地址");
+                        Swal.fire({
+                            icon: 'error',
+                            title: '警告',
+                            text: "請先選擇地址，若無地址，請先至會員專區加入您想運送的地址",
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定'
+                        })
                     } else {
                         _this.loading = true;
                         axios.post(`/Transaction/DeliverOrder`, {
