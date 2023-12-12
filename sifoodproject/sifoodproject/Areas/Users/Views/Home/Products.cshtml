@@ -27,7 +27,6 @@
         <section class="mt-8">
             <div class="container">
                 <div class="row">
-                    @* style="max-width:100%;height:65vh" *@@* 新加樣式 *@
                     <img class="col-md-6" :src="productData.photoPath" style="max-width:100%;height:25rem">
                     <div class="col-md-6">
                         <div class="ps-lg-10 mt-6 mt-md-0">
@@ -103,13 +102,13 @@
                     {
                         <!-- col -->
                         <div class="col">
-                            <div class="card card-product">
+                            <div class="card card-product" style="height:17rem">
                                 <div class="card-body">
                                     <!-- badge -->
                                     <div class="text-center position-relative">
-                                        <a href="/Users/Home/Products/@item.ProductId"> @* 網址連結到該商品 *@
+                                        <a href="/Users/Home/Products/@item.ProductId">
                                             <img src="@item.PhotoPath"
-                                                 class="mb-3 img-fluid">
+                                                 class="mb-3 img-fluid" style="height:10rem">
                                         </a>
                                     </div>
                                     <!-- heading -->
@@ -180,7 +179,20 @@
         </div>
     </div>
 </div>
-
+<!-- Modal -->
+<div class="modal fade" id="qtyZero" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="qtyZeroLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="qtyZeroLabel">目前尚未有庫存!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
     <script>
@@ -198,7 +210,7 @@
             },
             methods: {
                 getProductApi: function () {
-                    var productId=window.location.pathname.slice("21");
+                    var productId = window.location.pathname.slice("21");
                     fetch(`/api/Productapi/GetProduct/${productId}`, { method: "GET" })//寫死
                         .then(response => response.json())
                         .then(data => {
@@ -226,58 +238,59 @@
                     let addItem = {
                         productId: productData.productId,
                         quantity: this.number,
-                        userId:"",
-                    }; 
+                        userId: "",
+                    };
                     let cartCurrentStoreName = shoppingCart.carts.length > 0 ? shoppingCart.carts[0].storeName : "";
                     if (isLogin) {
-                        if (this.remainingStock == 0) { alert("目前尚未有庫存!"); return; };
-                        if (productData.storeName != cartCurrentStoreName && cartCurrentStoreName != "") {
-                            let isChangeStore = confirm(`目前購物車內商品的店家屬於${cartCurrentStoreName}，是否要挑選其他商家做購買?`);
-                            if (isChangeStore) {
-                                try {
-                                    //刪除原購物車所有商品
-                                    await fetch(`/api/CartVMapi/DeleteUserAllCart/`, { method: "DELETE" })
-                                    //換成新店家
-                                    let response = await fetch(`/api/CartVMapi/AddToCart`,
-                                        {
-                                            method: "POST",
-                                            headers: { "Content-Type": "application/json" },
-                                            body: JSON.stringify(addItem)
-                                        });
-                                    let data = await response.text();
-                                    $('#CartAddOkModal').modal('show');
-                                } catch (error) { alert("發生錯誤:" + error); }
+                        if (this.remainingStock == 0) { $('#qtyZero').modal('show'); return; };
+                            if (productData.storeName != cartCurrentStoreName && cartCurrentStoreName != "") {
+                                let isChangeStore = confirm(`目前購物車內商品的店家屬於${cartCurrentStoreName}，是否要挑選其他商家做購買?`);
+                                if (isChangeStore) {
+                                    try {
+                                        //刪除原購物車所有商品
+                                        await fetch(`/api/CartVMapi/DeleteUserAllCart/`, { method: "DELETE" })
+                                        //換成新店家
+                                        let response = await fetch(`/api/CartVMapi/AddToCart`,
+                                            {
+                                                method: "POST",
+                                                headers: { "Content-Type": "application/json" },
+                                                body: JSON.stringify(addItem)
+                                            });
+                                        let data = await response.text();
+                                        $('#CartAddOkModal').modal('show');
+                                    } catch (error) { alert("發生錯誤:" + error); }
+                                    shoppingCart.getCart();
+                                }
+                            }
+                            else {
+                                await fetch(`/api/CartVMapi/AddToCart`,
+                                    {
+                                        method: "POST",
+                                        headers: { "Content-Type": "application/json" },
+                                        body: JSON.stringify(addItem)
+                                    })
+                                    .then(response => {
+                                        if (response.ok) {
+                                            console.log(shoppingCart.carts);
+                                            $('#CartAddOkModal').modal('show');
+                                            shoppingCart.getCart();
+                                        }
+                                    })
+                                    .catch(error => {
+                                        alert(error.message);
+                                    });
                                 shoppingCart.getCart();
                             }
                         }
-                        else {
-                            await fetch(`/api/CartVMapi/AddToCart`,
-                                {
-                                    method: "POST",
-                                    headers: { "Content-Type": "application/json" },
-                                    body: JSON.stringify(addItem)
-                                })
-                                .then(response => {
-                                    if (response.ok) {
-                                        console.log(shoppingCart.carts);
-                                        $('#CartAddOkModal').modal('show');
-                                        shoppingCart.getCart();
-                                    }
-                                })
-                                .catch(error => {
-                                    alert(error.message);
-                                });
-                            shoppingCart.getCart();
+                        else { $('#CartModal').modal('show'); 
+                            $('#confirm').on('click', function () {
+                                $('#cancel').modal('hide');
+                                window.location.href = '/Users/Account/LoginRegister';
+                            });
                         }
                     }
-                    else { $('#CartModal').modal('show'); 
-                        $('#confirm').on('click', function () {
-                            $('#cancel').modal('hide');
-                            window.location.href = '/Users/Account/LoginRegister';
-                        });
-                    }
-                },
-            }
+                }
+            
         }).mount("#product")
     </script>
 }
