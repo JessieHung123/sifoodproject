@@ -2,7 +2,7 @@
 {
     public class StoreFavoriteVM
     {
-        //public string UserId { get; set; } = null!;
+        
 
         public string StoreId { get; set; } = null!;
 

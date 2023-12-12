@@ -10,7 +10,7 @@
     </style>
 }
 @{
-    ViewData["Title"] = "UserAddresses";
+    ViewData["Title"] = "地址管理";
 }
 
 <body>
@@ -52,14 +52,8 @@
                                     <template v-if="item.Edit==true">
                                         <!-- form -->
                                         <div class="card fixed-card ">
-                                            <div class="card-body p-6">
-                                                @* <div class="form-check mb-4">
-                                                <input class="form-check-input" type="radio" name="flexRadioDefault" id="homeRadio" checked>
-                                                <label class="form-check-label text-dark fw-semi-bold" for="homeRadio">
-                                                住址{{index + 1}}
-                                                </label>
-                                                </div> *@
-                                                <strong class="d-block mb-2">住址{{index + 1}}</strong>
+                                            <div class="card-body p-6">                                              
+                                                <strong class="d-block mb-2">地址{{index + 1}}</strong>
                                                 <!-- address --><p class="card-text"></p>
                                                 <p class="mb-6">
                                                     {{item.userName}}<br>
@@ -80,7 +74,7 @@
                                         <!-- form -->
                                         <div class="card fixed-card ">
                                             <div class="card-body p-6">
-                                                <strong class="d-block mb-2">住址{{index + 1}}</strong>
+                                                <strong class="d-block mb-2">地址{{index + 1}}</strong>
                                                 <!-- address -->
                                                 <p class="mb-6">
                                                     {{item.userName}}<br>
@@ -144,8 +138,8 @@
                         <div class="d-flex justify-content-between mb-5">
                             <div>
                                 <!-- heading -->
-                                <h5 class="mb-1" id="addAddressModalLabel">新收件地址</h5>
-                                <p class="small mb-0">為您的訂單新增新的寄送地址</p>
+                                <h5 class="mb-1" id="addAddressModalLabel">新外送地址</h5>
+                                <p class="small mb-0">為您的訂單新增新的外送地址</p>
                             </div>
                             <div>
                                 <!-- button -->
@@ -173,7 +167,7 @@
                             <!-- col -->
                             <div class="col-12">
                                 <!-- input -->
-                                <input type="text" class="form-control" placeholder="請輸入地址" v-model="addressLine">
+                                <input type="text" class="form-control" placeholder="請輸入詳細地址" v-model="addressLine">
                             </div>
                             <div class="col-12">
                                 <!-- form check -->

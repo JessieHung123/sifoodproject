@@ -5,7 +5,7 @@ using sifoodproject.Areas.Users.Models.ViewModels;
 using sifoodproject.Models;
 using sifoodproject.Services;
 
-namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
+namespace sifoodproject.Areas.Users.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -41,7 +41,7 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
             }).ToListAsync();
         }
 
-        // PUT: api/UserAddressesapi/5
+        // PUT: api/UserAddressesapi/id
         [HttpPut("{id}")]
         public async Task<string> PutUserAddress(int id, [FromBody] UserAddressesVM userAddressesVM)
         {
@@ -140,7 +140,7 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
             return "新增地址成功!";
         }
 
-        // DELETE: api/UserAddressesapi/5
+        // DELETE: api/UserAddressesapi/id
         [HttpDelete("{id}")]
         public async Task<string> DeleteUserAddress(int id)
         {
@@ -172,7 +172,6 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
         }
         private bool IsValidChineseAddress(string input)
         {
-            //中文字及阿拉伯數字
             return Regex.IsMatch(input, @"^[\u4e00-\u9fa50-9]+$");
         }
     }

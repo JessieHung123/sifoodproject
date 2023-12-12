@@ -5,7 +5,7 @@ using sifoodproject.Models;
 using sifoodproject.Services;
 
 
-namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
+namespace sifoodproject.Areas.Users.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -28,7 +28,7 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
             return _context.Stores;
         }
 
-        // GET: api/StoreProductsapi/5
+        // GET: api/StoreProductsapi/id
         [HttpGet("{id}")]
         public async Task<List<StoreProductsVM>> GetStore(string id)
         {
@@ -93,14 +93,12 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
         public async Task<object> GetFavoriteStatus(string storeId)
         {
             string userId = _userIdentityService.GetUserId();
-            //return _context.Favorites.Any(f => f.UserId == userId && f.StoreId == storeId);
             bool isFavorite = await _context.Favorites.AnyAsync(f => f.UserId == userId && f.StoreId == storeId);
             return Ok(new { IsFavorite = isFavorite });
         }
         [HttpPost("favorite/add")]
         public async Task<string> SaveToFavorites([FromBody] StoreFavoriteVM favoriteVM)
         {
-            //string userId = favoriteVM.UserId;
             string userId = _userIdentityService.GetUserId();
             string storeId = favoriteVM.StoreId;
             if (favoriteVM == null || string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(storeId))
@@ -185,7 +183,6 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
         }
 
         // POST: api/StoreProductsapi
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Store>> PostStore(Store store)
         {
@@ -199,7 +196,7 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
             return CreatedAtAction("GetStore", new { id = store.StoreId }, store);
         }
 
-        // DELETE: api/StoreProductsapi/5
+        // DELETE: api/StoreProductsapi/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteStore(string id)
         {

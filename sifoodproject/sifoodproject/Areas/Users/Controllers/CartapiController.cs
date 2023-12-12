@@ -29,7 +29,7 @@ namespace sifoodproject.Areas.Users.Controllers
         public async Task<List<CartVM>> GetCarts()
         {
             string userId = _userIdentityService.GetUserId();
-            var cart = await _context.Carts.Where(c => c.UserId == userId&&c.Product.IsDelete==1&& c.Product.RealeasedTime.Date == DateTime.Now.Date && c.Product.SuggestPickEndTime > DateTime.Now.TimeOfDay).Select(c => new CartVM
+            var cart = await _context.Carts.Where(c => c.UserId == userId&&c.Product.IsDelete==1&&c.Product.ReleasedQty-c.Product.OrderedQty!=0&& c.Product.RealeasedTime.Date == DateTime.Now.Date && c.Product.SuggestPickEndTime > DateTime.Now.TimeOfDay).Select(c => new CartVM
             {
                 UserId = userId,
                 ProductId = c.ProductId,
@@ -112,6 +112,19 @@ namespace sifoodproject.Areas.Users.Controllers
             }
             catch (Exception) { return false; }
         }
-        
+
+        [HttpDelete]
+        public async Task<bool> DeleteUserExpiredCart()
+        {
+            string userId = _userIdentityService.GetUserId();
+            var cart = await _context.Carts.Where(c => c.UserId == userId&& c.Product.ReleasedQty - c.Product.OrderedQty == 0 && c.Product.IsDelete == 1).ToListAsync();
+            try
+            {
+                _context.Carts.RemoveRange(cart);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception) { return false; }
+        }
     }
 }

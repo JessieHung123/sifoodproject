@@ -30,9 +30,9 @@ namespace sifoodproject.Areas.Users.Controllers
         public IActionResult CheckOut()
         {
             ViewData["MerchantID"] = _configuration.GetSection("MerchantID").Value;
-            ViewData["ReturnURL"] = $"https://4f68-114-34-121-89.ngrok-free.app/Users/Transaction/CallbackReturn";//上線換網址記得改
-            ViewData["NotifyURL"] = $"https://4f68-114-34-121-89.ngrok-free.app/Users/Transaction/CallbackNotify";//上線換網址記得改
-            ViewData["ClientBackURL"] = $"https://4f68-114-34-121-89.ngrok-free.app/Users/Transaction/Checkout"; //上線換網址記得改
+            ViewData["ReturnURL"] = $"https://sifood103.azurewebsites.net/Users/Transaction/CallbackReturn";
+            ViewData["NotifyURL"] = $"https://sifood103.azurewebsites.net/Users/Transaction/CallbackNotify";
+            ViewData["ClientBackURL"] = $"https://sifood103.azurewebsites.net/Users/Transaction/Checkout";
             return View();
         }
 
@@ -48,7 +48,8 @@ namespace sifoodproject.Areas.Users.Controllers
         {
             string userId = _userIdentityService.GetUserId();
             var CheckOutData = _context.Carts.Include(x => x.User).Where(y => y.UserId == userId && y.Product.IsDelete == 1 &&
-            y.Product.RealeasedTime.Date == DateTime.Now.Date && y.Product.SuggestPickEndTime > DateTime.Now.TimeOfDay)
+            y.Product.RealeasedTime.Date == DateTime.Now.Date && y.Product.SuggestPickEndTime > DateTime.Now.TimeOfDay 
+            && y.Product.ReleasedQty - y.Product.OrderedQty !=0)
             .Select(y => new CheckOutVM
             {
                 UserName = y.User.UserName,
