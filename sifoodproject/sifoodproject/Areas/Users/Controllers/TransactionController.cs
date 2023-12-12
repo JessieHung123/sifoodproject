@@ -48,7 +48,8 @@ namespace sifoodproject.Areas.Users.Controllers
         {
             string userId = _userIdentityService.GetUserId();
             var CheckOutData = _context.Carts.Include(x => x.User).Where(y => y.UserId == userId && y.Product.IsDelete == 1 &&
-            y.Product.RealeasedTime.Date == DateTime.Now.Date && y.Product.SuggestPickEndTime > DateTime.Now.TimeOfDay)
+            y.Product.RealeasedTime.Date == DateTime.Now.Date && y.Product.SuggestPickEndTime > DateTime.Now.TimeOfDay 
+            && y.Product.ReleasedQty - y.Product.OrderedQty !=0)
             .Select(y => new CheckOutVM
             {
                 UserName = y.User.UserName,
