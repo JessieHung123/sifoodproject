@@ -31,11 +31,11 @@
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="col-md-6 mb-3">
                             <label asp-for="ContactName" class="form-label">聯絡人姓名<span class="text-danger">*</span></label>
-                            <input asp-for="ContactName" class="form-control"  placeholder="請輸入一位負責聯繫的人員姓名" />
+                            <input asp-for="ContactName" class="form-control" placeholder="請輸入一位負責聯繫的人員姓名" />
                             <span asp-validation-for="ContactName" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 mb-3">
-                            <label asp-for="StoreName" class="form-label" >店名<span class="text-danger">*</span></label>
+                            <label asp-for="StoreName" class="form-label">店名<span class="text-danger">*</span></label>
                             <input asp-for="StoreName" class="form-control" autocomplete="organization" placeholder="請輸入您在惜食平台欲顯示的店名名稱" />
                             <span asp-validation-for="StoreName" class="text-danger"></span>
                         </div>
@@ -83,20 +83,20 @@
 
                         <!-- City 改下拉選單 -->
                         <div class="col-md-6 mb-3">
-                        <label asp-for="City" class="form-label">店家地址-市<span class="text-danger">*</span></label>
+                            <label asp-for="City" class="form-label">店家地址-市<span class="text-danger">*</span></label>
                             <select asp-for="City" class="form-select" id="citySelect">
-                            <option value="" selected>選擇城市</option>
-                            <option value="臺北市">臺北市</option>
-                            <option value="新北市">新北市</option>
-                            <span asp-validation-for="City" class="text-danger"></span>
-                        </select>
+                                <option value="" selected>選擇城市</option>
+                                <option value="臺北市">臺北市</option>
+                                <option value="新北市">新北市</option>
+                                <span asp-validation-for="City" class="text-danger"></span>
+                            </select>
                         </div>
 
                         <!--  區改下拉選單,並依照City動態改變 -->
-                       
+
                         <div class="col-md-6 mb-3">
                             <label asp-for="Region" class="form-label">店家地址-區<span class="text-danger">*</span></label>
-                            <select asp-for ="Region" id="regionSelect" class="form-select">
+                            <select asp-for="Region" id="regionSelect" class="form-select">
                                 <option value="">請先選擇城市</option>
                             </select>
                             <span asp-validation-for="Region" class="text-danger"></span>
@@ -108,12 +108,12 @@
                         </div>
                         <div class="col-md-6 mb-3">
                             <label asp-for="Latitude" class="form-label">經度<span class="text-danger">*</span></label>
-                            <input asp-for="Latitude" id="Latitude" class="form-control" autocomplete="address-line3"/>
+                            <input asp-for="Latitude" id="Latitude" class="form-control" autocomplete="address-line3" />
                             <span asp-validation-for="Latitude" class="text-danger"></span>
                         </div>
                         <div class="col-md-6 mb-3">
                             <label asp-for="Longitude" class="form-label">緯度<span class="text-danger">*</span></label>
-                            <input asp-for="Longitude" id="Longitude" class="form-control" autocomplete="address-line3"/>
+                            <input asp-for="Longitude" id="Longitude" class="form-control" autocomplete="address-line3" />
                             <span asp-validation-for="Longitude" class="text-danger"></span>
                         </div>
                         <div class="col-md-12 mb-3">
@@ -126,27 +126,26 @@
                         </div>
 
                         <div class="col-md-12 mb-3">
-                            <label asp-for="Description" class="form-label" >店家介紹<span class="text-danger">*(限制25字內)</span></label>
+                            <label asp-for="Description" class="form-label">店家介紹<span class="text-danger">*(限制25字內)</span></label>
                             <textarea asp-for="Description" class="form-control" placeholder="請輸入25字內的店家介紹" rows="3"></textarea>
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                         <div class="py-4 mb-4">
                             <label asp-for="LogoPath"><h4 class="mb-5 h5">請上傳您的LOGO</h4></label>
-                            
+
                             <div class="mb-4 d-flex">
                                 <div class="position-relative">
                                     <img class="image  icon-shape icon-xxxl bg-light rounded-4"
                                          src="~/images/joinus/uploadstorephoto.svg" alt="Image">
                                     <div class="file-upload position-absolute end-0 top-0 mt-n2 me-n1">
-                                        
-                                        <input asp-for="LogoPath" type="file" accept="image/*"class="file-input ">
+
+                                        <input asp-for="LogoPath" type="file" accept="image/*" class="file-input ">
                                         <span asp-validation-for="LogoPath" class="text-danger"></span>
                                         <span class="icon-shape icon-sm rounded-circle bg-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
-                                                fill="currentColor" class="bi bi-pencil-fill text-muted"
-                                                viewBox="0 0 16 16">
-                                                <path
-                                                    d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                                 fill="currentColor" class="bi bi-pencil-fill text-muted"
+                                                 viewBox="0 0 16 16">
+                                                <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                                             </svg>
                                         </span>
                                     </div>
@@ -154,7 +153,7 @@
                             </div>
 
                             @* 店家照片上傳3張安排 *@
-                                                       
+
                             <div class="border-bottom py-4 mb-4">
                                 <label><h4 class="mb-5 h5">請上傳您的店家照片</h4></label>
                                 <div class="row">
@@ -163,17 +162,16 @@
                                         <div class="mb-4 d-flex">
                                             <div class="position-relative">
                                                 <img class="image  icon-shape icon-xxxl bg-light rounded-4"
-                                                    src="~/assets/images/icons/bakery.svg" alt="Image">
+                                                     src="~/assets/images/icons/bakery.svg" alt="Image">
 
                                                 <div class="file-upload position-absolute end-0 top-0 mt-n2 me-n1">
                                                     <input asp-for="PhotosPath" type="file" accept="image/*" class="file-input ">
                                                     <span class="icon-shape icon-sm rounded-circle bg-white">
 
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
-                                                            fill="currentColor" class="bi bi-pencil-fill text-muted"
-                                                            viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                                             fill="currentColor" class="bi bi-pencil-fill text-muted"
+                                                             viewBox="0 0 16 16">
+                                                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                                                         </svg>
                                                     </span>
                                                 </div>
@@ -185,16 +183,15 @@
                                         <div class="mb-4 d-flex">
                                             <div class="position-relative">
                                                 <img class="image  icon-shape icon-xxxl bg-light rounded-4"
-                                                    src="~/assets/images/icons/bakery.svg" alt="Image">
+                                                     src="~/assets/images/icons/bakery.svg" alt="Image">
 
                                                 <div class="file-upload position-absolute end-0 top-0 mt-n2 me-n1">
                                                     <input asp-for="PhotosPath2" type="file" accept="image/*" class="file-input ">
                                                     <span class="icon-shape icon-sm rounded-circle bg-white">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
-                                                            fill="currentColor" class="bi bi-pencil-fill text-muted"
-                                                            viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                                             fill="currentColor" class="bi bi-pencil-fill text-muted"
+                                                             viewBox="0 0 16 16">
+                                                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                                                         </svg>
                                                     </span>
                                                 </div>
@@ -206,16 +203,15 @@
                                         <div class="mb-4 d-flex">
                                             <div class="position-relative">
                                                 <img class="image  icon-shape icon-xxxl bg-light rounded-4"
-                                                    src="~/assets/images/icons/bakery.svg" alt="Image">
+                                                     src="~/assets/images/icons/bakery.svg" alt="Image">
 
                                                 <div class="file-upload position-absolute end-0 top-0 mt-n2 me-n1">
                                                     <input asp-for="PhotosPath3" type="file" accept="image/*" class="file-input ">
                                                     <span class="icon-shape icon-sm rounded-circle bg-white">
                                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
-                                                            fill="currentColor" class="bi bi-pencil-fill text-muted"
-                                                            viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
+                                                             fill="currentColor" class="bi bi-pencil-fill text-muted"
+                                                             viewBox="0 0 16 16">
+                                                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708l-3-3zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207l6.5-6.5zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.499.499 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11l.178-.178z" />
                                                         </svg>
                                                     </span>
                                                 </div>
@@ -224,9 +220,10 @@
                                     </div>
                                 </div>
                             </div>
-                         <div class="col-md-6 mb-3">
-                            <!-- btn -->
-                            <button id="submitButton" type="submit" value="JoinUs" class="btn btn-primary">送出申請</button>
+                            <div class="col-md-6 mb-3">
+                                <!-- btn -->
+                                <button id="submitButton" type="submit" value="JoinUs" class="btn btn-primary">送出申請</button>
+                            </div>
                         </div>
                     </form>
 
@@ -235,7 +232,6 @@
                     </div>
 
                     <!--根據送出結果跳出Modal-->
-                    
                     <!-- OK Modal -->
                     <div class="modal fade" id="modalOK" tabindex="-1" role="dialog" aria-labelledby="okModalLabel" aria-hidden="true">
                         <div class="modal-dialog" role="document">
@@ -247,7 +243,7 @@
                                     請稍待一至二天審核，謝謝~
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='https://localhost:7042/Users/Home/Main'">好</button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='https://localhost:7172/Users/Home/Main'">好</button>
                                 </div>
                             </div>
                         </div>
@@ -269,11 +265,9 @@
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
             </div>
         </div>
-        </div>
-
     </section>
 </main>
 
@@ -319,7 +313,7 @@
     <script>
         document.getElementById('calculate').addEventListener('click', function (event) {
             var storeAddress = document.getElementById('address').value;
-            var storeFullAddress =storeAddress;
+            var storeFullAddress = storeAddress;
             event.preventDefault();
             event.stopPropagation();
             var geocoder = new google.maps.Geocoder();
@@ -334,7 +328,7 @@
     </script>
     <script>
         document.getElementById('myForm').addEventListener('submit', function (e) {
-            e.preventDefault(); 
+            e.preventDefault();
             // 阻止表單的默認提交行為:驗證沒過不要亂送出
 
             // 使用 FormData 來獲取表單數據
@@ -347,7 +341,7 @@
             })
                 .then(response => response.text()) // 將響應轉換為 JSON
                 .then(data => {
-                    if (data=="成功") {
+                    if (data == "成功") {
                         // 如果後端返回成功，顯示成功的 Modal
                         $('#modalOK').modal('show');
                     } else {
@@ -362,4 +356,3 @@
         });
     </script>
     }
-       
