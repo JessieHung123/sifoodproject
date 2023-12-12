@@ -35,98 +35,100 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th style="text-align: center;">
-                                    商店ID
-                                </th>
-                                <th style="text-align: left;">
-                                    商店名稱
-                                </th>
-                                <th style="text-align: left;">
-                                    聯絡人
-                                </th>
-                                <th style="text-align: left;">
-                                    Email
-                                </th>
-                                <th style="text-align: left;">
-                                    電話
-                                </th>
-                                <th style="text-align: left;">
-                                    城市
-                                </th>
-                                <th style="text-align: center;">
-                                    功能
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model)
-                            {
-                                @if (item.StoreIsAuthenticated == 1)
+                    <div class="table-responsive">
+                        <table class="table table-centered table-hover table-borderless mb-0 table-with-checkbox text-nowrap">
+                            <thead class="bg-light">
+                                <tr>
+                                    <th style="text-align: center;">
+                                        商店ID
+                                    </th>
+                                    <th style="text-align: left;">
+                                        商店名稱
+                                    </th>
+                                    <th style="text-align: left;">
+                                        聯絡人
+                                    </th>
+                                    <th style="text-align: left;">
+                                        Email
+                                    </th>
+                                    <th style="text-align: left;">
+                                        電話
+                                    </th>
+                                    <th style="text-align: left;">
+                                        城市
+                                    </th>
+                                    <th style="text-align: center;">
+                                        功能
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
                                 {
-                                    <tr>
-                                        <td style="text-align: center;">
-                                            @Html.DisplayFor(modelItem => item.StoreId)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.StoreName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.ContactName)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Email)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Phone)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.City)
-                                        </td>
-                                        <td style="text-align: center;">
-                                            <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="@("#EditStore-" + item.StoreId)" data-url="@Url.Action($"Edit/{item.StoreId}")">
-                                                <i class="bi bi-pencil-square me-3"></i>修改
-                                            </button>
-                                            @await Html.PartialAsync("_EditPartialView",item)
-                                            <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="@("#DetailStore-" + item.StoreId)" data-url="@Url.Action($"Details/{item.StoreId}")">
-                                                <i class="bi bi-info-circle me-3"></i>明細
-                                            </button>
-                                            @await Html.PartialAsync("_DetailsPartialView",item)
-                                            <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="@("#DeleteStore-" + item.StoreId)" data-url="@Url.Action($"Delete/{item.StoreId}")">
-                                                <i class="bi bi-trash me-3"></i>刪除
-                                            </button>
-                                            @await Html.PartialAsync("_DeletePartialView",item)
-                                        </td>
-                                    </tr>
+                                    @if (item.StoreIsAuthenticated == 1)
+                                    {
+                                        <tr>
+                                            <td style="text-align: center;">
+                                                @Html.DisplayFor(modelItem => item.StoreId)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.StoreName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.ContactName)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Email)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Phone)
+                                            </td>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.City)
+                                            </td>
+                                            <td style="text-align: center;">
+                                                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="@("#EditStore-" + item.StoreId)" data-url="@Url.Action($"Edit/{item.StoreId}")">
+                                                    <i class="bi bi-pencil-square me-3"></i>修改
+                                                </button>
+                                                @await Html.PartialAsync("_EditPartialView",item)
+                                                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="@("#DetailStore-" + item.StoreId)" data-url="@Url.Action($"Details/{item.StoreId}")">
+                                                    <i class="bi bi-info-circle me-3"></i>明細
+                                                </button>
+                                                @await Html.PartialAsync("_DetailsPartialView",item)
+                                                <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="@("#DeleteStore-" + item.StoreId)" data-url="@Url.Action($"Delete/{item.StoreId}")">
+                                                    <i class="bi bi-trash me-3"></i>刪除
+                                                </button>
+                                                @await Html.PartialAsync("_DeletePartialView",item)
+                                            </td>
+                                        </tr>
+                                    }
                                 }
-                            }
-                        </tbody>
-                    </table>
-                    <div class="border-top d-md-flex justify-content-between align-items-center p-6">
-                        <span>顯示 @ViewBag.EntriesStart 到 @ViewBag.EntriesEnd 筆資料，共 @ViewBag.TotalEntries 筆資料。</span>
-                        <nav class="mt-2 mt-md-0">
-                            <ul class="pagination mb-0">
-                                @if (ViewBag.Page > 1)
-                                {
-                                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page - 1, searchStores = ViewBag.searchStores })">上一頁</a></li>
-                                }
-
-                                @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                                {
-                                    <li class="page-item @(i == ViewBag.Page ? "active" : "")">
-                                        <a class="page-link" href="@Url.Action("Index", new { page = i, pageSize = ViewBag.PageSize, searchStores = TempData["SearchStores"] })">@i</a>
-                                    </li>
-                                }
-
-                                @if (ViewBag.Page < ViewBag.TotalPages)
-                                {
-                                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page + 1, searchStores = ViewBag.searchStores })">下一頁</a></li>
-                                }
-                            </ul>
-                        </nav>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+                <div class="border-top d-md-flex justify-content-between align-items-center p-6">
+                    <span>顯示 @ViewBag.EntriesStart 到 @ViewBag.EntriesEnd 筆資料，共 @ViewBag.TotalEntries 筆資料。</span>
+                    <nav class="mt-2 mt-md-0">
+                        <ul class="pagination mb-0">
+                            @if (ViewBag.Page > 1)
+                            {
+                                <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page - 1, searchStores = ViewBag.searchStores })">上一頁</a></li>
+                            }
+
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == ViewBag.Page ? "active" : "")">
+                                    <a class="page-link" href="@Url.Action("Index", new { page = i, pageSize = ViewBag.PageSize, searchStores = TempData["SearchStores"] })">@i</a>
+                                </li>
+                            }
+
+                            @if (ViewBag.Page < ViewBag.TotalPages)
+                            {
+                                <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page + 1, searchStores = ViewBag.searchStores })">下一頁</a></li>
+                            }
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>
