@@ -1,12 +1,11 @@
 ﻿using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using sifoodproject._0.Areas.Users.Models.ViewModels;
 using sifoodproject.Areas.Users.Models.ViewModels;
 using sifoodproject.Models;
 using sifoodproject.Services;
 
-namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
+namespace sifoodproject.Areas.Users.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
@@ -24,7 +23,6 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
         }
 
         // GET: api/RealTimeOrdersapi
-        //[HttpGet]
 
         [HttpGet]
         public async Task<List<OrderVM>> GetOrder()
@@ -66,8 +64,7 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
                  }).ToListAsync();
         }
 
-        // PUT: api/RealTimeOrdersapi/5
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        // PUT: api/RealTimeOrdersapi/id
         [HttpPut("{id}")]
         public async Task<string> PutOrder(string id, [FromBody] RealTimeOrderVM realTimeOrderVM)
         {
@@ -97,7 +94,7 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
         }
 
         // POST: api/RealTimeOrdersapi
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+
         [HttpPost]
         public async Task<ActionResult<Order>> PostOrder(Order order)
         {
@@ -111,7 +108,7 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
             return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
         }
 
-        // DELETE: api/RealTimeOrdersapi/5
+        // DELETE: api/RealTimeOrdersapi/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(string id)
         {

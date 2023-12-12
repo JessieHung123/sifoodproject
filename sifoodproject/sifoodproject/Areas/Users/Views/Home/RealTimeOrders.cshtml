@@ -4,7 +4,7 @@
 
 }
 @{
-    ViewData["Title"] = "RealTimeOrders";
+    ViewData["Title"] = "即時訂單";
 }
 
 <body>
@@ -20,14 +20,7 @@
                             <!-- heading -->
                             <div class="d-flex justify-content-between">
                                 <h2 class="mb-6">即時訂單</h2>
-                                <div class="mb-2 mb-md-0">
-                                    <select class="form-select">
-                                        <option selected>Status</option>
-                                        <option value="Success">Success</option>
-                                        <option value="Pending">Pending</option>
-                                        <option value="Cancel">Cancel</option>
-                                    </select>
-                                </div>
+                                
                             </div>
 
                             <div class="table-responsive-xxl border-0">
@@ -38,7 +31,7 @@
                                         <tr>
                                             <th>訂單編號</th>
                                             <th>訂單日期</th>
-                                            <th>數量</th>
+                                            <th>商品數量</th>
                                             <th>取餐方式</th>
                                             <th>訂單狀態</th>
                                             <th>訂購總額</th>
@@ -135,7 +128,6 @@
                                                                                             {{item.userEmail}}<br>
                                                                                             {{item.userPhone}}
                                                                                         </p>
-                                                                                        <a href="#">View Profile</a>
                                                                                     </div>
                                                                                 </div>
                                                                                 <!-- address -->
@@ -283,7 +275,6 @@
                 data: function () {
                     return {
                         orders: [],
-                        // orderDetails: [],
                     }
                 },
                 computed: {
@@ -369,7 +360,7 @@
                             text: "訂單已完成!"
                         });
                     },
-                    // **asynchronous nature of the fetch operation**
+                    
                     updateOrderStatus(item, newStatusId) {
 
                         fetch(`/api/RealTimeOrdersapi/${item.orderId}`, {
