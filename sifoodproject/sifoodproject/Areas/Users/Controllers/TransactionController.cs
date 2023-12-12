@@ -77,9 +77,12 @@ namespace sifoodproject.Areas.Users.Controllers
             string UserId = _context.Users.Where(x => x.UserName == model.UserName).Select(x => x.UserId).Single();
             User? user = _context.Users.FirstOrDefault(x => x.UserName == model.UserName);
             user.TotalOrderAmount += model.TotalPrice;
+            TimeZoneInfo taiwanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
+            DateTime utcNow = DateTime.UtcNow;
+            DateTime taiwanTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, taiwanTimeZone);
             Order order = new()
             {
-                OrderDate = DateTime.Now,
+                OrderDate = taiwanTime,
                 StoreId = StoreId,
                 UserId = UserId,
                 DeliveryMethod = "自取",
@@ -130,9 +133,12 @@ namespace sifoodproject.Areas.Users.Controllers
             string UserId = _context.Users.Where(x => x.UserName == model.UserName).Select(x => x.UserId).Single();
             User? user = _context.Users.FirstOrDefault(x => x.UserName == model.UserName);
             user.TotalOrderAmount += model.TotalPrice;
+            TimeZoneInfo taiwanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
+            DateTime utcNow = DateTime.UtcNow;
+            DateTime taiwanTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, taiwanTimeZone);
             Order order = new()
             {
-                OrderDate = DateTime.Now,
+                OrderDate = taiwanTime,
                 StoreId = StoreId,
                 UserId = UserId,
                 DeliveryMethod = "外送",
