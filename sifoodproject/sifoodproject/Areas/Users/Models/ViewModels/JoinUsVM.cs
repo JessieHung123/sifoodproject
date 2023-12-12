@@ -50,10 +50,12 @@ namespace sifoodproject.Areas.Users.Models.ViewModels
         [Display(Name = "公休日")]
         public string? ClosingDay { get; set; }
 
+        [Required(ErrorMessage = "請上傳LOGO")]
         [Display(Name = "LOGO")]
         //改類型為IFormFile
         public IFormFile? LogoPath { get; set; }
 
+        [Required(ErrorMessage = "請上傳店家照片")]
         [Display(Name = "店家照片")]
         //改類型,用於處理多個文件
         //然後，在控制器中，會遍歷這個列表並分別處理每個文件

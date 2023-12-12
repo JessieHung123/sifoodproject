@@ -58,7 +58,7 @@ namespace sifoodproject.Areas.Users.Controllers
 
         //11/23新版
         [HttpPost]
-        public async Task<IActionResult> Profile(string id, [Bind("UserName,UserPhone,UserBirthDate")] ProfileVM profileViewModel)
+        public async Task<IActionResult> Profile(string id, [Bind("UserName,UserPhone,UserEmail,UserBirthDate")] ProfileVM profileViewModel)
         {
             //if (ModelState.IsValid)
             //{

@@ -563,15 +563,15 @@
                         })
                     })
                         .then(response => { 
-                                    if (response.ok) {
-                            return response.json();
-                        } else if (response.status === 400) {
-                            throw new Error('無效的請求數據。');
-                        } else if (response.status === 404) {
-                            throw new Error('找不到相關的訂單。');
-                        } else {
-                            throw new Error('發生未知錯誤。');
-                        }
+                            if (response.ok) {
+                                return response.json();
+                            } else if (response.status === 400) {
+                                throw new Error('無效的請求數據。');
+                            } else if (response.status === 404) {
+                                throw new Error('找不到相關的訂單。');
+                            } else {
+                                throw new Error('發生未知錯誤。');
+                            }
                         })
                             //response.json())
                         .then(data => {

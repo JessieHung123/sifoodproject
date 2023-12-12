@@ -131,8 +131,8 @@
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                         <div class="py-4 mb-4">
-                            <label asp-for="LogoPath"><h4 class="mb-5 h5">請上傳您的LOGO</h4></label>
-
+                            <label asp-for="LogoPath"><h4 class="mb-5 h5">請上傳您的LOGO<span class="text-danger">*</span></h4></label>
+                            <span asp-validation-for="LogoPath" class="text-danger"></span>
                             <div class="mb-4 d-flex">
                                 <div class="position-relative">
                                     <img class="image  icon-shape icon-xxxl bg-light rounded-4"
@@ -140,7 +140,6 @@
                                     <div class="file-upload position-absolute end-0 top-0 mt-n2 me-n1">
 
                                         <input asp-for="LogoPath" type="file" accept="image/*" class="file-input ">
-                                        <span asp-validation-for="LogoPath" class="text-danger"></span>
                                         <span class="icon-shape icon-sm rounded-circle bg-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
                                                  fill="currentColor" class="bi bi-pencil-fill text-muted"
@@ -155,7 +154,8 @@
                             @* 店家照片上傳3張安排 *@
 
                             <div class="border-bottom py-4 mb-4">
-                                <label><h4 class="mb-5 h5">請上傳您的店家照片</h4></label>
+                                <label asp-for="PhotosPath"><h4 class="mb-5 h5">請上傳您的店家照片<span class="text-danger">*</span></h4></label>
+                                <span asp-validation-for="PhotosPath" class="text-danger"></span>
                                 <div class="row">
                                     <!-- 第一個上傳元素 -->
                                     <div class="col-md-4">

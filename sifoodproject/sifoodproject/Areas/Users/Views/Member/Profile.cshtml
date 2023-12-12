@@ -37,7 +37,7 @@
 
                                 <!-- input for UserEmail -->
                                 <div class="mb-3">
-                                    <label class="form-label" for="email">Email</label>
+                                        <label class="form-label" for="email">Email <span class="text-danger"> *(僅供檢視,不可修改)</span></label>
                                         <input asp-for="UserEmail" type="email" class="form-control" id="email" placeholder="example@gmail.com" autocomplete="email" readonly>
                                     <span asp-validation-for="UserEmail" class="text-danger"></span>
                                 </div>
