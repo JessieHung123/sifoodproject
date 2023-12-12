@@ -10,7 +10,6 @@ using System.Diagnostics;
 using System.Text;
 using static sifoodproject.Areas.Users.Models.NewebPayModels.PayModels;
 
-
 namespace sifoodproject.Areas.Users.Controllers
 {
     [Area("Users")]
@@ -32,7 +31,7 @@ namespace sifoodproject.Areas.Users.Controllers
             ViewData["MerchantID"] = _configuration.GetSection("MerchantID").Value;
             ViewData["ReturnURL"] = $"https://sifood103.azurewebsites.net/Users/Transaction/CallbackReturn";
             ViewData["NotifyURL"] = $"https://sifood103.azurewebsites.net/Users/Transaction/CallbackNotify";
-            ViewData["ClientBackURL"] = $"https://sifood103.azurewebsites.net/Users/Transaction/Checkout";
+            ViewData["ClientBackURL"] = $"https://sifood103.azurewebsites.net/Users/Home/Main";
             return View();
         }
 
