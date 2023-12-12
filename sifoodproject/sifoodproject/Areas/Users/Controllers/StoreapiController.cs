@@ -168,7 +168,7 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
                 CommentCount = comment.FirstOrDefault(s => s.Key == x.StoreId) == null ? 0 : comment.FirstOrDefault(s => s.Key == x.StoreId).Count,
                 CommentRank = commentRank.FirstOrDefault(r => r.Key == x.StoreId)?.TotalRank,
                 Phone = x.Phone,
-                CategoryList = Product.FirstOrDefault(p => p.Key == x.StoreId) == null ? new List<string>() : Product.FirstOrDefault(p => p.Key == x.StoreId).categoryList,
+                CategoryList = Product.FirstOrDefault(p => p.Key == x.StoreId) == null ? new List<string>() : Product.FirstOrDefault(p => p.Key == x.StoreId).categoryList.Distinct(),
             });
 
             return total;

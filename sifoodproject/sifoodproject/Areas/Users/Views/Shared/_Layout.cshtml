@@ -3,9 +3,9 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - sifoodprojectformal2._0</title>
+    <title>@ViewData["Title"]</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/.styles.css" asp-append-version="true" />
+    @* <link rel="stylesheet" href="~/.styles.css" asp-append-version="true" /> *@
     <link href="~/assets/libs/slick-carousel/slick/slick.css" asp-append-version="true" rel="stylesheet" />
     <link href="~/assets/libs/slick-carousel/slick/slick-theme.css" asp-append-version="true" rel="stylesheet" />
     <link href="~/assets/libs/tiny-slider/dist/tiny-slider.css" asp-append-version="true" rel="stylesheet" />
@@ -323,6 +323,7 @@
                 if (isLogin) {
                     this.getCart();
                 }
+                this.deleteExpiredCartItem();
             },
 
             methods: {
@@ -388,6 +389,17 @@
                             }, 1000);
                         }
                     }).catch(error => alert("發生錯誤"));
+                },
+                async deleteExpiredCartItem() {
+                    await fetch(`/api/CartVMapi/DeleteUserExpiredCart`,
+                        {
+                            method: "DELETE",
+                            headers: { "Content-Type": "application/json" },
+                            // body: JSON.stringify()
+                        }).then(response => {
+                            return response;
+                            
+                        });
                 },
             }
         }).mount("#header")
