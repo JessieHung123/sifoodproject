@@ -1,6 +1,7 @@
 using Hangfire;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
+using sifoodproject.Job;
 using sifoodproject.Models;
 using sifoodproject.Services;
 
@@ -47,7 +48,8 @@ namespace sifoodproject
 
 
             builder.Services.AddControllersWithViews();
-
+            //hangfire
+            builder.Services.AddSiFoodScheduleJob();
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -57,7 +59,8 @@ namespace sifoodproject
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-
+            //hangfire
+            app.UseSiFoodDailyJob();
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
@@ -66,7 +69,8 @@ namespace sifoodproject
 
             app.UseAuthentication();
             app.UseAuthorization();
-
+            //hangfire
+            app.UseHangfireDashboard();
             app.MapControllerRoute(
                 name: "areas",
                 pattern: "{area=Users}/{controller=Home}/{action=Main}/{id?}"
