@@ -39,7 +39,7 @@ namespace sifoodproject.Areas.Stores.Controllers
                     UserId = x.UserId,
                     OrderId = x.OrderId,
                     CommentRank = x.Comment.CommentRank,
-                    CommentTime = x.Comment.CommentTime,
+                    CommentTime = x.Comment.CommentTime.ToString("yyyy-MM-dd HH:mm:ss"),
                     Contents = x.Comment.Contents,
                     StoreId = x.StoreId,
                     UserName = x.User.UserName
@@ -64,7 +64,7 @@ namespace sifoodproject.Areas.Stores.Controllers
                 UserId = x.UserId,
                 OrderId = x.OrderId,
                 CommentRank = x.Comment.CommentRank,
-                CommentTime = x.Comment.CommentTime,
+                CommentTime = x.Comment.CommentTime.ToString("yyyy-MM-dd HH:mm:ss"),
                 Contents = x.Comment.Contents,
                 StoreId = x.StoreId,
                 UserName = x.User.UserName
