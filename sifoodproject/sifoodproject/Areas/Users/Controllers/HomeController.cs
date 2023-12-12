@@ -44,7 +44,16 @@ namespace sifoodproject.Areas.Users.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<string> JoinUsSubmit(JoinUsVM joinus)
-        {        
+        {
+            //擋重複email
+            // 檢查電子郵件是否已存在
+            var existingStore = await _context.Stores.FirstOrDefaultAsync(s => s.Email == joinus.Email);
+            if (existingStore != null)
+            {
+                // 電子郵件已存在，返回錯誤訊息
+                return "Email重複";
+            }
+
             // 格式化營業時間
             string formattedOpeningTime = $"平日 {joinus.WeekdayStartTime} - {joinus.WeekdayEndTime}，週末 {joinus.WeekendStartTime} - {joinus.WeekendEndTime}";
             //string formattedOpeningTime = $"平日 {joinus.WeekdayStartTime:HH:mm} - {joinus.WeekdayEndTime:HH:mm}，週末 {joinus.WeekendStartTime:HH:mm} - {joinus.WeekendEndTime:HH:mm}";

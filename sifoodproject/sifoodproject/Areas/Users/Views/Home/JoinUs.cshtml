@@ -257,7 +257,7 @@
                                     <h5 class="modal-title" id="notOkModalLabel">未成功送出申請!</h5>
                                 </div>
                                 <div class="modal-body">
-                                    請重新確認您填寫的資料~
+                                    <p id="error-message">請重新確認您填寫的資料~</p> <!-- 新增的錯誤訊息元素 -->
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
@@ -343,12 +343,15 @@
                 .then(data => {
                     if (data == "成功") {
                         // 如果後端返回成功，顯示成功的 Modal
-                        $('#modalOK').modal('show');                      
+                        $('#modalOK').modal('show');
+                         // 如果後端返回失敗，顯示失敗的 Modal
                     } else {
-                        // 如果後端返回失敗，顯示失敗的 Modal
+                        // 設置 NotOK Modal 的錯誤訊息
+                        let errorMessage = data === "Email重複" ? "Email重複申請!" : "請重新確認您填寫的資料~";
+                        document.getElementById('error-message').textContent = errorMessage;
                         $('#modalNotOK').modal('show');
                     }
-                })
+                    })
                 .catch(error => {
                     console.error('錯誤:', error);
                     // 這裡可以處理網路錯誤等問題
