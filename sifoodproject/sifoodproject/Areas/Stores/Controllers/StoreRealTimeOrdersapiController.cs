@@ -78,7 +78,7 @@ namespace sifoodproject.Areas.Stores.Controllers
                  }).ToListAsync();
         }
 
-        // PUT: api/StoreRealTimeOrdersapi/5
+        // PUT: api/StoreRealTimeOrdersapi/id
         [HttpPut("{id}")]
         public async Task<string> PutOrder(string id, [FromBody] RealTimeOrderVM realTimeOrderVM)
         {
@@ -134,7 +134,7 @@ namespace sifoodproject.Areas.Stores.Controllers
             return CreatedAtAction("GetOrder", new { id = order.OrderId }, order);
         }
 
-        // DELETE: api/StoreRealTimeOrdersapi/5
+        // DELETE: api/StoreRealTimeOrdersapi/id
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteOrder(string id)
         {

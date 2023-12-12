@@ -28,8 +28,6 @@
 
         public string? PaymentMethodＮame { get; set; }
 
-        //public DateTime PaymentTime { get; set; }
-
         public string PaymentDate { get; set; }
 
         public string PaymentTime { get; set; }
