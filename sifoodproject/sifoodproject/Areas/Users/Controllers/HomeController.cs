@@ -138,21 +138,19 @@ namespace sifoodproject.Areas.Users.Controllers
         {
             var IdToString = ProductId.ToString();
             List<string> ProductList = GetCookieProductList();//讀取
-            if (ProductList.Contains(IdToString)) { ProductList.Remove(IdToString); }
+            ProductList.Remove(IdToString);
             if (IdToString != "0") { ProductList.Add(IdToString); }
             SetCookieProductList(ProductList);//取陣列最後一個以外的值
             //倒敘且只留最後五個
             ProductList.Reverse();
             ProductList = ProductList.Take(5).ToList();
-
-            ViewBag.ProductList = ProductList;
             List<ProductVM> cookieProduct = new List<ProductVM>();
-
             if (ProductList != null)
             {
-                foreach (var productid in ProductList)
+                foreach (var productId in ProductList)
                 {
-                    var c = _context.Products.Where(p => p.ProductId == int.Parse(productid));
+
+                    var c = _context.Products.Where(p => p.ProductId == int.Parse(productId));
                     ProductVM VM = new ProductVM
                     {
                         ProductId = c.Select(p => p.ProductId).Single(),
@@ -174,6 +172,7 @@ namespace sifoodproject.Areas.Users.Controllers
             if (ProductCookieValue != null && ProductCookieValue != "")
             {
                 ProductList.AddRange(ProductCookieValue.Split(','));
+                ProductList = ProductList.Skip(Math.Max(0, ProductList.Count - 5)).ToList();
             }
             return ProductList;//{"32","33","34"}
         }
