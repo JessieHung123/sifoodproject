@@ -230,6 +230,7 @@
     <script src="~/assets/js/theme.min.js"></script>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script src="https://unpkg.com/vuejs-paginate-next@latest/dist/vuejs-paginate-next.umd.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         const StoreMainApp = Vue.createApp({
             data: function () {
@@ -357,11 +358,21 @@
                                     _this.description = "";
                                     document.getElementById("insertFilePreview").src = "/images/Noimage.png";
                                     document.querySelector("#insertFile").value = ""; // 清空檔案輸入
-                                    alert("新增商品成功");
+                                    Swal.fire({
+                                        icon: 'success',
+                                        title: '成功!',
+                                        text: "新增商品成功!"
+                                    });
+                                    // alert("新增商品成功");
                                     return response.text(); // 將回傳結果轉為文字
                                 } else {
                                     _this.startSeach()
-                                    alert("更新失敗，請確認資料是否完整");
+                                    Swal.fire({
+                                        icon: 'fail',
+                                        title: '失敗!',
+                                        text: "新增商品失敗，請確認資料是否完整!"
+                                    });
+                                    // alert("更新失敗，請確認資料是否完整");
                                     return response.text();
                                 }
                             }).then(data => {
@@ -378,9 +389,19 @@
                         .then(response => {
                             if (response.ok) {
                                 _this.startSeach();
-                                alert("刪除成功");
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '成功!',
+                                    text: "刪除成功!"
+                                });
+                                // alert("刪除成功");
                             } else {
-                                alert("刪除失敗");
+                                Swal.fire({
+                                    icon: 'fail',
+                                    title: '失敗!',
+                                    text: "刪除失敗!"
+                                });
+                                // alert("刪除失敗");
                             }
                         })
                         .catch(error => console.log(error));
@@ -389,11 +410,21 @@
                     let _this = this;
                     if (_this.selectedToEdit.orderedQty > _this.selectedToEdit.releasedQty) {
                         _this.startSeach();
-                        return alert("上架數量不可低於已訂購數量!");
+                        return Swal.fire({
+                            icon: 'fail',
+                            title: '失敗!',
+                            text: "上架數量不可低於已訂購數量!"
+                        });
+                        // alert("上架數量不可低於已訂購數量!");
                     }
                     else if (_this.selectedToEdit.suggestPickUpTime >= _this.selectedToEdit.suggestPickEndTime) {
                         _this.startSeach();
-                        return alert("建議取貨迄時不可早於建議取貨起時!");
+                        return Swal.fire({
+                            icon: 'fail',
+                            title: '失敗!',
+                            text: "建議取貨迄時不可早於建議取貨起時!"
+                        });
+                        // alert("建議取貨迄時不可早於建議取貨起時!");
                     }
                     else {
                         var form = new FormData();
