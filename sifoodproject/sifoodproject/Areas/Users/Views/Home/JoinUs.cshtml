@@ -243,7 +243,7 @@
                                     請稍待一至二天審核，謝謝~
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='https://localhost:7172/Users/Home/Main'">好</button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='@Url.Action("Main", "Home", new { area = "Users" })'">好</button>
                                 </div>
                             </div>
                         </div>
@@ -343,7 +343,7 @@
                 .then(data => {
                     if (data == "成功") {
                         // 如果後端返回成功，顯示成功的 Modal
-                        $('#modalOK').modal('show');
+                        $('#modalOK').modal('show');                      
                     } else {
                         // 如果後端返回失敗，顯示失敗的 Modal
                         $('#modalNotOK').modal('show');
