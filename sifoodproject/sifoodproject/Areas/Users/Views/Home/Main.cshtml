@@ -47,7 +47,7 @@
                                 <li class="nav-item border-bottom w-100 " v-for="(area,name) in showArea">
                                     <a class="nav-link collapsed" style="color:#6c757d;font-weight: bold" data-bs-toggle="collapse" :data-bs-target="'#flush-collapseTwo'+name"
                                        aria-expanded="false"
-                                       aria-controls="flush-collapseTwo">
+                                       aria-controls="flush-collapseTwo" v-cloak>
                                         {{name}} <i class="feather-icon icon-chevron-right"></i>
                                     </a>
                                     <!-- collapse -->
@@ -104,7 +104,7 @@
                 <!-- list icon -->
                 <div class="d-lg-flex justify-content-between align-items-center">
                     <div class="mb-3 mb-lg-0">
-                        <p class="mb-0"> <span class="text-dark">{{storeCount}}</span> Stores found </p>
+                        <p class="mb-0"> <span class="text-dark" v-cloak>{{storeCount}}</span> Stores found </p>
                     </div>
                 </div>
                 <!-- row -->
@@ -118,7 +118,7 @@
                                 <!-- badge -->
                                 <div class="text-center position-relative ">
                                     <div class=" position-absolute top-0 start-0">
-                                        <span class="badge bg-danger">庫存:{{item.inventory>0?item.inventory:0}}</span>
+                                        <span class="badge bg-danger" v-cloak>庫存:{{item.inventory>0?item.inventory:0}}</span>
                                     </div>
                                     <a :href="'/Users/Home/Stores/'+item.storeId">
                                         <!-- img --><img :src="item.logoPath" class="mb-3 img-fluid" />
@@ -127,20 +127,20 @@
                                 <!-- heading -->
                                 <div class=" mb-1">
                                     <a href="#!" class="text-decoration-none text-muted">
-                                        <h5>
+                                        <h5 v-cloak>
                                             {{item.storeName}}
                                         </h5>
                                     </a>
                                 </div>
                                 <div>
-                                    <h6 class="text-inherit text-muted ">{{item.description}}</h6>
+                                    <h6 class="text-inherit text-muted " v-cloak>{{item.description}}</h6>
                                 </div>
                                 <!-- price -->
                                 <div class="d-flex justify-content-between align-items-center mt-3">
                                     <div>
                                         <small class="text-warning">
                                             <i class="bi bi-star-fill"></i>
-                                        </small> <span class="text-muted">{{item.commentRank}} ({{item.commentCount}})</span>
+                                        </small> <span class="text-muted" v-cloak>{{item.commentRank}} ({{item.commentCount}})</span>
                                     </div>
                                     <!-- btn -->
                                     <div @@click="toggle(item.storeId)">
@@ -180,21 +180,6 @@
     </div>
 
 </div>
-<!--根據送出結果跳出Modal-->
-<!-- OK Modal -->
-<div class="modal fade" id="modalOK" tabindex="-1" role="dialog" aria-labelledby="okModalLabel" aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="okModalLabel">店家已加入收藏!</h5>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- NotOK Modal -->
 <div class="modal fade" id="modalNotOK" tabindex="-1" role="dialog" aria-labelledby="notOkModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
@@ -367,9 +352,7 @@
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(favoriteData)
             }).then(response => {
-                if (response.ok) {
-                    $('#modalOK').modal('show');
-                }
+                response;
             });
         },
         //取消收藏

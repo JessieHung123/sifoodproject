@@ -16,7 +16,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item"><a href="/Users/Home/Main">首頁</a></li>
-                                <li class="breadcrumb-item"><a :href="'/Users/Home/Stores/'+productData.storeId">{{productData.storeName}}</a></li>
+                                <li class="breadcrumb-item"><a :href="'/Users/Home/Stores/'+productData.storeId" v-cloak>{{productData.storeName}}</a></li>
                                 <li class="breadcrumb-item active" aria-current="page" v-cloak>{{productData.productName}}</li>
                             </ol>
                         </nav>
@@ -54,8 +54,23 @@
                                     </button>
                                 </div>
                                 <!-- hr -->
-                                
                             </div>
+                            <!-- Modal -->
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="staticBackdropLabel">目前購物車內商品的店家屬於{{cartCurrentStoreName}}，是否要挑選其他商家做購買?</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-primary">確定</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Modal -->
                             <hr class="my-3">
                             <div class="container">
 
@@ -202,7 +217,8 @@
                 return {
                 productData:[],
                 remainingStock: 0,
-                number:1
+                number:1,
+                cartCurrentStoreName:"",
                 }
             },
             mounted: function () {
@@ -240,7 +256,7 @@
                         quantity: this.number,
                         userId: "",
                     };
-                    let cartCurrentStoreName = shoppingCart.carts.length > 0 ? shoppingCart.carts[0].storeName : "";
+                    this.cartCurrentStoreName = shoppingCart.carts.length > 0 ? shoppingCart.carts[0].storeName : "";
                     if (isLogin) {
                         if (this.remainingStock == 0) { $('#qtyZero').modal('show'); return; };
                             if (productData.storeName != cartCurrentStoreName && cartCurrentStoreName != "") {

@@ -336,21 +336,22 @@
                 },
                 async clickMinus(item) {
                     item.quantity = item.quantity <= 1 ? item.quantity = 1 : item.quantity - 1;
+                    setTimeout(async () =>
                     await fetch(`/api/CartVMapi/ChangeQty`, {
                         method: "PUT",
                         headers: { "Content-Type": "application/json" },
                         body: JSON.stringify(item)
-                    }).then(response => response)
+                    }).then(response => response),2000)
                 },
                 async clickAdd(item) {
-
-                    if (item.quantity >= item.remainingStock) { $('#moreQty').modal('show'); }
-                    else { item.quantity = item.quantity + 1; }
-                    await fetch(`/api/CartVMapi/ChangeQty`, {
-                        method: "PUT",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(item)
-                    }).then(response => response)
+                    if (item.quantity >= item.remainingStock) { $('#moreQty').modal('show'); return; }
+                    else { item.quantity = item.quantity + 1; };
+                    setTimeout(async () =>
+                        await fetch(`/api/CartVMapi/ChangeQty`, {
+                            method: "PUT",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify(item)
+                        }).then(response => response),2000)
                 },
                 deleteCartItem(item) {
                     this.currentDeleteItem = item;
