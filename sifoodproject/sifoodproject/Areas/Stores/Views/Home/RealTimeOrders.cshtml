@@ -5,6 +5,10 @@
         th {
             border-bottom: none !important;
         }
+
+        [v-cloak] {
+            display: none;
+        }
     </style>
     }
 @{
@@ -15,7 +19,7 @@
     <!-- main -->
     <div class="main-wrapper">
         <!-- main wrapper -->
-        <main class="main-content-wrapper" id="orderApp">
+        <main class="main-content-wrapper" id="orderApp" v-cloak>
             <div class="container">
                 <!-- row -->
                 <div class="row mb-8">
