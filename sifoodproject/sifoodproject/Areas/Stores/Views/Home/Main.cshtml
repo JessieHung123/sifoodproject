@@ -1,10 +1,18 @@
-﻿@{
+﻿@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+}
+
+@{
     ViewData["Title"] = "首頁";
 }
 <body>
     <div>
         <div class="main-wrapper">
-            <main class="main-content-wrapper">
+            <main class="main-content-wrapper" >
                 <section class="container">
                     <div class="row mb-8">
                         <div class="col-md-12">
@@ -70,8 +78,8 @@
                                     <h3 class="mb-0 fs-5">今日銷售</h3>
                                 </div>
                                 <div class="card-body p-6">
-                                    <div id="totalSale1" class="mt-6 d-flex justify-content-center"></div>
-                                    <div id="main" class="mt-4">
+                                    <div id="totalSale1" class="mt-6 d-flex justify-content-center" ></div>
+                                    <div id="main" class="mt-4" v-cloak>
                                         <ul v-for="(item, productName) in TotalSales" class="list-unstyled mb-0">
                                             <li class="mb-2">
                                                 <svg xmlns="http://www.w3.org/2000/svg" width="8"
@@ -101,7 +109,6 @@
 
 @section Scripts
     {
-
     <script src="~/assets/libs/apexcharts/dist/apexcharts.min.js"></script>
     <script src="~/assets/js/vendors/chart.js"></script>
 

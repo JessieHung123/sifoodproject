@@ -1,10 +1,18 @@
-﻿@{
+﻿@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+}
+
+@{
     ViewData["Title"] = "客戶評論";
 }
 <body>
     <div class="main-wrapper">
         <main class="main-content-wrapper">
-            <div class="container" id="reviewapp">
+            <div class="container" id="reviewapp" v-cloak>
                 <div class="row mb-8">
                     <div class="col-md-12">
                         <div>

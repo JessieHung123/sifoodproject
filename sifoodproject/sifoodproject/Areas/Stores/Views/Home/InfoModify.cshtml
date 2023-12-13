@@ -1,11 +1,19 @@
-﻿@{
+﻿@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+}
+
+@{
     ViewData["Title"] = "資料修改";
 }
 
 <body>
     <main>
         <section>
-            <div class="container" id="modifyapp">
+            <div class="container" id="modifyapp" v-cloak>
                 <div class="row">
                     <div class="col-lg-10 col-md-12 col-12">
                         <div class="py-6 p-md-6 p-lg-10">
@@ -16,56 +24,56 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">商家名稱</label>
+                                            <label class="form-label" style="font-weight: bold;">商家名稱<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" v-model="ModifyInfo.storeName" required>
                                         </div>
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">負責人名稱</label>
+                                            <label class="form-label" style="font-weight: bold;">負責人名稱<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" v-model="ModifyInfo.contactName" required>
                                         </div>
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">店家電話</label>
+                                            <label class="form-label" style="font-weight: bold;">店家電話<span class="text-danger">*</span></label>
                                             <input type="number" class="form-control" v-model="ModifyInfo.phone" required>
                                         </div>
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">公休時間</label>
+                                            <label class="form-label" style="font-weight: bold;">公休時間<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" v-model="ModifyInfo.closingDay" required>
                                         </div>
                                         <div class="mb-3 col-lg-6 form-group">
-                                            <label class="form-label" style="font-weight: bold;">平日開始營業時間</label>~
+                                            <label class="form-label" style="font-weight: bold;">平日開始營業時間<span class="text-danger">*</span></label>~
                                             <input type="time" class="form-control" v-model="ModifyInfo.weekdayOpen" required>
                                         </div>
                                         <div class="mb-3 col-lg-6 form-group">
-                                            <label class="form-label" style="font-weight: bold;">平日結束營業時間</label>
+                                            <label class="form-label" style="font-weight: bold;">平日結束營業時間<span class="text-danger">*</span></label>
                                             <input type="time" class="form-control" v-model="ModifyInfo.weekdayClose" required>
                                         </div>
                                         <div class="mb-3 col-lg-6 form-group">
-                                            <label class="form-label" style="font-weight: bold;">周末開始營業時間</label>~
+                                            <label class="form-label" style="font-weight: bold;">周末開始營業時間<span class="text-danger">*</span></label>~
                                             <input type="time" class="form-control" v-model="ModifyInfo.weekendOpen" required>
                                         </div>
                                         <div class="mb-3 col-lg-6 form-group">
-                                            <label class="form-label" style="font-weight: bold;">周末結束營業時間</label>
+                                            <label class="form-label" style="font-weight: bold;">周末結束營業時間<span class="text-danger">*</span></label>
                                             <input type="time" class="form-control" v-model="ModifyInfo.weekendClose" required>
                                         </div>
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">縣市</label>
+                                            <label class="form-label" style="font-weight: bold;">縣市<span class="text-danger">*</span></label>
                                             <select class="form-select" v-model="ModifyInfo.city">
                                                 <option value="臺北市">臺北市</option>
                                                 <option value="新北市">新北市</option>
                                             </select>
                                         </div>
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">地區</label>
+                                            <label class="form-label" style="font-weight: bold;">地區<span class="text-danger">*</span></label>
                                             <select class="form-select" v-model="ModifyInfo.region">
                                                 <option v-for="item in RegionOptions" :value="item.id">{{item.name}}</option>
                                             </select>
                                         </div>
                                         <div class="mb-3 col-lg-12">
-                                            <label class="form-label" style="font-weight: bold;">地址</label>
+                                            <label class="form-label" style="font-weight: bold;">地址<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" v-model="ModifyInfo.address" required>
                                         </div>
                                         <div class="mb-3 col-lg-12 mt-5">
-                                            <h4 class="mb-3 h5" style="font-weight: bold;">店家敘述</h4>
+                                            <h4 class="mb-3 h5" style="font-weight: bold;">店家敘述<span class="text-danger">*</span></h4>
                                             <div class="mb-3">
                                                 <textarea class="form-control" rows="3" v-model="ModifyInfo.description"></textarea>
                                             </div>

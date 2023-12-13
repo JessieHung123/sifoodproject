@@ -1,8 +1,16 @@
-﻿@{
+﻿@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+}
+
+@{
     ViewData["Title"] = "商品管理";
 }
 <body>
-    <div class="main-wrapper" id="productapp">
+    <div class="main-wrapper" id="productapp" v-cloak>
         <main class="main-content-wrapper">
             <div class="container">
                 <div class="row mb-8">
@@ -52,7 +60,7 @@
                                             <tr v-for="item in filterList">
                                                 <td>
                                                     <a href="#!">
-                                                        <img :src="item.photoPath" alt=""
+                                                        <img :src="getPath(item.photoPath)" alt=""
                                                              class="icon-shape icon-md">
                                                     </a>
                                                 </td>
@@ -105,13 +113,12 @@
                         <div class="container">
                             <div class="row">
                                 <div class="mb-3 col-lg-6 form-group">
-                                    <label class="form-label">商品名稱</label>
+                                    <label class="form-label">商品名稱<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="productName" placeholder="請輸入名稱" required>
                                 </div>
                                 <div class="mb-3 col-lg-6">
-                                    <label class="form-label">商品種類</label>
+                                    <label class="form-label">商品種類<span class="text-danger">*</span></label>
                                     <select class="form-select" v-model="categoryId">
-                                        <option selected>商品種類</option>
                                         <option :value="1">生鮮</option>
                                         <option :value="2">飲料</option>
                                         <option :value="3">甜點麵包</option>
@@ -122,19 +129,19 @@
                                     </select>
                                 </div>
                                 <div class="mb-3 col-lg-6 form-group">
-                                    <label class="form-label">商品單價</label>
+                                    <label class="form-label">商品單價<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="unitPrice" placeholder="請輸入價格" required>
                                 </div>
                                 <div class="mb-3 col-lg-6 form-group">
-                                    <label class="form-label">上架數量</label>
+                                    <label class="form-label">上架數量<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="releasedQty" placeholder="請輸入數量" required>
                                 </div>
                                 <div class="mb-3 col-lg-6 form-group">
-                                    <label class="form-label">建議取貨起時</label>
+                                    <label class="form-label">建議取貨起時<span class="text-danger">*</span></label>
                                     <input type="time" class="form-control" v-model="suggestPickUpTime" placeholder="請輸入價格" required>
                                 </div>
                                 <div class="mb-3 col-lg-6 form-group">
-                                    <label class="form-label">建議取貨迄時</label>
+                                    <label class="form-label">建議取貨迄時<span class="text-danger">*</span></label>
                                     <input type="time" class="form-control" v-model="suggestPickEndTime" placeholder="請輸入數量" required>
                                 </div>
                                 <div class="form-group">
@@ -168,11 +175,11 @@
                         <div class="container">
                             <div class="row">
                                 <div class="mb-3 col-lg-6">
-                                    <label class="form-label">商品名稱</label>
+                                    <label class="form-label">商品名稱<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="selectedToEdit.productName" required>
                                 </div>
                                 <div class="mb-3 col-lg-6">
-                                    <label class="form-label">商品種類</label>
+                                    <label class="form-label">商品種類<span class="text-danger">*</span></label>
                                     <select class="form-select" v-model="selectedToEdit.categoryId">
                                         <option :value="1">生鮮</option>
                                         <option :value="2">飲料</option>
@@ -184,23 +191,23 @@
                                     </select>
                                 </div>
                                 <div class="mb-3 col-lg-6">
-                                    <label class="form-label">商品單價</label>
+                                    <label class="form-label">商品單價<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="selectedToEdit.unitPrice" required>
                                 </div>
                                 <div class="mb-3 col-lg-6">
-                                    <label class="form-label">上架數量</label>
+                                    <label class="form-label">上架數量<span class="text-danger">*</span></label>
                                     <input type="text" class="form-control" v-model="selectedToEdit.releasedQty" required>
                                 </div>
                                 <div class="mb-3 col-lg-6 form-group">
-                                    <label class="form-label">建議取貨起時</label>
+                                    <label class="form-label">建議取貨起時<span class="text-danger">*</span></label>
                                     <input type="time" class="form-control" v-model="selectedToEdit.suggestPickUpTime" placeholder="請輸入價格" required>
                                 </div>
                                 <div class="mb-3 col-lg-6 form-group">
-                                    <label class="form-label">建議取貨迄時</label>
+                                    <label class="form-label">建議取貨迄時<span class="text-danger">*</span></label>
                                     <input type="time" class="form-control" v-model="selectedToEdit.suggestPickEndTime" placeholder="請輸入數量" required>
                                 </div>
                                 <div class="form-group">
-                                    <img id="updateFilePreview" :src="selectedToEdit.photoPath" title="待上傳" style="width:300px;width:240px" />
+                                    <img id="updateFilePreview" :src="getPath(selectedToEdit.photoPath)" title="待上傳" style="width:300px;width:240px" />
                                     <input type="file" id="updateFile" class="form-control" @@change="insertFileChange($event.target)" accept="image/*" />
                                 </div>
                                 <div class="mb-3 col-lg-12 mt-5">
@@ -263,6 +270,12 @@
                 _this.startSeach();
             },
             methods: {
+                getPath: function (path) {
+                    if (path == null) {
+                        path = "/images/Noimage.png"
+                    }
+                    return path
+                },
                 pageClick(num) {
                     this.page.pageNumber = num;
                 },
