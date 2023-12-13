@@ -17,9 +17,14 @@
     <!-- Theme CSS -->
     <link rel="stylesheet" href="~/assets/css/theme.min.css" />
     @await RenderSectionAsync("Styles", required: false)
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <header id="header">
+    <header id="header" v-cloak>
         <div class=" border-bottom ">
             <div class=" py-1 container">
                 @await Html.PartialAsync("~/Areas/Users/Views/Shared/_LoginPartial.cshtml")

@@ -15,13 +15,11 @@
             margin: 0 auto;
             display: block;
         }
-
         html, body {
             height: 100%;
             margin: 0;
             padding: 0;
         }
-
         .custom-map-control-button {
             background-color: #fff;
             border: 0;
@@ -34,13 +32,16 @@
             height: 40px;
             cursor: pointer;
         }
-
             .custom-map-control-button:hover {
                 background: rgb(235, 235, 235);
             }
+
+        [v-cloak] {
+            display: none;
+        }
     </style>
 }
-<section class="container pt-1" id="showMap">
+<section class="container pt-1" id="showMap" v-cloak>
 
         <div class="container mapShow">
             <div id="map"></div>

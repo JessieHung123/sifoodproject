@@ -12,13 +12,17 @@
             text-decoration: underline !important;
             font-weight: bold !important;
         }
+
+        [v-cloak] {
+            display: none;
+        }
     </style>
 }
 @{
     ViewData["Title"] = "首頁";
 }
 <div>
-    <div class="container" id="main">
+    <div class="container" id="main" v-cloak>
         <section>
             <div class="slider slider-nav responsive row  mx-auto p-3 " style="display:flex;justify-content: space-around">
                 <img class="rounded-2" style="width:350px ;height:180px" src="~/images/mainpage/banner1.png" />

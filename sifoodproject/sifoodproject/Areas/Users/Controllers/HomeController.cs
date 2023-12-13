@@ -146,8 +146,6 @@ namespace sifoodproject.Areas.Users.Controllers
             ProductList = ProductList.Take(5).ToList();
             //===========================================================================
             List<int> productIds = ProductList.Select(int.Parse).ToList();
-
-            // 查询缓存，如果不存在则从数据库同步查询
             var products = productIds.Select(productId =>
             {
                 if (!ProductCache.TryGetValue(productId, out var cachedProduct))
@@ -155,7 +153,6 @@ namespace sifoodproject.Areas.Users.Controllers
                     var productFromDb = _context.Products
                         .Where(p => p.ProductId == productId)
                         .FirstOrDefault();
-
                     if (productFromDb != null)
                     {
                         cachedProduct = new ProductVM
@@ -166,11 +163,9 @@ namespace sifoodproject.Areas.Users.Controllers
                             PhotoPath = productFromDb.PhotoPath,
                             UnitPrice = Math.Round(productFromDb.UnitPrice, 2)
                         };
-
                         ProductCache[productId] = cachedProduct;
                     }
                 }
-
                 return cachedProduct;
             }).OrderBy(p => ProductList.IndexOf(p.ProductId.ToString())).ToList();
 
@@ -178,28 +173,6 @@ namespace sifoodproject.Areas.Users.Controllers
 
             return View();
         }
-        //==============================================================================
-        //    List<ProductVM> cookieProduct = new List<ProductVM>();
-        //    if (ProductList != null)
-        //    {
-        //        foreach (var productId in ProductList)
-        //        {
-
-        //            var c = _context.Products.Where(p => p.ProductId == int.Parse(productId));
-        //            ProductVM VM = new ProductVM
-        //            {
-        //                ProductId = c.Select(p => p.ProductId).Single(),
-        //                ProductName = c.Select(p => p.ProductName).Single(),
-        //                StoreName = c.Include(p => p.Store).Select(p => p.Store.StoreName).Single(),
-        //                PhotoPath = c.Select(p => p.PhotoPath).Single(),
-        //                UnitPrice = Math.Round(c.Select(p => p.UnitPrice).Single(), 2)
-        //            };
-        //            cookieProduct.Add(VM);
-        //        }
-        //        ViewBag.CookieProduct = cookieProduct;
-        //    }
-        //    return View();
-        //}
         private List<string> GetCookieProductList()
         {
             string? ProductCookieValue = Request.Cookies["Records"];

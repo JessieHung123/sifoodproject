@@ -4,8 +4,15 @@
 @{
     ViewData["Title"] = "商品頁面";
 }
+@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+}
 <body>
-    <main id="product">
+    <main id="product" v-cloak>
         <div class="mt-4">
             <div class="container">
                 <!-- row -->
