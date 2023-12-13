@@ -30,7 +30,7 @@
                     <div class="row justify-content-between">
                         <div class="col-md-4 col-12">
                             <form class="d-flex" role="search">
-                                <input class="form-control" type="search" name="searchUsers" value="@ViewBag.searchUsers" placeholder="Search Users" aria-label="Search">
+                                <input class="form-control" type="search" name="searchUsers" value="@ViewBag.searchUsers" placeholder="搜尋顧客" aria-label="Search">
                             </form>
                         </div>
 
@@ -99,27 +99,27 @@
                             </tbody>
                         </table>
                     </div>
-                    <div class="border-top d-md-flex justify-content-between align-items-center p-6">
-                        <span>顯示 @ViewBag.EntriesStart 到 @ViewBag.EntriesEnd 筆資料，共 @ViewBag.TotalEntries 筆資料。</span>
-                        <nav class="mt-2 mt-md-0">
-                            <ul class="pagination mb-0">
-                                @if (ViewBag.Page > 1)
-                                {
-                                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page - 1, searchUsers = ViewBag.searchUsers })">上一頁</a></li>
-                                }
+                </div>
+                <div class="border-top d-md-flex justify-content-between align-items-center p-6">
+                    <span>顯示 @ViewBag.EntriesStart 到 @ViewBag.EntriesEnd 筆資料，共 @ViewBag.TotalEntries 筆資料。</span>
+                    <nav class="mt-2 mt-md-0">
+                        <ul class="pagination mb-0">
+                            @if (ViewBag.Page > 1)
+                            {
+                                <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page - 1, searchUsers = ViewBag.searchUsers })">上一頁</a></li>
+                            }
 
-                                @for (int i = 1; i <= ViewBag.TotalPages; i++)
-                                {
-                                    <li class="page-item @(i == ViewBag.Page ? "active" : "")"><a class="page-link" href="@Url.Action("Index", new { page = i, searchUsers = ViewBag.searchUsers })">@i</a></li>
-                                }
+                            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == ViewBag.Page ? "active" : "")"><a class="page-link" href="@Url.Action("Index", new { page = i, searchUsers = ViewBag.searchUsers })">@i</a></li>
+                            }
 
-                                @if (ViewBag.Page < ViewBag.TotalPages)
-                                {
-                                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page + 1, searchUsers = ViewBag.searchUsers })">下一頁</a></li>
-                                }
-                            </ul>
-                        </nav>
-                    </div>
+                            @if (ViewBag.Page < ViewBag.TotalPages)
+                            {
+                                <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = ViewBag.Page + 1, searchUsers = ViewBag.searchUsers })">下一頁</a></li>
+                            }
+                        </ul>
+                    </nav>
                 </div>
             </div>
         </div>

@@ -91,15 +91,78 @@ namespace sifoodproject.Areas.Admin.Controllers
         {
             Store store = _context.Stores.Where(x => x.StoreId == storeId).FirstOrDefault();
             return PartialView("_EditPartialView", store);
-        }
+        }      
 
         [HttpPost]
-        public IActionResult Edit(Store store)
+        public IActionResult Edit(Store store, IFormFile newLogo, IFormFile newPhoto, IFormFile newPhoto2, IFormFile newPhoto3)
         {
+            Store originalStore = _context.Stores.AsNoTracking().FirstOrDefault(x => x.StoreId == store.StoreId);
+                        
+            if (newLogo != null && newLogo.Length > 0)
+            {
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + newLogo.FileName;
+                string filePath = Path.Combine("wwwroot/images/Stores/logo", uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    newLogo.CopyTo(fileStream);
+                }
+                store.LogoPath = filePath;
+            }
+            if (newPhoto != null && newPhoto.Length > 0)
+            {
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + newPhoto.FileName;
+                string filePath = Path.Combine("wwwroot/images/Stores/Photo", uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    newPhoto.CopyTo(fileStream);
+                }
+                store.PhotosPath = filePath;
+            }
+            if (newPhoto2 != null && newPhoto2.Length > 0)
+            {
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + newPhoto2.FileName;
+                string filePath = Path.Combine("wwwroot/images/Stores/Photo", uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    newPhoto2.CopyTo(fileStream);
+                }
+                store.PhotosPath2 = filePath;
+            }
+            if (newPhoto3 != null && newPhoto3.Length > 0)
+            {
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + newPhoto3.FileName;
+                string filePath = Path.Combine("wwwroot/images/Stores/Photo", uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    newPhoto3.CopyTo(fileStream);
+                }
+                store.PhotosPath3 = filePath;
+            }
+            if (originalStore != null)
+            {
+                if (store.LogoPath == null)
+                {
+                    store.LogoPath = originalStore.LogoPath;
+                }
+                if (store.PhotosPath == null)
+                {
+                    store.PhotosPath = originalStore.PhotosPath;
+                }
+                if (store.PhotosPath2 == null)
+                {
+                    store.PhotosPath2 = originalStore.PhotosPath2;
+                }
+                if (store.PhotosPath3 == null)
+                {
+                    store.PhotosPath3 = originalStore.PhotosPath3;
+                }
+            }
+
             _context.Stores.Update(store);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
+
 
         public IActionResult Delete(string storeId)
         {
@@ -137,7 +200,10 @@ namespace sifoodproject.Areas.Admin.Controllers
             mail.IsBodyHtml = true;
             mail.BodyEncoding = Encoding.UTF8;
             client.Send(mail);
-            return "已寄送驗證信";
+            var store = _context.Stores.Where(x => x.Email == model.StoreEmail).FirstOrDefault();
+            store.StoreIsAuthenticated = 1;
+            _context.SaveChanges();
+            return "已寄送驗證信";            
         }
     }
 }

@@ -39,7 +39,8 @@ namespace sifoodproject.Areas.Users.Controllers
                 OrderDate = o.OrderDate,
                 Status = o.Status.StatusName,
                 Quantity = o.OrderDetails.Sum(od => od.Quantity),
-                TotalPrice = Convert.ToInt32(o.OrderDetails.Sum(od => od.Quantity * od.Product.UnitPrice) + o.ShippingFee),
+                TotalPrice = Convert.ToInt32(o.TotalPrice),
+                //TotalPrice = Convert.ToInt32(o.OrderDetails.Sum(od => od.Quantity * od.Product.UnitPrice) + o.ShippingFee),
                 FirstProductPhotoPath = o.OrderDetails.FirstOrDefault().Product.PhotoPath,
                 FirstProductName = o.OrderDetails.FirstOrDefault().Product.ProductName
             }).ToListAsync();
