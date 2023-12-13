@@ -95,7 +95,24 @@ namespace sifoodproject.Areas.Admin.Controllers
 
         [HttpPost]
         public IActionResult Edit(Store store)
-        {
+        {            
+            Store originalStore = _context.Stores.AsNoTracking().FirstOrDefault(x => x.StoreId == store.StoreId);
+            if (originalStore != null && store.LogoPath == null)
+            {
+                store.LogoPath = originalStore.LogoPath;
+            }
+            if (originalStore != null && store.PhotosPath == null)
+            {
+                store.PhotosPath = originalStore.PhotosPath;
+            }
+            if (originalStore != null && store.PhotosPath2 == null)
+            {
+                store.PhotosPath2 = originalStore.PhotosPath2;
+            }
+            if (originalStore != null && store.PhotosPath3 == null)
+            {
+                store.PhotosPath3 = originalStore.PhotosPath3;
+            }
             _context.Stores.Update(store);
             _context.SaveChanges();
             return RedirectToAction("Index");
@@ -137,7 +154,7 @@ namespace sifoodproject.Areas.Admin.Controllers
             mail.IsBodyHtml = true;
             mail.BodyEncoding = Encoding.UTF8;
             client.Send(mail);
-            return "已寄送驗證信";
+            return "已寄送驗證信";            
         }
     }
 }
