@@ -103,49 +103,13 @@
             <div>
            
                 <form asp-action="Delete">
-                @* <input type="hidden" asp-for="firstOrderDetail.OrderId" />
-                    <input type="hidden" asp-for="ProductId" /> *@
                     <input type="submit" onclick='return confirm("確定要刪除嗎?")' value="刪除" class="btn btn-danger" /> |
-                    <a asp-action="Index">回上頁</a>
+                    <a asp-action="Index">回首頁</a>
                 </form>
-            </div>
-                @* <form asp-action="DeleteConfirmed" asp-route-OrderId="@firstOrderDetail.OrderId" method="post">
-                    <input type="submit"  onclick='return confirm("確定要刪除嗎?")' value="刪除" class="btn btn-danger" /> |
-                    <a asp-action="Index">回上頁</a>
-                </form>
-          
-
-            @* <div>
-                <form asp-action="DeleteConfirmed">
-                    <input type="hidden" asp-for="@firstOrderDetail.OrderId" />
-                    <input type="submit" onclick="showSweetAlert(event)"  value="刪除" class="btn btn-danger" /> |
-                    <a asp-action="Index">回上頁</a>
-                </form>
-            </div> *@
-        
+            </div>       
     </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-
-  @*   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
-    <script>
-        function showSweetAlert(event) {
-            event.preventDefault();
-            Swal.fire({
-                title: '確定要刪除嗎?',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: '確定',
-                cancelButtonText: '取消'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    document.forms[0].submit();
-                }
-            });
-        }
-    </script> *@
 }
 
