@@ -30,7 +30,7 @@ namespace sifoodproject.Areas.Users.Controllers
             var ordersQuery = _context.Orders
                 .Where(o => o.UserId == loginUserId)
                 .Include(o => o.OrderDetails).ThenInclude(od => od.Product)
-                .Include(o => o.Status);
+                .Include(o => o.Status).Where(s=>s.Status.StatusId==5|| s.Status.StatusId ==6|| s.Status.StatusId ==7);
 
             var ordersList = await ordersQuery.Select(o => new HistoryOrderVM
             {
@@ -63,6 +63,7 @@ namespace sifoodproject.Areas.Users.Controllers
             var viewModel = new HistoryOrderDetailVM
             {
                 OrderId = order.OrderId,
+
                 OrderDate = order.OrderDate,
                 ShippingFee = order.ShippingFee,
                 DeliveryMethod = order.DeliveryMethod,
@@ -81,32 +82,49 @@ namespace sifoodproject.Areas.Users.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SubmitRating([FromBody] RatingModel ratingModel)
+        public async Task<object> SubmitRating([FromBody] RatingModel ratingModel)
         {
-            if (ratingModel == null || string.IsNullOrEmpty(ratingModel.OrderId))
+            if (ratingModel == null || ratingModel.OrderId == "")
             {
                 return BadRequest("無效的請求數據。");
             }
 
-            var order = await _context.Orders.Include(o => o.Comment).FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
+            //var order = await _context.Orders.Include(o => o.Comment).FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
+            var order = await _context.Orders
+                            .Include(o => o.Comment)
+                            .Include(o => o.Status) 
+                            .FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
 
             if (order == null)
             {
                 return NotFound("找不到相關的訂單。");
             }
 
+            // 檢查訂單的 StatusID 是否為 7
+            if (order.StatusId == 7)
+            {
+                return BadRequest("已取消");
+            }
+
+
             if (order.Comment == null)
             {
-                order.Comment = new Comment { CommentRank = (short)ratingModel.Rating, Contents = ratingModel.Comment };
+                var newComment = new Comment
+                {
+                    CommentTime = DateTime.Now,
+                    CommentRank = (short)ratingModel.Rating,
+                    Contents = ratingModel.Comment,
+                    OrderId = ratingModel.OrderId,
+                    StoreId = _context.Orders.Where(x => x.OrderId == ratingModel.OrderId).Select(x => x.StoreId).FirstOrDefault()
+                };
+                _context.Comments.Add(newComment);
+                await _context.SaveChangesAsync();
             }
             else
             {
                 order.Comment.CommentRank = (short)ratingModel.Rating;
                 order.Comment.Contents = ratingModel.Comment;
             }
-
-            await _context.SaveChangesAsync();
-
             return Ok(new { message = "評價提交成功" });
         }
 
@@ -114,9 +132,7 @@ namespace sifoodproject.Areas.Users.Controllers
         {
             public string OrderId { get; set; } // 訂單ID
             public int Rating { get; set; } // 評分數值
-            public string Comment { get; set; } // 評論內容
+            public string Comment { get; set; } // 評論內容 
         }
-
-
     }
 }
