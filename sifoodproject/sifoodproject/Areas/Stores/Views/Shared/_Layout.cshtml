@@ -99,9 +99,14 @@
                 credentials: 'include',
             }).then(response => {
                 if (response.ok) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: '成功!',
+                        text: "已成功登出!"
+                    });
                     setTimeout(() => {
                         window.location.href = "/Stores/Account/Login";
-                        alert("已成功登出");
+                        // alert("已成功登出");
                     }, 1000);
                 }
             }).catch(error => alert("發生錯誤"));
