@@ -208,6 +208,20 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="cartAlert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cartAlertLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cartAlertLabel">購物車已有此商品!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
     <script>
@@ -263,22 +277,22 @@
                             $('#cartToChange').modal('show');
                         }
                         else {
-                            await fetch(`/api/CartVMapi/AddToCart`,
+                            await  fetch(`/api/CartVMapi/AddToCart`,
                                 {
                                     method: "POST",
                                     headers: { "Content-Type": "application/json" },
                                     body: JSON.stringify(addItem)
-                                })
-                                .then(response => {
-                                    if (response.ok) {
+                                }).then(response => response.json())
+                                .then(data => {
+                                    if (data) {
                                         $('#CartAddOkModal').modal('show');
                                         shoppingCart.getCart();
                                     }
+                                    else { $('#cartAlert').modal('show'); }
                                 })
                                 .catch(error => {
                                     alert(error.message);
                                 });
-
                         }
                     }
                     else {

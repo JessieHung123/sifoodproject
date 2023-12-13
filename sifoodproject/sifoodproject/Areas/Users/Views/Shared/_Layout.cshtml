@@ -129,13 +129,13 @@
                                 <div class="col-6 col-md-6 col-lg-7">
                                     <div class="d-flex">
                                         <a :href="'/Users/Home/Products/'+item.productId" class="text-inherit">
-                                            <img :src="item.photoPath" alt="Ecommerce" class="icon-shape icon-xxl">
+                                            <img :src="item.photoPath"  class="icon-shape icon-xxl">
                                         </a>
                                         <div class="ms-3">
                                             <!-- title -->
                                             <a :href="'/Users/Home/Products/'+item.productId" class="text-inherit">
                                                 @* 照片網址帶處李 *@
-                                                <h6 class="mb-1">{{item.productName}}</h6>
+                                                <h6 class="mb-1" v-cloak>{{item.productName}}</h6>
                                             </a>
                                             <h6>{{item.storeName}}</h6>
                                             <!-- text -->
@@ -286,7 +286,6 @@
         </div>
     </div>
 
-
     <script src="~/js/site.js" asp-append-version="true"></script>
     <!-- Javascript-->
     <!-- Libs JS -->
@@ -295,15 +294,13 @@
     <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Theme JS -->
     <script src="~/assets/js/theme.min.js"></script>
-    <script src="~/assets/libs/jquery-countdown/dist/jquery.countdown.min.js" asp-append-version="true"></script>
-    <script src="~/assets/js/vendors/countdown.js" asp-append-version="true"></script>
     <script src="~/assets/libs/slick-carousel/slick/slick.min.js" asp-append-version="true"></script>
     <script src="~/assets/js/vendors/slick-slider.js" asp-append-version="true"></script>
     <script src="~/assets/libs/tiny-slider/dist/min/tiny-slider.js" asp-append-version="true"></script>
     <script src="~/assets/js/vendors/tns-slider.js" asp-append-version="true"></script>
-    <script src="~/assets/js/vendors/zoom.js" asp-append-version="true"></script>
     <script src="~/assets/js/vendors/increment-value.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+   
     <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
     <script>
         var isLogin = ('@User.Identity.IsAuthenticated' == "True");
@@ -321,8 +318,9 @@
             mounted: function () {
                 if (isLogin) {
                     this.getCart();
+                    this.deleteExpiredCartItem();
                 }
-                this.deleteExpiredCartItem();
+                
             },
 
             methods: {
@@ -403,7 +401,10 @@
             }
         }).mount("#header")
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    
+   
 
 </body>
 </html>

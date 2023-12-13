@@ -131,40 +131,75 @@ namespace sifoodproject.Areas.Users.Controllers
             return View();
         }
 
-
+        private Dictionary<int, ProductVM> ProductCache = new Dictionary<int, ProductVM>();
         [Route("/Users/Home/Products/{ProductId?}")]
 
-        public IActionResult Products(int ProductId)
+        public async Task<IActionResult> Products(int ProductId)
         {
             var IdToString = ProductId.ToString();
-            List<string> ProductList = GetCookieProductList();//讀取
+            List<string> ProductList =GetCookieProductList();//讀取
             ProductList.Remove(IdToString);
             if (IdToString != "0") { ProductList.Add(IdToString); }
             SetCookieProductList(ProductList);//取陣列最後一個以外的值
             //倒敘且只留最後五個
             ProductList.Reverse();
             ProductList = ProductList.Take(5).ToList();
-            List<ProductVM> cookieProduct = new List<ProductVM>();
-            if (ProductList != null)
-            {
-                foreach (var productId in ProductList)
-                {
+            //===========================================================================
+            List<int> productIds = ProductList.Select(int.Parse).ToList();
 
-                    var c = _context.Products.Where(p => p.ProductId == int.Parse(productId));
-                    ProductVM VM = new ProductVM
+            // 查询缓存，如果不存在则从数据库同步查询
+            var products = productIds.Select(productId =>
+            {
+                if (!ProductCache.TryGetValue(productId, out var cachedProduct))
+                {
+                    var productFromDb = _context.Products
+                        .Where(p => p.ProductId == productId)
+                        .FirstOrDefault();
+
+                    if (productFromDb != null)
                     {
-                        ProductId = c.Select(p => p.ProductId).Single(),
-                        ProductName = c.Select(p => p.ProductName).Single(),
-                        StoreName = c.Include(p => p.Store).Select(p => p.Store.StoreName).Single(),
-                        PhotoPath = c.Select(p => p.PhotoPath).Single(),
-                        UnitPrice = Math.Round(c.Select(p => p.UnitPrice).Single(), 2)
-                    };
-                    cookieProduct.Add(VM);
+                        cachedProduct = new ProductVM
+                        {
+                            ProductId = productFromDb.ProductId,
+                            ProductName = productFromDb.ProductName,
+                            StoreName = productFromDb.Store.StoreName,
+                            PhotoPath = productFromDb.PhotoPath,
+                            UnitPrice = Math.Round(productFromDb.UnitPrice, 2)
+                        };
+
+                        ProductCache[productId] = cachedProduct;
+                    }
                 }
-                ViewBag.CookieProduct = cookieProduct;
-            }
+
+                return cachedProduct;
+            }).OrderBy(p => ProductList.IndexOf(p.ProductId.ToString())).ToList();
+
+            ViewBag.CookieProduct = products;
+
             return View();
         }
+        //==============================================================================
+        //    List<ProductVM> cookieProduct = new List<ProductVM>();
+        //    if (ProductList != null)
+        //    {
+        //        foreach (var productId in ProductList)
+        //        {
+
+        //            var c = _context.Products.Where(p => p.ProductId == int.Parse(productId));
+        //            ProductVM VM = new ProductVM
+        //            {
+        //                ProductId = c.Select(p => p.ProductId).Single(),
+        //                ProductName = c.Select(p => p.ProductName).Single(),
+        //                StoreName = c.Include(p => p.Store).Select(p => p.Store.StoreName).Single(),
+        //                PhotoPath = c.Select(p => p.PhotoPath).Single(),
+        //                UnitPrice = Math.Round(c.Select(p => p.UnitPrice).Single(), 2)
+        //            };
+        //            cookieProduct.Add(VM);
+        //        }
+        //        ViewBag.CookieProduct = cookieProduct;
+        //    }
+        //    return View();
+        //}
         private List<string> GetCookieProductList()
         {
             string? ProductCookieValue = Request.Cookies["Records"];

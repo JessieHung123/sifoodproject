@@ -297,9 +297,9 @@
                     this.selectedSetting.city = isBoth ? "" : city;
                     this.selectedSetting.region = isBoth ? "" : region;
                 },
-                getStoreapi() {
+               getStoreapi() {
                     let _this = this;
-                    fetch(`/api/Storeapi/Main2`, { method: "GET" })
+                   fetch(`/api/Storeapi/Main2`, { method: "GET" })
                         .then(response => {
                             return response.json();
                         })
