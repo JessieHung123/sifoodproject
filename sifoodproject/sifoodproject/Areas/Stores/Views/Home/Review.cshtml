@@ -1,37 +1,36 @@
-﻿@{
+﻿@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+}
+
+@{
     ViewData["Title"] = "客戶評論";
 }
 <body>
-    <!-- main wrapper-->
     <div class="main-wrapper">
-        <!-- navbar vertical -->
-        <!-- main -->
         <main class="main-content-wrapper">
-            <div class="container" id="reviewapp">
+            <div class="container" id="reviewapp" v-cloak>
                 <div class="row mb-8">
                     <div class="col-md-12">
                         <div>
-                            <!-- page header -->
                             <h2>客戶評論</h2>
-                            <!-- breacrumb -->
                         </div>
                     </div>
                 </div>
-                <!-- row -->
                 <div class="row ">
                     <div class="col-xl-12 col-12 mb-5">
-                        <!-- card -->
                         <div class="card h-100 card-lg">
                             <div class="p-6 ">
                                 <div class="row justify-content-between">
                                     <div class="col-md-4 col-12 mb-2 mb-md-0">
-                                        <!-- form -->
                                         <div class="d-flex" role="search">
                                             <input class="form-control" type="search" placeholder="搜尋評論" aria-label="Search" v-model.lazy="searchText" @@keyup.enter="startSeach">
                                         </div>
                                     </div>
                                     <div class="col-lg-2 col-md-4 col-12">
-                                        <!-- main -->
                                         <select class="form-select" v-model="starNum" @@change="selectStars">
                                             <option :value="0">篩選評分</option>
                                             <option :value="1">一星</option>
@@ -43,9 +42,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- card body -->
                             <div class="card-body p-0">
-                                <!-- table -->
                                 <div class="table-responsive">
                                     <table class="table table-centered table-hover table-borderless mb-0 table-with-checkbox text-nowrap" >
                                         <thead class="bg-light">
@@ -102,20 +99,8 @@
         </main>
     </div>
 </body>
-
 @section scripts{
-    <script src="/assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/libs/simplebar/dist/simplebar.min.js"></script>
-    <script src="/assets/js/theme.min.js"></script>
-    <script type="text/javascript" src="/_vs/browserLink" async="async" id="__browserLink_initializationData" data-requestid="2f5a7dd90325443196819a586f019be1" data-requestmappingfromserver="false" data-connecturl="http://localhost:61567/549414066c8c4b829972c6f5055a8617/browserLink"></script>
-    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
-    <script type="text/javascript" src="/_vs/browserLink" async="async" id="__browserLink_initializationData" data-requestid="3089df0821034d5c9bccdfdb59cbdbac" data-requestmappingfromserver="false" data-connecturl="http://localhost:61567/549414066c8c4b829972c6f5055a8617/browserLink"></script>
-    <script src="/_framework/aspnetcore-browser-refresh.js"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-    <script src="https://unpkg.com/vuejs-paginate-next@latest/dist/vuejs-paginate-next.umd.js"></script>
     <script>
-        var baseAddress = "https://localhost:7042";
         const StoreMainApp = Vue.createApp({
             data: function () {
                 return {
