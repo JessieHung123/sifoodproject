@@ -552,16 +552,18 @@
                         return;
                     }
 
+                    var xxx = {
+                        orderId: this.orderDetail.orderId,
+                        rating: this.currentRating,
+                        comment: this.comment,
+                    }
+
                     fetch('/api/HistoryOrderapi/SubmitRating', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({
-                            orderId: this.orderDetail.orderId,
-                            rating: this.currentRating,
-                            comment: this.comment,
-                        })
+                        body: JSON.stringify(xxx)
                     })
                         .then(response => { 
                             if (response.ok) {
