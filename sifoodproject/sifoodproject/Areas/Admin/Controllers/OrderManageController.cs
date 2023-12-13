@@ -166,13 +166,14 @@ namespace sifoodproject.Areas.Admin.Controllers
             }
         }
         // GET: Admin/OrderManage/Delete/5
-        public async Task<IActionResult> Delete(string? OrderId, int? ProductId)
+        public async Task<IActionResult> Delete(string? OrderId)
         {
-            if (OrderId == null || ProductId == null || _context.OrderDetails == null)
+            if (OrderId == null || _context.OrderDetails == null)
             {
                 return NotFound();
             }
-            var orderDetail = await _context.OrderDetails
+            var orderDetails = await _context.OrderDetails
+                .Where(od => od.OrderId == OrderId)
                 .Include(o => o.Order)
                 .Include(o => o.Product)
                 .Select(o => new OrderManageVM
@@ -193,24 +194,36 @@ namespace sifoodproject.Areas.Admin.Controllers
                     StoreAddress = o.Order.Store.Address,
                     Total = o.Quantity * o.Product.UnitPrice,
                 })
-                .FirstOrDefaultAsync(od => od.OrderId == OrderId && od.ProductId == ProductId);
-            if (orderDetail == null)
+                .ToListAsync();
+
+            if (orderDetails == null || orderDetails.Count == 0)
             {
                 return NotFound();
             }
-            return View(orderDetail);
+            return View(orderDetails);
         }
-        // POST: Admin/OrderManage/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Admin/OrderManage/DeleteConfirmed
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string OrderId, int ProductId)
+        public async Task<IActionResult> DeleteConfirmed(string OrderId)
         {
-            var orderDetail = await _context.OrderDetails.FindAsync(OrderId, ProductId);
-            if (orderDetail != null)
+            // Retrieve the order details
+            var orderDetails = await _context.OrderDetails
+                .Where(od => od.OrderId == OrderId)
+                .ToListAsync();
+
+            if (orderDetails == null || orderDetails.Count == 0)
             {
-                _context.OrderDetails.Remove(orderDetail);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
+            var order = await _context.Orders.FindAsync(OrderId);
+            if (order != null)
+            {
+                _context.Orders.Remove(order);
+            }
+            _context.OrderDetails.RemoveRange(orderDetails);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
         private bool OrderDetailExists(string OrderId, int ProductId)

@@ -1,5 +1,4 @@
 ﻿@model List<OrderManageVM>
-
 @{
     Layout = "_AdminLayout";
     ViewData["Title"] = "訂單詳細資料";
@@ -16,9 +15,7 @@
         }
     </style>
 }
-
 <h2>訂單明細</h2>
-
 <div>
     <h4>訂單詳細資料</h4>
     <hr />
@@ -36,10 +33,8 @@
                             @Html.DisplayFor(model => firstOrderDetail.UserPhone)<br>
                             @Html.DisplayFor(model => firstOrderDetail.OrderAddress)
                         </p>
-
                     </div>
                 </div>
-
                 <div class="col-lg-4 col-md-4 col-12">
                     <div class="mb-6">
                         <h6 style="color: forestgreen;">店家資料</h6>
@@ -50,7 +45,6 @@
                         </p>
                     </div>
                 </div>
-
                 <table class="table table-centered table-hover text-nowrap table-borderless mb-0 table-with-checkbox">
                     <thead class="bg-light">
                         <tr class="text-center">
@@ -92,12 +86,10 @@
                                 <td>
                                     @Html.DisplayFor(model => orderDetail.StatusName)
                                 </td>
-
                             </tr>
                         }
                     </tbody>
                 </table>
-
                 <div class="col-lg-4 col-md-4 col-12">
                     <a asp-controller="OrderManage" asp-action="Edit" asp-route-OrderId="@firstOrderDetail.OrderId"
                        asp-route-ProductId="@firstOrderDetail.ProductId" class="btn btn-warning">修改</a> |
@@ -107,7 +99,7 @@
         }
         else
         {
-            <p>沒有找到訂單詳細信息。</p>
+            <p>無訂單明細。</p>
         }
     </div>
 </div>

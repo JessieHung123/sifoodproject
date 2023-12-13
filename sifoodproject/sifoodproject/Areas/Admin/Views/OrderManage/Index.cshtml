@@ -53,9 +53,9 @@
                     @Html.DisplayFor(modelItem => order.StatusName)
                 </td>
                 <td>
-                    <a asp-controller="OrderManage" asp-action="Edit" asp-route-OrderId="@order.OrderId" asp-route-ProductId="@order.ProductId"><button type="button" class="btn btn-warning">修改</button></a> |
-                    <a asp-controller="OrderManage" asp-action="Details" asp-route-OrderId="@order.OrderId" asp-route-ProductId="@order.ProductId"><button type="button" class="btn btn-info">明細</button></a> |
-                    <a asp-controller="OrderManage" asp-action="Delete" asp-route-OrderId="@order.OrderId" asp-route-ProductId="@order.ProductId"><button type="button" class="btn btn-danger">刪除</button></a>
+                    <a asp-controller="OrderManage" asp-action="Edit" asp-route-OrderId="@order.OrderId"><button type="button" class="btn btn-warning">修改</button></a> |
+                    <a asp-controller="OrderManage" asp-action="Details" asp-route-OrderId="@order.OrderId"><button type="button" class="btn btn-info">明細</button></a> |
+                    <a asp-controller="OrderManage" asp-action="Delete" asp-route-OrderId="@order.OrderId"><button type="button" class="btn btn-danger">刪除</button></a>
                 </td>
             </tr>
 
