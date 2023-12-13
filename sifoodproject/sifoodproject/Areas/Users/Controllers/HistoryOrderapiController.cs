@@ -30,7 +30,7 @@ namespace sifoodproject.Areas.Users.Controllers
             var ordersQuery = _context.Orders
                 .Where(o => o.UserId == loginUserId)
                 .Include(o => o.OrderDetails).ThenInclude(od => od.Product)
-                .Include(o => o.Status);
+                .Include(o => o.Status).Where(s=>s.Status.StatusId==5|| s.Status.StatusId ==6|| s.Status.StatusId ==7);
 
             var ordersList = await ordersQuery.Select(o => new HistoryOrderVM
             {
@@ -89,12 +89,23 @@ namespace sifoodproject.Areas.Users.Controllers
                 return BadRequest("無效的請求數據。");
             }
 
-            var order = await _context.Orders.Include(o => o.Comment).FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
+            //var order = await _context.Orders.Include(o => o.Comment).FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
+            var order = await _context.Orders
+                            .Include(o => o.Comment)
+                            .Include(o => o.Status) 
+                            .FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
 
             if (order == null)
             {
                 return NotFound("找不到相關的訂單。");
             }
+
+            // 檢查訂單的 StatusID 是否為 7
+            if (order.StatusId == 7)
+            {
+                return BadRequest("已取消");
+            }
+
 
             if (order.Comment == null)
             {
