@@ -1,11 +1,8 @@
 ﻿@model IEnumerable<OrderManageVM>
 @{
     Layout = "_AdminLayout";
-    ViewData["Title"] = "訂單管理"; 
-    <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
-    <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet" />
-    <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
-    <link href="~/assets/css/theme.min.css" rel="stylesheet" />
+    ViewData["Title"] = "訂單管理";
+    <link rel="stylesheet" href="~/assets/css/theme.min.css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
 }
   <div class="text-center">
@@ -64,10 +61,6 @@
     </tbody>
 </table>
 @section Scripts {
-    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
-    <script src="~/assets/js/theme.min.js"></script>    
      <script>
         $(document).ready(function () {
              $("#orderTable").DataTable({
