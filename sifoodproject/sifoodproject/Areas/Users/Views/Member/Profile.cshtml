@@ -16,98 +16,98 @@
         <!-- col -->
         <!-- partial start -->
         <partial name="_MembershipPartial">
-        <!-- partial end -->
-        <div class="col-lg-9 col-md-8 col-12">
-            <div class="py-6 p-md-6 p-lg-10">
-                <div class="mb-6">
-                    <h2 class="mb-0">帳號設定</h2>
-                </div>
-                <div>
-                    <h5 class="mb-4">個人資料</h5>
-                    <div class="row">
-                        <div class="col-lg-5">
-                            <!-- Profile form -->
-                            <form asp-action="Profile" asp-antiforgery="true">
-                                <!-- input for UserName -->
-                                <div class="mb-3">
-                                    <label class="form-label" for="fname">姓名</label>
-                                    <input asp-for="UserName" class="form-control" id="fname" placeholder="林小白" autocomplete="name">
-                                    <span asp-validation-for="UserName" class="text-danger"></span>
-                                </div>
+            <!-- partial end -->
+            <div class="col-lg-9 col-md-8 col-12">
+                <div class="py-6 p-md-6 p-lg-10">
+                    <div class="mb-6">
+                        <h2 class="mb-0">帳號設定</h2>
+                    </div>
+                    <div>
+                        <h5 class="mb-4">個人資料</h5>
+                        <div class="row">
+                            <div class="col-lg-5">
+                                <!-- Profile form -->
+                                <form asp-action="Profile" asp-antiforgery="true">
+                                    <!-- input for UserName -->
+                                    <div class="mb-3">
+                                        <label class="form-label" for="fname">姓名</label>
+                                        <input asp-for="UserName" class="form-control" id="fname" placeholder="林小白" autocomplete="name">
+                                        <span asp-validation-for="UserName" class="text-danger"></span>
+                                    </div>
 
                                 <!-- input for UserEmail -->
                                 <div class="mb-3">
-                                    <label class="form-label" for="email">Email</label>
-                                    <input asp-for="UserEmail" type="email" class="form-control" id="email" placeholder="example@gmail.com" autocomplete="email">
+                                        <label class="form-label" for="email">Email <span class="text-danger"> *(僅供檢視,不可修改)</span></label>
+                                        <input asp-for="UserEmail" type="email" class="form-control" id="email" placeholder="example@gmail.com" autocomplete="email" readonly>
                                     <span asp-validation-for="UserEmail" class="text-danger"></span>
                                 </div>
 
-                                <!-- input for UserPhone -->
-                                <div class="mb-3">
-                                    <label class="form-label" for="phone">電話</label>
-                                    <input asp-for="UserPhone" class="form-control" id="phone" placeholder="0912345678" autocomplete="tel">
-                                    <span asp-validation-for="UserPhone" class="text-danger"></span>
-                                </div>
+                                    <!-- input for UserPhone -->
+                                    <div class="mb-3">
+                                        <label class="form-label" for="phone">電話</label>
+                                        <input asp-for="UserPhone" class="form-control" id="phone" placeholder="0912345678" autocomplete="tel">
+                                        <span asp-validation-for="UserPhone" class="text-danger"></span>
+                                    </div>
 
-                                <!-- input for UserBirthDate -->
-                                <div class="mb-3">
-                                    <label class="form-label" for="birthday">生日</label>
-                                    <input asp-for="UserBirthDate" type="date" class="form-control" id="birthday" placeholder="yyyy/mm/dd" autocomplete="bday">
-                                    <span asp-validation-for="UserBirthDate" class="text-danger"></span>
-                                </div>
+                                    <!-- input for UserBirthDate -->
+                                    <div class="mb-3">
+                                        <label class="form-label" for="birthday">生日</label>
+                                        <input asp-for="UserBirthDate" type="date" class="form-control" id="birthday" placeholder="yyyy/mm/dd" autocomplete="bday">
+                                        <span asp-validation-for="UserBirthDate" class="text-danger"></span>
+                                    </div>
 
-                                <!-- submit button -->
-                                <div class="mt-5 mb-3">
+                                    <!-- submit button -->
+                                    <div class="mt-5 mb-3">
                                         <button type="submit" class="btn btn-primary" id="saveButton" asp-route-id="@ViewBag.ID">儲存資料</button>
-                                </div>
-                            </form>
-                            <!-- form end -->
-                            <!--測試TempData-->
-                            @if (TempData["SuccessMessage"] != null)
-                            {
-                                <div class="alert alert-success">
-                                    @TempData["SuccessMessage"]
-                                </div>
-                            }
+                                    </div>
+                                </form>
+                                <!-- form end -->
+                                <!--測試TempData-->
+                                @if (TempData["SuccessMessage"] != null)
+                                {
+                                    <div class="alert alert-success">
+                                        @TempData["SuccessMessage"]
+                                    </div>
+                                }
+                            </div>
                         </div>
                     </div>
-                </div>
-                <hr class="my-10">
-                <!-- 密碼區 -->
-                <div class="pe-lg-14 mb-15">
-                    <h5 class="mb-4">密碼</h5>
-                    <!-- 密碼變更表單 -->
-                    <div id="password-change-form">
-                        <div class="row row-cols-1 row-cols-lg-2">
-                            <!-- 現在密碼輸入欄位 -->
-                            <div class="mb-3 col">
-                                <label class="form-label">現在密碼</label>
+                    <hr class="my-10">
+                    <!-- 密碼區 -->
+                    <div class="pe-lg-14 mb-15">
+                        <h5 class="mb-4">密碼</h5>
+                        <!-- 密碼變更表單 -->
+                        <div id="password-change-form">
+                            <div class="row row-cols-1 row-cols-lg-2">
+                                <!-- 現在密碼輸入欄位 -->
+                                <div class="mb-3 col">
+                                    <label class="form-label">現在密碼</label>
                                     <input type="password" ref="currentPasswordInput" class="form-control" placeholder="**********" v-bind:readonly="allowEnter" v-model="oldPassword">
-                                <span class="text-danger"></span>
-                            </div>
-                            <!-- 新密碼輸入欄位 -->
-                            <div class="mb-3 col">
-                                <label class="form-label">新密碼</label>
-                                <input type="password" class="form-control" placeholder="**********" v-bind:readonly="allowEnter" v-model="newPassword">
-                                <span class="text-danger"></span>
-                            </div>
-                            <!-- 更新密碼按鈕 -->
-                            <div class="mb-3">
-                                <button type="submit" class="btn btn-danger" @@click="SendPasswordBack()">更新密碼</button>
+                                    <span class="text-danger"></span>
+                                </div>
+                                <!-- 新密碼輸入欄位 -->
+                                <div class="mb-3 col">
+                                    <label class="form-label">新密碼</label>
+                                    <input type="password" class="form-control" placeholder="**********" v-bind:readonly="allowEnter" v-model="newPassword">
+                                    <span class="text-danger"></span>
+                                </div>
+                                <!-- 更新密碼按鈕 -->
+                                <div class="mb-3">
+                                    <button type="submit" class="btn btn-danger" @@click="SendPasswordBack()">更新密碼</button>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                    <!-- 重設密碼連結 -->
-                    <p class="mb-4">
-                        想要更新密碼嗎?
+                        <!-- 重設密碼連結 -->
+                        <p class="mb-4">
+                            想要更新密碼嗎?
                             <button class="btn btn-primary d-flex align-items-center justify-content-center" @@click="toggleAndFocus()" style="height:30px;width:135px">按這裡輸入密碼</button>
-                    </p>
-                </div>
+                        </p>
+                    </div>
 
-                <!-- 一般性錯誤消息 -->
-                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <!-- 一般性錯誤消息 -->
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                </div>
             </div>
-        </div>
     </div>
 </div>
 
@@ -115,7 +115,7 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
-  
+
     <!-- jQuery驗證 -->
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/jquery-validation/dist/jquery.validate.min.js"></script>
@@ -124,7 +124,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
     <!--Sweet Alert-->
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     @* /跳出修改成功alert *@
     <script>
@@ -156,7 +156,7 @@
                 SendPasswordBack() {
                     var _this = this;
                     axios.post(`/Member/ChangePassword`, {
-                        UserEmail:_this.userEmail,
+                        UserEmail: _this.userEmail,
                         OldPassword: _this.oldPassword,
                         NewPassword: _this.newPassword,
                     }, {
@@ -164,11 +164,25 @@
                             'Content-Type': 'application/json'
                         }
                     }).then(response => {
-                        alert(response.data);
-                        window.location.href = '/Users/Member/Profile'
+                        var successMessage = "密碼修改成功";
+                        var iconType = response.data === successMessage ? 'success' : 'error';
+
+                        Swal.fire({
+                            icon: iconType,
+                            title: iconType === 'success' ? '操作成功' : '操作失敗',
+                            text: response.data,
+                        }).then(() => {
+                            if (response.data === successMessage) {
+                                window.location.href = '/Users/Member/Profile';
+                            }
+                        });
                     }).catch(err => {
-                        alert(err);
-                    })
+                        Swal.fire({
+                            icon: 'error',
+                            title: '發生錯誤',
+                            text: err.toString(),
+                        });
+                    });
                 },
                 toggleAndFocus() {
                     this.allowEnter = !this.allowEnter;

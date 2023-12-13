@@ -4,8 +4,15 @@
 @{
     ViewData["Title"] = "商品頁面";
 }
+@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+}
 <body>
-    <main id="product">
+    <main id="product" v-cloak>
         <div class="mt-4">
             <div class="container">
                 <!-- row -->
@@ -16,7 +23,7 @@
                         <nav aria-label="breadcrumb">
                             <ol class="breadcrumb mb-0">
                                 <li class="breadcrumb-item"><a href="/Users/Home/Main">首頁</a></li>
-                                <li class="breadcrumb-item"><a :href="'/Users/Home/Stores/'+productData.storeId">{{productData.storeName}}</a></li>
+                                <li class="breadcrumb-item"><a :href="'/Users/Home/Stores/'+productData.storeId" v-cloak>{{productData.storeName}}</a></li>
                                 <li class="breadcrumb-item active" aria-current="page" v-cloak>{{productData.productName}}</li>
                             </ol>
                         </nav>
@@ -54,7 +61,6 @@
                                     </button>
                                 </div>
                                 <!-- hr -->
-                                
                             </div>
                             <hr class="my-3">
                             <div class="container">
@@ -86,6 +92,22 @@
                     </div>
                 </div>
         </section>
+        <!-- Modal -->
+        <div class="modal fade" id="cartToChange" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cartToChangeLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="cartToChangeLabel">目前購物車內商品的店家屬於{{cartCurrentStoreName}}，是否要挑選其他商家做購買?</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                        <button type="button" class="btn btn-primary" @@click="confirmToChange(productData)">確定</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal -->
         <!-- 前次瀏覽的商品 -->
         <section class="my-lg-10 my-10">
             <div class="container">
@@ -193,6 +215,20 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="cartAlert" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="cartAlertLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cartAlertLabel">購物車已有此商品!</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
+            </div>
+        </div>
+    </div>
+</div>
 @section Scripts{
     <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
     <script>
@@ -200,9 +236,10 @@
         var productApp = Vue.createApp({
             data: function () {
                 return {
-                productData:[],
-                remainingStock: 0,
-                number:1
+                    productData: [],
+                    remainingStock: 0,
+                    number: 1,
+                    cartCurrentStoreName: "",
                 }
             },
             mounted: function () {
@@ -235,61 +272,71 @@
                     } else { this.number = this.number + 1; }
                 },
                 async AddCartItem(productData) {
-                    let addItem = {
+                    var addItem = {
                         productId: productData.productId,
                         quantity: this.number,
                         userId: "",
                     };
-                    let cartCurrentStoreName = shoppingCart.carts.length > 0 ? shoppingCart.carts[0].storeName : "";
+                    this.cartCurrentStoreName = shoppingCart.carts.length > 0 ? shoppingCart.carts[0].storeName : "";
                     if (isLogin) {
                         if (this.remainingStock == 0) { $('#qtyZero').modal('show'); return; };
-                            if (productData.storeName != cartCurrentStoreName && cartCurrentStoreName != "") {
-                                let isChangeStore = confirm(`目前購物車內商品的店家屬於${cartCurrentStoreName}，是否要挑選其他商家做購買?`);
-                                if (isChangeStore) {
-                                    try {
-                                        //刪除原購物車所有商品
-                                        await fetch(`/api/CartVMapi/DeleteUserAllCart/`, { method: "DELETE" })
-                                        //換成新店家
-                                        let response = await fetch(`/api/CartVMapi/AddToCart`,
-                                            {
-                                                method: "POST",
-                                                headers: { "Content-Type": "application/json" },
-                                                body: JSON.stringify(addItem)
-                                            });
-                                        let data = await response.text();
-                                        $('#CartAddOkModal').modal('show');
-                                    } catch (error) { alert("發生錯誤:" + error); }
-                                    shoppingCart.getCart();
-                                }
-                            }
-                            else {
-                                await fetch(`/api/CartVMapi/AddToCart`,
-                                    {
-                                        method: "POST",
-                                        headers: { "Content-Type": "application/json" },
-                                        body: JSON.stringify(addItem)
-                                    })
-                                    .then(response => {
-                                        if (response.ok) {
-                                            console.log(shoppingCart.carts);
-                                            $('#CartAddOkModal').modal('show');
-                                            shoppingCart.getCart();
-                                        }
-                                    })
-                                    .catch(error => {
-                                        alert(error.message);
-                                    });
-                                shoppingCart.getCart();
-                            }
+                        if (productData.storeName != this.cartCurrentStoreName && this.cartCurrentStoreName != "") {
+                            $('#cartToChange').modal('show');
                         }
-                        else { $('#CartModal').modal('show'); 
-                            $('#confirm').on('click', function () {
-                                $('#cancel').modal('hide');
-                                window.location.href = '/Users/Account/LoginRegister';
-                            });
+                        else {
+                            await  fetch(`/api/CartVMapi/AddToCart`,
+                                {
+                                    method: "POST",
+                                    headers: { "Content-Type": "application/json" },
+                                    body: JSON.stringify(addItem)
+                                }).then(response => response.json())
+                                .then(data => {
+                                    if (data) {
+                                        $('#CartAddOkModal').modal('show');
+                                        shoppingCart.getCart();
+                                    }
+                                    else { $('#cartAlert').modal('show'); }
+                                })
+                                .catch(error => {
+                                    alert(error.message);
+                                });
                         }
                     }
+                    else {
+                        $('#CartModal').modal('show');
+                        $('#confirm').on('click', function () {
+                            $('#cancel').modal('hide');
+                            window.location.href = '/Users/Account/LoginRegister';
+                        });
+                    }
+                },
+
+                 async confirmToChange(productData) {
+                    var addItem = {
+                        productId: productData.productId,
+                        quantity: this.number,
+                        userId: "",
+                    };
+                    try {
+                        //刪除原購物車所有商品
+                        await fetch(`/api/CartVMapi/DeleteUserAllCart/`, { method: "DELETE" })
+                        //換成新店家
+                        let response = await fetch(`/api/CartVMapi/AddToCart`,
+                            {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify(addItem)
+                            });
+                        // let data = await response.text();
+                        $('#cartToChange').modal('hide');
+                        $('#CartAddOkModal').modal('show');
+                    } catch (error) { alert("發生錯誤:" + error); }
+                    shoppingCart.getCart();
+
                 }
+
+            },
+        
             
         }).mount("#product")
     </script>

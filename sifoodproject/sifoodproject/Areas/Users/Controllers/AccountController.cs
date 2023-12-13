@@ -116,8 +116,8 @@ namespace sifoodproject.Areas.Users.Controllers
         [Route("/Account/OpenUserAccount")]
         public string OpenUserAccount([FromBody] EmailVerificationVM model)
         {
-            User? LockUser = _context.Users.FirstOrDefault(x => x.UserVerificationCode == model.UserAccountVerificationCode);
-            if (LockUser != null)
+            User? LockUser = _context.Users.Where(x => x.UserEmail == model.Email).FirstOrDefault();
+            if (LockUser?.UserVerificationCode == model.UserAccountVerificationCode)
             {
                 LockUser.UserAuthenticated = 1;
                 _context.SaveChanges();
@@ -169,14 +169,14 @@ namespace sifoodproject.Areas.Users.Controllers
         [Route("/Account/ConfirmForgotPasswordRandom")]
         public string ConfirmForgotPasswordRandom([FromBody] EmailVerificationVM model)
         {
-            User? user = _context.Users.FirstOrDefault(x => x.ForgotPasswordRandom == model.UserAccountVerificationCode);
-            if (user == null)
-            {
-                return "驗證碼核對失敗";
-            }
-            else
+            User? user = _context.Users.Where(x => x.UserEmail == model.Email).FirstOrDefault();
+            if (user?.ForgotPasswordRandom == model.UserAccountVerificationCode)
             {
                 return "驗證碼核對成功";
+            }
+            else
+            {         
+                return "驗證碼核對失敗";
             }
         }
 
