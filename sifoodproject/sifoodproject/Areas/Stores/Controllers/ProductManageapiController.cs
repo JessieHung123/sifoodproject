@@ -125,6 +125,10 @@ namespace sifoodproject.Areas.Stores.Controllers
         [HttpPost]
         public async Task<string> postProduct([FromForm]AddProductVM addProductDTO)
         {
+            TimeZoneInfo taiwanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
+            DateTime utcNow = DateTime.UtcNow;
+            DateTime taiwanTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, taiwanTimeZone);
+
             string targetStoreId = _storeIdentityService.GetStoreId();
             //string targetStoreId = "S001";
 
@@ -138,7 +142,7 @@ namespace sifoodproject.Areas.Stores.Controllers
                 UnitPrice = addProductDTO.UnitPrice,
                 SuggestPickUpTime=addProductDTO.SuggestPickUpTime,
                 SuggestPickEndTime=addProductDTO.SuggestPickEndTime,
-                RealeasedTime = DateTime.Now,
+                RealeasedTime = taiwanTime,
                 PhotoPath = await SavePhoto(addProductDTO.ImageFile)
             };
             _context.Products.Add(prodct);

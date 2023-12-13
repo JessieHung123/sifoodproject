@@ -24,36 +24,49 @@ namespace sifoodproject.Areas.Admin.Controllers
         // GET: Admin/OrderManage
         public async Task<IActionResult> Index()
         {
-            var sifood3Context = await _context.OrderDetails.Include(o => o.Order).ThenInclude(o => o.User).Include(o => o.Product)
-                .Select(o => new OrderManageVM
+            var orderDetails = await _context.OrderDetails.Include(o => o.Order).ThenInclude(o => o.User).Include(o => o.Product).ToListAsync();
+            var orderManageVMs = orderDetails
+                .GroupBy(o => o.OrderId)
+                .Select(group => new OrderManageVM
                 {
-                    UserName = o.Order.User.UserName,
-                    OrderAddress = o.Order.Address,
-                    ProductName = o.Product.ProductName,
-                    Quantity = o.Quantity,
-                    UserPhone = o.Order.User.UserPhone,
-                    OrderDetailId = o.OrderDetailId,
-                    OrderId = o.OrderId,
-                    OrderDate = o.Order.OrderDate,
-                    StatusName = o.Order.Status.StatusName,
-                    ProductId = o.ProductId,
-                    ProductUnitPrice = o.Product.UnitPrice,
-                    StoreName = o.Order.Store.StoreName,
-                    StorePhone = o.Order.Store.Phone,
-                    StoreAddress = o.Order.Store.Address,
-                    Total = o.Quantity * o.Product.UnitPrice,
-                }).ToListAsync();
-            return View(sifood3Context);
+                    UserName = group.First().Order.User.UserName,
+                    OrderAddress = group.First().Order.Address,
+                    ProductName = group.First().Product.ProductName,
+                    Quantity = group.Sum(o => o.Quantity),
+                    UserPhone = group.First().Order.User.UserPhone,
+                    OrderDetailId = group.First().OrderDetailId,
+                    OrderId = group.Key,
+                    OrderDate = group.First().Order.OrderDate,
+                    StatusName = group.First().Order.Status.StatusName,
+                    ProductId = group.First().ProductId,
+                    ProductUnitPrice = group.First().Product.UnitPrice,
+                    StoreName = group.First().Order.Store.StoreName,
+                    StorePhone = group.First().Order.Store.Phone,
+                    StoreAddress = group.First().Order.Store.Address,
+                    Total = group.Sum(o => o.Quantity * o.Product.UnitPrice),
+                    OrderDetails = group.Select(detail => new OrderDetailVM
+                    {
+                        ProductId = detail.ProductId,
+                        ProductName = detail.Product.ProductName,
+                        Quantity = detail.Quantity
+                    }).ToList()
+                })
+                .ToList();
+
+            return View(orderManageVMs);
         }
         // GET: Admin/OrderManage/Details/5
-        public async Task<IActionResult> Details(string? OrderId, int? ProductId)
+        public async Task<IActionResult> Details(string? OrderId)
         {
-            if (OrderId == null || ProductId == null || _context.OrderDetails == null)
+            if (OrderId == null || _context.OrderDetails == null)
             {
                 return NotFound();
             }
-            var orderDetail = await _context.OrderDetails
-                .Where(x => x.OrderId == OrderId && x.ProductId == ProductId)
+
+            var orderDetails = await _context.OrderDetails
+                .Where(x => x.OrderId == OrderId)
+                .Include(o => o.Order)
+                .Include(o => o.Product)
                 .Select(o => new OrderManageVM
                 {
                     UserName = o.Order.User.UserName,
@@ -72,14 +85,15 @@ namespace sifoodproject.Areas.Admin.Controllers
                     StoreAddress = o.Order.Store.Address,
                     Total = o.Quantity * o.Product.UnitPrice,
                 })
-                .FirstOrDefaultAsync();
-            if (orderDetail == null)
+                .ToListAsync();
+
+            if (orderDetails == null || orderDetails.Count == 0)
             {
                 return NotFound();
             }
-            return View(orderDetail);
-        }
 
+            return View(orderDetails);
+        }
         // GET: Admin/OrderManage/Edit/5
         public async Task<IActionResult> Edit(string? OrderId, int? ProductId)
         {
@@ -152,13 +166,14 @@ namespace sifoodproject.Areas.Admin.Controllers
             }
         }
         // GET: Admin/OrderManage/Delete/5
-        public async Task<IActionResult> Delete(string? OrderId, int? ProductId)
+        public async Task<IActionResult> Delete(string? OrderId)
         {
-            if (OrderId == null || ProductId == null || _context.OrderDetails == null)
+            if (OrderId == null || _context.OrderDetails == null)
             {
                 return NotFound();
             }
-            var orderDetail = await _context.OrderDetails
+            var orderDetails = await _context.OrderDetails
+                .Where(od => od.OrderId == OrderId)
                 .Include(o => o.Order)
                 .Include(o => o.Product)
                 .Select(o => new OrderManageVM
@@ -179,24 +194,36 @@ namespace sifoodproject.Areas.Admin.Controllers
                     StoreAddress = o.Order.Store.Address,
                     Total = o.Quantity * o.Product.UnitPrice,
                 })
-                .FirstOrDefaultAsync(od => od.OrderId == OrderId && od.ProductId == ProductId);
-            if (orderDetail == null)
+                .ToListAsync();
+
+            if (orderDetails == null || orderDetails.Count == 0)
             {
                 return NotFound();
             }
-            return View(orderDetail);
+            return View(orderDetails);
         }
-        // POST: Admin/OrderManage/Delete/5
-        [HttpPost, ActionName("Delete")]
+        // POST: Admin/OrderManage/DeleteConfirmed
+        [HttpPost, ActionName("DeleteConfirmed")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(string OrderId, int ProductId)
+        public async Task<IActionResult> DeleteConfirmed(string OrderId)
         {
-            var orderDetail = await _context.OrderDetails.FindAsync(OrderId, ProductId);
-            if (orderDetail != null)
+            // Retrieve the order details
+            var orderDetails = await _context.OrderDetails
+                .Where(od => od.OrderId == OrderId)
+                .ToListAsync();
+
+            if (orderDetails == null || orderDetails.Count == 0)
             {
-                _context.OrderDetails.Remove(orderDetail);
-                await _context.SaveChangesAsync();
+                return NotFound();
             }
+            var order = await _context.Orders.FindAsync(OrderId);
+            if (order != null)
+            {
+                _context.Orders.Remove(order);
+            }
+            _context.OrderDetails.RemoveRange(orderDetails);
+            await _context.SaveChangesAsync();
+
             return RedirectToAction(nameof(Index));
         }
         private bool OrderDetailExists(string OrderId, int ProductId)

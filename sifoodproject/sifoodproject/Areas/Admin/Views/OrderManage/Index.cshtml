@@ -1,18 +1,13 @@
 ﻿@model IEnumerable<OrderManageVM>
 @{
     Layout = "_AdminLayout";
-}
-@{
-    ViewData["Title"] = "訂單管理";
-}
-@section Styles
- {
+    ViewData["Title"] = "訂單管理"; 
     <link href="~/assets/libs/bootstrap-icons/font/bootstrap-icons.min.css" rel="stylesheet" />
     <link href="~/assets/libs/feather-webfont/dist/feather-icons.css" rel="stylesheet" />
     <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
     <link href="~/assets/css/theme.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css">
-  }
+}
   <div class="text-center">
     <div class="container">
         <div>
@@ -26,50 +21,46 @@
         </div>
     </div>
 </div>
+<br />
 <table id="orderTable" class="table table-centered table-hover text-nowrap table-borderless mb-0 table-with-checkbox">
     <thead class="bg-light" height="68px">
         <tr class="text-center">
             <th>訂單編號</th>
             <th>訂單日期</th>
             <th>客戶姓名</th>
-            <th>商品名稱</th>
-            <th>商品數量</th>
             <th>金額</th>
             <th>訂單狀態</th>
             <th>編輯</th>
         </tr>
     </thead>
     <tbody id="orderTableBody">
-@foreach (var item in Model) {
+        @foreach (var order in Model)
+        {
             <tr class="text-center">
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderId)
+                    @Html.DisplayFor(modelItem => order.OrderId)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderDate)
+                    @Html.DisplayFor(modelItem => order.OrderDate)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.UserName)
+                    @Html.DisplayFor(modelItem => order.UserName)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ProductName)
+                    @Html.DisplayFor(ModelItem => order.Total)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
+                    @Html.DisplayFor(modelItem => order.StatusName)
                 </td>
                 <td>
-                    @Html.DisplayFor(ModelItem => item.Total)
+                    <a asp-controller="OrderManage" asp-action="Edit" asp-route-OrderId="@order.OrderId"><button type="button" class="btn btn-warning">修改</button></a> |
+                    <a asp-controller="OrderManage" asp-action="Details" asp-route-OrderId="@order.OrderId"><button type="button" class="btn btn-info">明細</button></a> |
+                    <a asp-controller="OrderManage" asp-action="Delete" asp-route-OrderId="@order.OrderId"><button type="button" class="btn btn-danger">刪除</button></a>
                 </td>
-             <td>
-                    @Html.DisplayFor(modelItem => item.StatusName)
-             </td>
-            <td>      
-                    <a asp-controller="OrderManage" asp-action="Edit" asp-route-OrderId="@item.OrderId" asp-route-ProductId="@item.ProductId"><button type="button" class="btn btn-warning">修改</button></a> |
-                    <a asp-controller="OrderManage" asp-action="Details" asp-route-OrderId="@item.OrderId" asp-route-ProductId="@item.ProductId"><button type="button" class="btn btn-info">明細</button></a> |
-                    <a asp-controller="OrderManage" asp-action="Delete" asp-route-OrderId="@item.OrderId" asp-route-ProductId="@item.ProductId"><button type="button" class="btn btn-danger">刪除</button></a>                          
-            </td>
-        </tr>
-}
+            </tr>
+
+            
+        }
     </tbody>
 </table>
 @section Scripts {
@@ -78,7 +69,7 @@
     <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
     <script src="~/assets/js/theme.min.js"></script>    
      <script>
-         $(document).ready(function () {
+        $(document).ready(function () {
              $("#orderTable").DataTable({
                 "iDisplayLength": 5,
                 "lengthMenu": [[5, 10, 25, 50, -1], [5, 10, 25, 50, "All"]],

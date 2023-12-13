@@ -131,8 +131,8 @@
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                         <div class="py-4 mb-4">
-                            <label asp-for="LogoPath"><h4 class="mb-5 h5">請上傳您的LOGO</h4></label>
-
+                            <label asp-for="LogoPath"><h4 class="mb-5 h5">請上傳您的LOGO<span class="text-danger">*</span></h4></label>
+                            <span asp-validation-for="LogoPath" class="text-danger"></span>
                             <div class="mb-4 d-flex">
                                 <div class="position-relative">
                                     <img class="image  icon-shape icon-xxxl bg-light rounded-4"
@@ -140,7 +140,6 @@
                                     <div class="file-upload position-absolute end-0 top-0 mt-n2 me-n1">
 
                                         <input asp-for="LogoPath" type="file" accept="image/*" class="file-input ">
-                                        <span asp-validation-for="LogoPath" class="text-danger"></span>
                                         <span class="icon-shape icon-sm rounded-circle bg-white">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12"
                                                  fill="currentColor" class="bi bi-pencil-fill text-muted"
@@ -155,7 +154,8 @@
                             @* 店家照片上傳3張安排 *@
 
                             <div class="border-bottom py-4 mb-4">
-                                <label><h4 class="mb-5 h5">請上傳您的店家照片</h4></label>
+                                <label asp-for="PhotosPath"><h4 class="mb-5 h5">請上傳您的店家照片<span class="text-danger">*</span></h4></label>
+                                <span asp-validation-for="PhotosPath" class="text-danger"></span>
                                 <div class="row">
                                     <!-- 第一個上傳元素 -->
                                     <div class="col-md-4">
@@ -243,7 +243,7 @@
                                     請稍待一至二天審核，謝謝~
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='https://localhost:7172/Users/Home/Main'">好</button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" onclick="location.href='@Url.Action("Main", "Home", new { area = "Users" })'">好</button>
                                 </div>
                             </div>
                         </div>
@@ -257,7 +257,7 @@
                                     <h5 class="modal-title" id="notOkModalLabel">未成功送出申請!</h5>
                                 </div>
                                 <div class="modal-body">
-                                    請重新確認您填寫的資料~
+                                    <p id="error-message">請重新確認您填寫的資料~</p> <!-- 新增的錯誤訊息元素 -->
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-primary" data-bs-dismiss="modal">好</button>
@@ -344,11 +344,14 @@
                     if (data == "成功") {
                         // 如果後端返回成功，顯示成功的 Modal
                         $('#modalOK').modal('show');
+                         // 如果後端返回失敗，顯示失敗的 Modal
                     } else {
-                        // 如果後端返回失敗，顯示失敗的 Modal
+                        // 設置 NotOK Modal 的錯誤訊息
+                        let errorMessage = data === "Email重複" ? "Email重複申請!" : "請重新確認您填寫的資料~";
+                        document.getElementById('error-message').textContent = errorMessage;
                         $('#modalNotOK').modal('show');
                     }
-                })
+                    })
                 .catch(error => {
                     console.error('錯誤:', error);
                     // 這裡可以處理網路錯誤等問題

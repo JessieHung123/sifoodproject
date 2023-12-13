@@ -109,10 +109,10 @@
                                                     </td>
 
                                                     <td class="align-middle ">
-                                                        <a type="submit" name="singleDelete" value="@store.FavoriteId" class="text-muted" data-bs-toggle="tooltip"
+                                                        <button type="submit" name="singleDelete" value="@store.FavoriteId" class="text-muted" data-bs-toggle="tooltip"
                                                                 data-bs-placement="top" title="移除收藏">
                                                             <i class="feather-icon icon-trash-2"></i>
-                                                        </a>
+                                                        </button>
                                                     </td>
 
                                                 </tr>
@@ -163,7 +163,7 @@
                         title: "已刪除！",
                         text: "您的文件已被刪除。",
                         icon: "success",
-                        confirmButtonColor: "#00AA90",  /* 改OK按鈕 */
+                        confirmButtonColor: "#00AA90",  /* 改OK按鈕
                     }).then(() => {
                         // 提交表單
                         event.target.submit();
@@ -171,7 +171,7 @@
                 }
             });
         };
-    </script>
+    </script> */
 
 }
 

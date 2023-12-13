@@ -44,7 +44,16 @@ namespace sifoodproject.Areas.Users.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<string> JoinUsSubmit(JoinUsVM joinus)
-        {        
+        {
+            //擋重複email
+            // 檢查電子郵件是否已存在
+            var existingStore = await _context.Stores.FirstOrDefaultAsync(s => s.Email == joinus.Email);
+            if (existingStore != null)
+            {
+                // 電子郵件已存在，返回錯誤訊息
+                return "Email重複";
+            }
+
             // 格式化營業時間
             string formattedOpeningTime = $"平日 {joinus.WeekdayStartTime} - {joinus.WeekdayEndTime}，週末 {joinus.WeekendStartTime} - {joinus.WeekendEndTime}";
             //string formattedOpeningTime = $"平日 {joinus.WeekdayStartTime:HH:mm} - {joinus.WeekdayEndTime:HH:mm}，週末 {joinus.WeekendStartTime:HH:mm} - {joinus.WeekendEndTime:HH:mm}";
@@ -131,40 +140,46 @@ namespace sifoodproject.Areas.Users.Controllers
             return View();
         }
 
-
+        private Dictionary<int, ProductVM> ProductCache = new Dictionary<int, ProductVM>();
         [Route("/Users/Home/Products/{ProductId?}")]
 
-        public IActionResult Products(int ProductId)
+        public async Task<IActionResult> Products(int ProductId)
         {
             var IdToString = ProductId.ToString();
-            List<string> ProductList = GetCookieProductList();//讀取
-            if (ProductList.Contains(IdToString)) { ProductList.Remove(IdToString); }
+            List<string> ProductList =GetCookieProductList();//讀取
+            ProductList.Remove(IdToString);
             if (IdToString != "0") { ProductList.Add(IdToString); }
             SetCookieProductList(ProductList);//取陣列最後一個以外的值
             //倒敘且只留最後五個
             ProductList.Reverse();
             ProductList = ProductList.Take(5).ToList();
-
-            ViewBag.ProductList = ProductList;
-            List<ProductVM> cookieProduct = new List<ProductVM>();
-
-            if (ProductList != null)
+            //===========================================================================
+            List<int> productIds = ProductList.Select(int.Parse).ToList();
+            var products = productIds.Select(productId =>
             {
-                foreach (var productid in ProductList)
+                if (!ProductCache.TryGetValue(productId, out var cachedProduct))
                 {
-                    var c = _context.Products.Where(p => p.ProductId == int.Parse(productid));
-                    ProductVM VM = new ProductVM
+                    var productFromDb = _context.Products
+                        .Where(p => p.ProductId == productId)
+                        .FirstOrDefault();
+                    if (productFromDb != null)
                     {
-                        ProductId = c.Select(p => p.ProductId).Single(),
-                        ProductName = c.Select(p => p.ProductName).Single(),
-                        StoreName = c.Include(p => p.Store).Select(p => p.Store.StoreName).Single(),
-                        PhotoPath = c.Select(p => p.PhotoPath).Single(),
-                        UnitPrice = Math.Round(c.Select(p => p.UnitPrice).Single(), 2)
-                    };
-                    cookieProduct.Add(VM);
+                        cachedProduct = new ProductVM
+                        {
+                            ProductId = productFromDb.ProductId,
+                            ProductName = productFromDb.ProductName,
+                            StoreName = productFromDb.Store.StoreName,
+                            PhotoPath = productFromDb.PhotoPath,
+                            UnitPrice = Math.Round(productFromDb.UnitPrice, 2)
+                        };
+                        ProductCache[productId] = cachedProduct;
+                    }
                 }
-                ViewBag.CookieProduct = cookieProduct;
-            }
+                return cachedProduct;
+            }).OrderBy(p => ProductList.IndexOf(p.ProductId.ToString())).ToList();
+
+            ViewBag.CookieProduct = products;
+
             return View();
         }
         private List<string> GetCookieProductList()
@@ -174,6 +189,7 @@ namespace sifoodproject.Areas.Users.Controllers
             if (ProductCookieValue != null && ProductCookieValue != "")
             {
                 ProductList.AddRange(ProductCookieValue.Split(','));
+                ProductList = ProductList.Skip(Math.Max(0, ProductList.Count - 5)).ToList();
             }
             return ProductList;//{"32","33","34"}
         }
