@@ -1,5 +1,6 @@
 ﻿@section Styles {
     <link href="~/css/loginsite.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
 }
 @{
     ViewData["Title"] = "登入註冊";
@@ -97,6 +98,7 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         var RegisterApp = Vue.createApp({
@@ -114,13 +116,22 @@
             },
             methods: {
                 register() {
-                    var _this = this
+                    var _this = this;
                     if (_this.vuePassword != _this.vuePasswordConfirm || _this.vueAccount == "" || _this.vueUserName == "" || _this.vuePassword == "") {
-                        alert("註冊失敗");
+                        Swal.fire({
+                            icon: 'error',
+                            title: '註冊失敗',
+                            text: '請確認資料是否填寫正確',
+                        });
                     } else if (/[a-zA-Z]/.test(_this.vueUserName)) {
-                        alert("使用者名稱不能包含英文");
+                        Swal.fire({
+                            icon: 'error',
+                            title: '使用者名稱錯誤',
+                            text: '使用者名稱不能包含英文',
+                        });
                     } else {
                         _this.loading = true;
+                        sessionStorage.setItem('email', _this.vueAccount);
                         var form = new FormData();
                         form.append("EmailAccount", _this.vueAccount);
                         form.append("Password", _this.vuePassword);
@@ -130,20 +141,29 @@
                                 "Content-Type": "multipart/form-data"
                             }
                         }).then(response => {
-                            alert(response.data);
-                            var success = "帳號註冊成功, 即將進入驗證階段";
-                            if (response.data == success) {
-                                window.location.href = '/Users/Account/RegisterConfirmation'
-                            }
-                            else {
-                                _this.vueAccount = "";
-                                _this.vuePassword = "";
-                                _this.vuePasswordConfirm = "";
-                                _this.vueUserName = "";
-                            }
-                            _this.loading = false;
+                            var successMessage = "帳號註冊成功, 即將進入驗證階段";
+                            var iconType = response.data === successMessage ? 'success' : 'error';
+                            Swal.fire({
+                                icon: iconType,
+                                title: iconType === 'success' ? '註冊成功' : '註冊失敗',
+                                text: response.data,
+                            }).then((result) => {
+                                if (response.data === successMessage) {
+                                    window.location.href = '/Users/Account/RegisterConfirmation';
+                                } else {
+                                    _this.vueAccount = "";
+                                    _this.vuePassword = "";
+                                    _this.vuePasswordConfirm = "";
+                                    _this.vueUserName = "";
+                                }
+                                _this.loading = false;
+                            });
                         }).catch(err => {
-                            alert(err);
+                            Swal.fire({
+                                icon: 'error',
+                                title: '發生錯誤',
+                                text: err.toString(),
+                            });
                         });
                     }
                 },

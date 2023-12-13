@@ -1,9 +1,15 @@
 ﻿@model IEnumerable<sifoodproject.Models.Store>
 
+@section Styles {
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
+}
+
 @{
     Layout = "_AdminLayout";
 }
-
+@{
+    ViewData["Title"] = "商家審核";
+}
 <div class="container" id="StoreConfirmApp">
     <div class="row mb-8">
         <div class="col-md-12">
@@ -161,6 +167,7 @@
 @section Scripts {
     <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         var StoreConfirmApp = Vue.createApp({
@@ -172,6 +179,17 @@
             methods: {
                 SendEmailBack() {
                     var _this = this;
+                    var email = _this.SendBackEmail;
+                    function setCookie(name, value, days) {
+                        var expires = "";
+                        if (days) {
+                            var date = new Date();
+                            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+                            expires = "; expires=" + date.toUTCString();
+                        }
+                        document.cookie = name + "=" + value + expires + "; path=/";
+                    }
+                    setCookie("email", email, 7);
                     axios.post(`/StoreManage/SendSetPasswordEmail`, {
                         StoreEmail: _this.SendBackEmail
                     }, {
@@ -179,11 +197,20 @@
                             "Content-Type": "application/json"
                         }
                     }).then(response => {
-                        alert(response.data);
-                        $('#storeModal').modal('hide');
+                        Swal.fire({
+                            icon: 'success',
+                            title: '郵件已發送',
+                            text: response.data,
+                        }).then(() => {
+                            $('#storeModal').modal('hide');
+                        });
                     }).catch(err => {
-                        alert(err);
-                    })
+                        Swal.fire({
+                            icon: 'error',
+                            title: '發生錯誤',
+                            text: err.toString(),
+                        });
+                    });
                 },
                 openModal(item) {
                     var _this = this;
