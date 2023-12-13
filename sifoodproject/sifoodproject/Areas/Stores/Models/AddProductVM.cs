@@ -18,7 +18,7 @@
 
         public decimal UnitPrice { get; set; }
 
-        public IFormFile ImageFile { get; set; }
+        public IFormFile? ImageFile { get; set; }
 
 
     }

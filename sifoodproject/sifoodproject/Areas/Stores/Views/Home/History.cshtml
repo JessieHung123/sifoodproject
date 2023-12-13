@@ -25,8 +25,9 @@
 
 
     <!-- Theme CSS -->
-@*     <link rel="stylesheet" href="~/assets/css/theme.min.css">
- *@    <link href="~/assets/libs/prismjs/themes/prism-okaidia.min.css" rel="stylesheet" />
+                    @*     <link rel="stylesheet" href="~/assets/css/theme.min.css">
+ *@
+    <link href="~/assets/libs/prismjs/themes/prism-okaidia.min.css" rel="stylesheet" />
 
     <!--改放大鏡和X顯示問題-->
     <style>
@@ -121,7 +122,10 @@
                                             <!-- Sort選擇 -->
                                             <select class="form-select" name="sortOption" aria-label="Default select example" onchange="this.form.submit()">
                                                 <option value="=">排序</option>
+<<<<<<< HEAD
                                                @*  <option value="Status">訂單狀態</option> *@
+=======
+>>>>>>> 65a1e1ff72808b1dcbf1715d2a88dad62ed79b21
                                                 <option value="Low to High">金額：由低到高</option>
                                                 <option value="High to Low">金額：由高到低</option>
                                                 <option value="Newest">訂購日期：由新到舊</option>
@@ -162,19 +166,19 @@
                                                 <tr>
                                                     <td class="text-muted align-middle border-top-0">
                                                         <!-- 觸發模態框的按鈕 -->
-                                                        <a href="#" onclick="loadOrderDetails('@order.OrderId')" type="button" class="text-inherit" 
-                                                            data-bs-toggle="modal" data-bs-placement="top" data-bs-title="View"
-                                                            data-bs-target="#exampleModalScrollable-@order.OrderId-Store">
+                                                        <a href="#" onclick="loadOrderDetails('@order.OrderId')" type="button" class="text-inherit"
+                                                           data-bs-toggle="modal" data-bs-placement="top" data-bs-title="View"
+                                                           data-bs-target="#exampleModalScrollable-@order.OrderId-Store">
                                                             <i class="feather-icon icon-eye"></i>
                                                         </a>
 
-                                                        <div class="modal fade gd-example-modal-lg" id="exampleModalScrollable-@order.OrderId-Store" 
-                                                                tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel-@order.OrderId-Store" 
-                                                                aria-hidden="true">
+                                                        <div class="modal fade gd-example-modal-lg" id="exampleModalScrollable-@order.OrderId-Store"
+                                                             tabindex="-1" role="dialog" aria-labelledby="myExtraLargeModalLabel-@order.OrderId-Store"
+                                                             aria-hidden="true">
                                                             <div class="modal-dialog modal-dialog-scrollable" role="document">
                                                                 <div class="modal-content">
                                                                     <!-- 部分視圖將在這裡動態加載 -->
-                                                                    
+
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -211,7 +215,7 @@
                                                                 "待配送" => "badge bg-info text-dark",
                                                                 "待領取" => "badge bg-secondary",
                                                                 "配送中" => "badge bg-primary",
-                                                               
+
                                                             };
                                                         }
                                                         <span class="@badgeClass">@order.Status</span>
@@ -227,7 +231,7 @@
                             </div>
                         </div>
                         <div class="border-top d-md-flex justify-content-between align-items-center p-6">
-                         @*    <span>Showing 1 to 8 of 12 entries</span> *@
+                            @*    <span>Showing 1 to 8 of 12 entries</span> *@
                             <nav class="mt-2 mt-md-0">
                                 <ul class="pagination mb-0 ">
                                     <li class="page-item disabled"><a class="page-link " href="#!">Previous</a></li>
@@ -246,7 +250,7 @@
 </div>
 
 
-@section Scripts{
+@section Scripts {
     <!-- Libs JS -->
     <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
     <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -354,7 +358,7 @@
                 console.log("載入訂單詳情，訂單 ID:", orderId);
 
                 // 構建正確的模態框 ID
-                var modalId = 'exampleModalScrollable-' + orderId+'-Store';
+                var modalId = 'exampleModalScrollable-' + orderId + '-Store';
 
                 //偵錯:查modalId
                 console.log("模態框 ID:", modalId);
@@ -381,7 +385,7 @@
                                 clearModalsBackdrop();
                             });
 
-                            
+
                         }
                     })
                     .catch(err => {
@@ -390,7 +394,7 @@
                     });
             };
 
-         
+
 
             // 綁定 loadOrderDetails 事件
             var elements = document.querySelectorAll('[data-order-id]');
