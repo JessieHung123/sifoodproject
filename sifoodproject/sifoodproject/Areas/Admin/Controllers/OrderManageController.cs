@@ -95,14 +95,14 @@ namespace sifoodproject.Areas.Admin.Controllers
             return View(orderDetails);
         }
         // GET: Admin/OrderManage/Edit/5
-        public async Task<IActionResult> Edit(string? OrderId, int? ProductId)
+        public async Task<IActionResult> Edit(string? OrderId)
         {
-            if (OrderId == null || ProductId == null || _context.OrderDetails == null)
+            if (OrderId == null ||_context.OrderDetails == null)
             {
                 return NotFound();
             }
             var orderDetail = await _context.OrderDetails
-                .Where(x => x.OrderId == OrderId && x.ProductId == ProductId)
+                .Where(x => x.OrderId == OrderId)
                 .Select(o => new OrderManageVM
                 {
                     UserName = o.Order.User.UserName,
@@ -133,14 +133,14 @@ namespace sifoodproject.Areas.Admin.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string OrderId, int ProductId, [Bind("OrderId,ProductId,UserName,OrderAddress,UserPhone")] OrderManageVM orderDetail)
+        public async Task<IActionResult> Edit(string OrderId,[Bind("OrderId,UserName,OrderAddress,UserPhone")] OrderManageVM orderDetail)
         {
-            if (OrderId != orderDetail.OrderId || ProductId != orderDetail.ProductId)
+            if (OrderId != orderDetail.OrderId )
             {
                 return NotFound();
             }
             var existingOrderDetail = await _context.OrderDetails
-                .FirstOrDefaultAsync(x => x.OrderId == OrderId && x.ProductId == ProductId);
+                .FirstOrDefaultAsync(x => x.OrderId == OrderId);
             if (existingOrderDetail == null)
             {
                 return NotFound();
@@ -151,7 +151,7 @@ namespace sifoodproject.Areas.Admin.Controllers
             try
             {
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Details", new { OrderId = orderDetail.OrderId, ProductId = orderDetail.ProductId });
+                return RedirectToAction("Details", new { OrderId = orderDetail.OrderId});
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -173,7 +173,6 @@ namespace sifoodproject.Areas.Admin.Controllers
                 return NotFound();
             }
             var orderDetails = await _context.OrderDetails
-                .Where(od => od.OrderId == OrderId)
                 .Include(o => o.Order)
                 .Include(o => o.Product)
                 .Select(o => new OrderManageVM
@@ -193,39 +192,28 @@ namespace sifoodproject.Areas.Admin.Controllers
                     StorePhone = o.Order.Store.Phone,
                     StoreAddress = o.Order.Store.Address,
                     Total = o.Quantity * o.Product.UnitPrice,
-                })
-                .ToListAsync();
+                }).Where(c=>c.OrderId== OrderId).ToListAsync();
+                
 
-            if (orderDetails == null || orderDetails.Count == 0)
+            if (orderDetails == null)
             {
                 return NotFound();
             }
             return View(orderDetails);
         }
-        // POST: Admin/OrderManage/DeleteConfirmed
-        [HttpPost, ActionName("DeleteConfirmed")]
+        // POST: Admin/OrderManage/Delete/5
+        [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string OrderId)
         {
-            // Retrieve the order details
-            var orderDetails = await _context.OrderDetails
-                .Where(od => od.OrderId == OrderId)
-                .ToListAsync();
-
-            if (orderDetails == null || orderDetails.Count == 0)
+            var orderDetails = await _context.OrderDetails.Where(c=>c.OrderId== OrderId).ToListAsync();
+            if (orderDetails != null)
             {
-                return NotFound();
+                _context.OrderDetails.RemoveRange(orderDetails);
+                await _context.SaveChangesAsync();
             }
-            var order = await _context.Orders.FindAsync(OrderId);
-            if (order != null)
-            {
-                _context.Orders.Remove(order);
-            }
-            _context.OrderDetails.RemoveRange(orderDetails);
-            await _context.SaveChangesAsync();
-
             return RedirectToAction(nameof(Index));
-        }
+        } 
         private bool OrderDetailExists(string OrderId, int ProductId)
         {
             return (_context.OrderDetails?.Any(e => e.OrderId == OrderId && e.ProductId == ProductId)).GetValueOrDefault();

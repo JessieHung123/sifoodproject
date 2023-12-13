@@ -1,5 +1,4 @@
 ﻿@model List<OrderManageVM>
-
 @{
     ViewData["Title"] = "刪除訂單";
     Layout = "_AdminLayout";
@@ -11,9 +10,9 @@
 
     <style>
         .col-sm-2 {
-            background-color: forestgreen;
-            color: #fff;
-            text-align: center;
+        background-color: forestgreen;
+        color: #fff;
+        text-align: center;
         }
     </style>
 }
@@ -24,11 +23,11 @@
     <h4>訂單資料</h4>
     <hr />
     <div class="mt-8">
+
         @if (Model.Any())
         {
             var firstOrderDetail = Model.First();
             <div class="row">
-
                 <!-- Customer Information -->
                 <div class="col-lg-4 col-md-4 col-12">
                     <div class="mb-6">
@@ -53,7 +52,7 @@
                     </div>
                 </div>
             </div>
-
+            }
 
             <table class="table table-centered table-hover text-nowrap table-borderless mb-0 table-with-checkbox">
                 <thead class="bg-light">
@@ -97,16 +96,24 @@
                                 @Html.DisplayFor(model => orderDetail.StatusName)
                             </td>
                         </tr>
-                    }
+                  }
                 </tbody>
             </table>
 
             <div>
-                <form asp-action="DeleteConfirmed">
+           
+                <form asp-action="Delete">
+                @* <input type="hidden" asp-for="firstOrderDetail.OrderId" />
+                    <input type="hidden" asp-for="ProductId" /> *@
                     <input type="submit" onclick='return confirm("確定要刪除嗎?")' value="刪除" class="btn btn-danger" /> |
                     <a asp-action="Index">回上頁</a>
                 </form>
             </div>
+                @* <form asp-action="DeleteConfirmed" asp-route-OrderId="@firstOrderDetail.OrderId" method="post">
+                    <input type="submit"  onclick='return confirm("確定要刪除嗎?")' value="刪除" class="btn btn-danger" /> |
+                    <a asp-action="Index">回上頁</a>
+                </form>
+          
 
             @* <div>
                 <form asp-action="DeleteConfirmed">
@@ -115,12 +122,12 @@
                     <a asp-action="Index">回上頁</a>
                 </form>
             </div> *@
-        }
+        
     </div>
-</div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
   @*   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
     <script>
         function showSweetAlert(event) {
