@@ -153,6 +153,7 @@
                         <div class="border-top d-md-flex justify-content-between align-items-center p-6">
                             <nav aria-label="Page navigation">
                                 <paginate :page-count="total"
+                                          :force-page="pageNumber"
                                           :prev-text="'<'"
                                           :next-text="'>'"
                                           :click-handler="pageClick">
