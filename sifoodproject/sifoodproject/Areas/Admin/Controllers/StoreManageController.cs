@@ -91,32 +91,78 @@ namespace sifoodproject.Areas.Admin.Controllers
         {
             Store store = _context.Stores.Where(x => x.StoreId == storeId).FirstOrDefault();
             return PartialView("_EditPartialView", store);
-        }
+        }      
 
         [HttpPost]
-        public IActionResult Edit(Store store)
-        {            
+        public IActionResult Edit(Store store, IFormFile newLogo, IFormFile newPhoto, IFormFile newPhoto2, IFormFile newPhoto3)
+        {
             Store originalStore = _context.Stores.AsNoTracking().FirstOrDefault(x => x.StoreId == store.StoreId);
-            if (originalStore != null && store.LogoPath == null)
+                        
+            if (newLogo != null && newLogo.Length > 0)
             {
-                store.LogoPath = originalStore.LogoPath;
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + newLogo.FileName;
+                string filePath = Path.Combine("wwwroot/images/Stores/logo", uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    newLogo.CopyTo(fileStream);
+                }
+                store.LogoPath = filePath;
             }
-            if (originalStore != null && store.PhotosPath == null)
+            if (newPhoto != null && newPhoto.Length > 0)
             {
-                store.PhotosPath = originalStore.PhotosPath;
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + newPhoto.FileName;
+                string filePath = Path.Combine("wwwroot/images/Stores/Photo", uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    newPhoto.CopyTo(fileStream);
+                }
+                store.PhotosPath = filePath;
             }
-            if (originalStore != null && store.PhotosPath2 == null)
+            if (newPhoto2 != null && newPhoto2.Length > 0)
             {
-                store.PhotosPath2 = originalStore.PhotosPath2;
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + newPhoto2.FileName;
+                string filePath = Path.Combine("wwwroot/images/Stores/Photo", uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    newPhoto2.CopyTo(fileStream);
+                }
+                store.PhotosPath2 = filePath;
             }
-            if (originalStore != null && store.PhotosPath3 == null)
+            if (newPhoto3 != null && newPhoto3.Length > 0)
             {
-                store.PhotosPath3 = originalStore.PhotosPath3;
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + newPhoto3.FileName;
+                string filePath = Path.Combine("wwwroot/images/Stores/Photo", uniqueFileName);
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    newPhoto3.CopyTo(fileStream);
+                }
+                store.PhotosPath3 = filePath;
             }
+            if (originalStore != null)
+            {
+                if (store.LogoPath == null)
+                {
+                    store.LogoPath = originalStore.LogoPath;
+                }
+                if (store.PhotosPath == null)
+                {
+                    store.PhotosPath = originalStore.PhotosPath;
+                }
+                if (store.PhotosPath2 == null)
+                {
+                    store.PhotosPath2 = originalStore.PhotosPath2;
+                }
+                if (store.PhotosPath3 == null)
+                {
+                    store.PhotosPath3 = originalStore.PhotosPath3;
+                }
+            }
+
             _context.Stores.Update(store);
             _context.SaveChanges();
             return RedirectToAction("Index");
         }
+
 
         public IActionResult Delete(string storeId)
         {

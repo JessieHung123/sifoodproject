@@ -81,7 +81,7 @@
                             <span asp-validation-for="ClosingDay" class="text-danger"></span>
                         </div>
                         <div class="form-group" style="text-align: left;">
-                            <label asp-for="LogoPath" class="control-label">商家照片</label>
+                            <label asp-for="PhotosPath" class="control-label">商家照片</label>
                             <br />
                             @if (!string.IsNullOrEmpty(Model.PhotosPath))
                             {
@@ -93,7 +93,10 @@
                                      width="300" height="200" alt="Default Logo" />
                             }
                             <br />
-                            <input type="file" asp-for="PhotosPath" class="form-control" />
+                            <input type="file" name="newPhoto" class="form-control" />
+                            <br />
+                            <label asp-for="PhotosPath2" class="control-label">商家照片2</label>
+                            <br />
                             @if (!string.IsNullOrEmpty(Model.PhotosPath2))
                             {
                                 <img src="@Model.PhotosPath2" width="300" height="200" alt="Logo" />
@@ -103,7 +106,10 @@
                                 <img src="~/images/Noimage.png" width="300" height="200" alt="Default Logo" />
                             }
                             <br />
-                            <input type="file" asp-for="PhotosPath2" class="form-control" />
+                            <input type="file" name="newPhoto2" class="form-control" />
+                            <br />
+                            <label asp-for="PhotosPath3" class="control-label">商家照片3</label>
+                            <br />
                             @if (!string.IsNullOrEmpty(Model.PhotosPath3))
                             {
                                 <img src="@Model.PhotosPath3" width="300" height="200" alt="Logo" />
@@ -112,14 +118,20 @@
                             {
                                 <img src="~/images/Noimage.png" width="300" height="200" alt="Default Logo" />
                             }
-                            <input type="file" asp-for="PhotosPath3" class="form-control" />
-                            <span asp-validation-for="PhotosPath" class="text-danger"></span>
+                            <input type="file" name="newPhoto3" class="form-control" />
+                            <span asp-validation-for="PhotosPath3" class="text-danger"></span>
                         </div>
                         <div class="form-group" style="text-align: left;">
                             <label asp-for="LogoPath" class="control-label">商家Logo</label>
-                            <br />
-                            <img src="@Model.LogoPath" width="300" height="300" alt="Logo" />
-                            <input type="file" asp-for="LogoPath" class="form-control" />                            
+                            <br />@if (!string.IsNullOrEmpty(Model.LogoPath))
+                            {
+                                <img src="@Model.LogoPath" width="300" height="200" alt="Logo" />
+                            }
+                            else
+                            {
+                                <img src="~/images/Noimage.png" width="300" height="200" alt="Default Logo" />
+                            }
+                            <input type="file" name="newLogo" class="form-control" />
                             <span asp-validation-for="LogoPath" class="text-danger"></span>
                         </div>
                         <div class="form-group" style="text-align: left;">
