@@ -22,11 +22,16 @@ namespace SiFoodProjectFormal2._0.Areas.Users.Controllers
 
         public async Task<object> Main2()
         {
+            TimeZoneInfo taiwanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
+            DateTime utcNow = DateTime.UtcNow;
+            DateTime taiwanTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, taiwanTimeZone);
+            var today = taiwanTime.Date;
+            var currentTime = taiwanTime.TimeOfDay;
             var comment = await _context.Comments.AsNoTracking().GroupBy(x => x.StoreId).Select(x => new { x.Key, Count = x.Count() }).ToListAsync();
             var commentRank =await _context.Comments.AsNoTracking().GroupBy(x => x.StoreId).Select(x => new { x.Key, TotalRank = x.Sum(z => z.CommentRank) }).ToListAsync();
 
             var Product = await _context.Products.AsNoTracking().Include(x => x.Category).Where(x => x.IsDelete == 1 && x.RealeasedTime.Date == DateTime.Now.Date &&
-               x.SuggestPickEndTime >= DateTime.Now.TimeOfDay).GroupBy(x => x.StoreId).Select(x => new { x.Key, sumQty = x.Sum(z => z.ReleasedQty - z.OrderedQty), categoryList = x.Select(z => z.Category.CategoryName) }).ToListAsync();
+               x.SuggestPickEndTime >= currentTime).GroupBy(x => x.StoreId).Select(x => new { x.Key, sumQty = x.Sum(z => z.ReleasedQty - z.OrderedQty), categoryList = x.Select(z => z.Category.CategoryName) }).ToListAsync();
 
             var stores =await  _context.Stores.AsNoTracking().Where(x => x.StoreIsAuthenticated == 1).Select(z => new
             {
