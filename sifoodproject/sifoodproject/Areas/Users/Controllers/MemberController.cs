@@ -58,7 +58,7 @@ namespace sifoodproject.Areas.Users.Controllers
 
         //11/23新版
         [HttpPost]
-        public async Task<IActionResult> Profile(string id, [Bind("UserName,UserPhone,UserEmail,UserBirthDate")] ProfileVM profileViewModel)
+        public async Task<IActionResult> Profile(string id, [Bind("UserName,UserPhone,UserBirthDate")] ProfileVM profileViewModel)
         {
             //if (ModelState.IsValid)
             //{
@@ -74,7 +74,7 @@ namespace sifoodproject.Areas.Users.Controllers
 
             // 更新用戶數據
             userToUpdate.UserName = profileViewModel.UserName;
-            userToUpdate.UserEmail = profileViewModel.UserEmail;
+            //userToUpdate.UserEmail = profileViewModel.UserEmail;
             userToUpdate.UserPhone = profileViewModel.UserPhone;
             userToUpdate.UserBirthDate = profileViewModel.UserBirthDate;
 
