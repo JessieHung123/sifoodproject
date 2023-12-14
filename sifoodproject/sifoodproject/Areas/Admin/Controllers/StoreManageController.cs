@@ -97,7 +97,7 @@ namespace sifoodproject.Areas.Admin.Controllers
         public IActionResult Edit(Store store, IFormFile newLogo, IFormFile newPhoto, IFormFile newPhoto2, IFormFile newPhoto3)
         {
             Store originalStore = _context.Stores.AsNoTracking().FirstOrDefault(x => x.StoreId == store.StoreId);
-                        
+            
             if (newLogo != null && newLogo.Length > 0)
             {
                 string uniqueFileName = Guid.NewGuid().ToString() + "_" + newLogo.FileName;
