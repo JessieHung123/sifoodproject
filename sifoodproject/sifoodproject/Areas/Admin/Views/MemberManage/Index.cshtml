@@ -65,20 +65,20 @@
                                 @foreach (var item in Model)
                                 {
                                     <tr>
-                                        <td>
+                                        <td style="text-align: center;">
                                             @Html.DisplayFor(modelItem => item.UserId)
                                         </td>
-                                        <td>
+                                        <td style="text-align: center;">
                                             @Html.DisplayFor(modelItem => item.UserName)
                                         </td>
-                                        <td>
+                                        <td style="text-align: center;">
                                             @Html.DisplayFor(modelItem => item.UserEmail)
                                         </td>
-                                        <td>
+                                        <td style="text-align: center;">
                                             @Html.DisplayFor(modelItem => item.UserPhone)
                                         </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.UserBirthDate)
+                                        <td style="text-align: center;">
+                                            @String.Format("{0:yyyy-MM-dd}", item.UserBirthDate)
                                         </td>
                                         <td style="text-align:center;">
                                             <button type="button" class="dropdown-item" data-bs-toggle="modal" data-bs-target="@("#EditUser-" + item.UserId)" data-url="@Url.Action($"Edit1/{item.UserId}")">
