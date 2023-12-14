@@ -95,11 +95,6 @@ namespace sifoodproject.Areas.Users.Controllers
             //var order = await _context.Orders.Include(o => o.Comment).FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
             var comment = await _context.Comments.Where(x => x.OrderId == ratingModel.OrderId).FirstOrDefaultAsync();
 
-            if (comment == null)
-            {
-                return NotFound("找不到相關的訂單。");
-            }
-
             var order = await _context.Orders.Where(y => y.OrderId == ratingModel.OrderId).FirstOrDefaultAsync();
             // 檢查訂單的 StatusID 是否為 7
             if (order?.StatusId == 7)
