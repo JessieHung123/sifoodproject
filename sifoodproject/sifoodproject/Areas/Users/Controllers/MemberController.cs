@@ -242,43 +242,43 @@ namespace sifoodproject.Areas.Users.Controllers
 
 
         //送出評論
-        [HttpPost]
-        public async Task<IActionResult> SubmitRating([FromBody] RatingModel ratingModel)
-        {
-            // 檢查從前端接收的評價模型是否為空，或者是否缺少訂單ID
-            if (ratingModel == null || string.IsNullOrEmpty(ratingModel.OrderId))
-            {
-                // 如果數據無效，返回一個錯誤響應
-                return BadRequest("無效的請求數據。");
-            }
+        //[HttpPost]
+        //public async Task<IActionResult> SubmitRating([FromBody] RatingModel ratingModel)
+        //{
+        //    // 檢查從前端接收的評價模型是否為空，或者是否缺少訂單ID
+        //    if (ratingModel == null || string.IsNullOrEmpty(ratingModel.OrderId))
+        //    {
+        //        // 如果數據無效，返回一個錯誤響應
+        //        return BadRequest("無效的請求數據。");
+        //    }
 
-            // 根據訂單ID查找相關的訂單，包括其相關的評論數據
-            var order = await _context.Orders.Include(o => o.Comment).FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
-            if (order == null)
-            {
-                // 如果找不到訂單，返回一個未找到的響應
-                return NotFound("找不到相關的訂單。");
-            }
+        //    // 根據訂單ID查找相關的訂單，包括其相關的評論數據
+        //    var order = await _context.Orders.Include(o => o.Comment).FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
+        //    if (order == null)
+        //    {
+        //        // 如果找不到訂單，返回一個未找到的響應
+        //        return NotFound("找不到相關的訂單。");
+        //    }
 
-            // 檢查訂單是否已經有相關聯的評論
-            if (order.Comment == null)
-            {
-                // 如果沒有，則創建一個新的評論實例並賦值
-                order.Comment = new Comment { CommentRank = (short)ratingModel.Rating, Contents = ratingModel.Comment };
-            }
-            else
-            {
-                // 如果已經有評論，則更新現有評論的數據
-                order.Comment.CommentRank = (short)ratingModel.Rating;
-                order.Comment.Contents = ratingModel.Comment;
-            }
+        //    // 檢查訂單是否已經有相關聯的評論
+        //    if (order.Comment == null)
+        //    {
+        //        // 如果沒有，則創建一個新的評論實例並賦值
+        //        order.Comment = new Comment { CommentRank = (short)ratingModel.Rating, Contents = ratingModel.Comment };
+        //    }
+        //    else
+        //    {
+        //        // 如果已經有評論，則更新現有評論的數據
+        //        order.Comment.CommentRank = (short)ratingModel.Rating;
+        //        order.Comment.Contents = ratingModel.Comment;
+        //    }
 
-            // 保存更改到數據庫
-            await _context.SaveChangesAsync();
+        //    // 保存更改到數據庫
+        //    await _context.SaveChangesAsync();
 
-            // 返回操作成功的響應
-            return Ok(new { message = "評價提交成功" });
-        }
+        //    // 返回操作成功的響應
+        //    return Ok(new { message = "評價提交成功" });
+        //}
 
         // 用於從前端接收評價數據的模型類
         public class RatingModel

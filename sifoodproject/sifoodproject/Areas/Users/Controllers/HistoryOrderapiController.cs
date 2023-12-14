@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using sifoodproject.Areas.Stores.Models;
 using sifoodproject.Areas.Users.Models.ViewModels;
 using sifoodproject.Models;
 using sifoodproject.Services;
@@ -91,24 +93,21 @@ namespace sifoodproject.Areas.Users.Controllers
             }
 
             //var order = await _context.Orders.Include(o => o.Comment).FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
-            var order = await _context.Orders
-                            .Include(o => o.Comment)
-                            .Include(o => o.Status) 
-                            .FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
+            var comment = await _context.Comments.Where(x => x.OrderId == ratingModel.OrderId).FirstOrDefaultAsync();
 
-            if (order == null)
+            if (comment == null)
             {
                 return NotFound("找不到相關的訂單。");
             }
 
+            var order = await _context.Orders.Where(y => y.OrderId == ratingModel.OrderId).FirstOrDefaultAsync();
             // 檢查訂單的 StatusID 是否為 7
-            if (order.StatusId == 7)
+            if (order?.StatusId == 7)
             {
                 return BadRequest("已取消");
             }
 
-
-            if (order.Comment == null)
+            if (comment == null)
             {
                 var newComment = new Comment
                 {
@@ -123,8 +122,10 @@ namespace sifoodproject.Areas.Users.Controllers
             }
             else
             {
-                order.Comment.CommentRank = (short)ratingModel.Rating;
-                order.Comment.Contents = ratingModel.Comment;
+                comment.CommentRank = (short)ratingModel.Rating;
+                comment.Contents = ratingModel.Comment;
+                comment.CommentTime = DateTime.Now;
+                await _context.SaveChangesAsync();
             }
             return Ok(new { message = "評價提交成功" });
         }
