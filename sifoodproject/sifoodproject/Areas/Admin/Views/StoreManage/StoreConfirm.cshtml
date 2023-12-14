@@ -198,20 +198,15 @@
                         headers: {
                             "Content-Type": "application/json"
                         }
-                    }).then(response => {
-<<<<<<< HEAD
-                        alert(response.data);
-                        $('#storeModal').modal('hide');
-                        window.location.href = "/admin/StoreManage/StoreConfirm"
-=======
+                    }).then(response => {                 
                         Swal.fire({
                             icon: 'success',
                             title: '郵件已發送',
                             text: response.data,
                         }).then(() => {
                             $('#storeModal').modal('hide');
+                            window.location.href = "/admin/StoreManage/StoreConfirm"
                         });
->>>>>>> d23f46f4dc6961dc564e781a8f08cd5c94971c60
                     }).catch(err => {
                         Swal.fire({
                             icon: 'error',

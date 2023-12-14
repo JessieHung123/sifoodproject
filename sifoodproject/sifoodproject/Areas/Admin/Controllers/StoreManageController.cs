@@ -200,6 +200,9 @@ namespace sifoodproject.Areas.Admin.Controllers
             mail.IsBodyHtml = true;
             mail.BodyEncoding = Encoding.UTF8;
             client.Send(mail);
+            var store = _context.Stores.Where(x => x.Email == model.StoreEmail).FirstOrDefault();
+            store.StoreIsAuthenticated = 1;
+            _context.SaveChanges();
             return "已寄送驗證信";            
         }
     }

@@ -206,10 +206,10 @@ namespace sifoodproject.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(string OrderId)
         {
-            var orderDetails = await _context.OrderDetails.Where(c=>c.OrderId== OrderId).ToListAsync();
+            var orderDetails = await _context.Orders.Where(c=>c.OrderId== OrderId).FirstOrDefaultAsync();
             if (orderDetails != null)
             {
-                _context.OrderDetails.RemoveRange(orderDetails);
+                _context.Orders.RemoveRange(orderDetails);
                 await _context.SaveChangesAsync();
             }
             return RedirectToAction(nameof(Index));
