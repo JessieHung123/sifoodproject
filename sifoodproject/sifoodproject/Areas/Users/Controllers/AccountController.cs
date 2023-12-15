@@ -66,7 +66,7 @@ namespace sifoodproject.Areas.Users.Controllers
             IQueryable<string?> AllUserName = _context.Users.Select(x => x.UserName);
             if (AllAccount.Contains(model.EmailAccount) || AllUserName.Contains(model.UserName))
             {
-                return "此帳號已被註冊";
+                return "此帳號已被註冊或使用者名稱已被使用";
             }
             else
             {
