@@ -10,7 +10,6 @@ using System.Diagnostics;
 using System.Text;
 using static sifoodproject.Areas.Users.Models.NewebPayModels.PayModels;
 
-
 namespace sifoodproject.Areas.Users.Controllers
 {
     [Area("Users")]
@@ -32,7 +31,7 @@ namespace sifoodproject.Areas.Users.Controllers
             ViewData["MerchantID"] = _configuration.GetSection("MerchantID").Value;
             ViewData["ReturnURL"] = $"https://sifood103.azurewebsites.net/Users/Transaction/CallbackReturn";
             ViewData["NotifyURL"] = $"https://sifood103.azurewebsites.net/Users/Transaction/CallbackNotify";
-            ViewData["ClientBackURL"] = $"https://sifood103.azurewebsites.net/Users/Transaction/Checkout";
+            ViewData["ClientBackURL"] = $"https://sifood103.azurewebsites.net/Users/Home/Main";
             return View();
         }
 
@@ -77,9 +76,12 @@ namespace sifoodproject.Areas.Users.Controllers
             string UserId = _context.Users.Where(x => x.UserName == model.UserName).Select(x => x.UserId).Single();
             User? user = _context.Users.FirstOrDefault(x => x.UserName == model.UserName);
             user.TotalOrderAmount += model.TotalPrice;
+            TimeZoneInfo taiwanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
+            DateTime utcNow = DateTime.UtcNow;
+            DateTime taiwanTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, taiwanTimeZone);
             Order order = new()
             {
-                OrderDate = DateTime.Now,
+                OrderDate = taiwanTime,
                 StoreId = StoreId,
                 UserId = UserId,
                 DeliveryMethod = "自取",
@@ -130,9 +132,12 @@ namespace sifoodproject.Areas.Users.Controllers
             string UserId = _context.Users.Where(x => x.UserName == model.UserName).Select(x => x.UserId).Single();
             User? user = _context.Users.FirstOrDefault(x => x.UserName == model.UserName);
             user.TotalOrderAmount += model.TotalPrice;
+            TimeZoneInfo taiwanTimeZone = TimeZoneInfo.FindSystemTimeZoneById("Taipei Standard Time");
+            DateTime utcNow = DateTime.UtcNow;
+            DateTime taiwanTime = TimeZoneInfo.ConvertTimeFromUtc(utcNow, taiwanTimeZone);
             Order order = new()
             {
-                OrderDate = DateTime.Now,
+                OrderDate = taiwanTime,
                 StoreId = StoreId,
                 UserId = UserId,
                 DeliveryMethod = "外送",

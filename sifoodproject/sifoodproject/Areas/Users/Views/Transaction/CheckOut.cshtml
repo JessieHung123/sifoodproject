@@ -1,5 +1,6 @@
 ﻿@section Styles {
     <link href="~/css/loginsite.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
 }
 @{
     ViewData["Title"] = "結帳";
@@ -11,8 +12,8 @@
             <div class="col-12">
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb mb-0">
-                        <li class="breadcrumb-item"><a href="/Users/Home/Main">首頁</a></li>
-                        <li class="breadcrumb-item"><a href="/Users/Home/Stores">商店</a></li>
+                        <li class="breadcrumb-item">首頁</li>
+                        <li class="breadcrumb-item">商店</li>
                         <li class="breadcrumb-item active" aria-current="page">結帳</li>
                     </ol>
                 </nav>
@@ -310,6 +311,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js" integrity="sha512-uKQ39gEGiyUJl4AI6L+ekBdGKpGw4xJ55+xyJG7YFlJokPNYegn9KwQ3P8A7aFQAUtUsAQHep+d/lrGqrbPIDQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
         var CheckoutApp = {
@@ -364,8 +366,18 @@
                     axios.get(`/Transaction/GetCheckoutData`)
                         .then(response => {
                             if (!response.data || response.data.length === 0) {
-                                alert("購物車沒有商品喔，請先選擇喜愛的商品");
-                                window.location.href = "/Users/Home/Main";
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: '警告',
+                                    text: "購物車沒有商品喔，請先選擇喜愛的商品",
+                                    showCancelButton: false,
+                                    confirmButtonColor: '#3085d6',
+                                    confirmButtonText: '確定'
+                                }).then((result) => {
+                                    if (result.value) {
+                                        window.location.href = "/Users/Home/Main";
+                                    }
+                                });
                             } else {
                                 _this.checkoutDatas = response.data;
                                 _this.checkoutData = response.data[0];
@@ -451,7 +463,14 @@
                 createDeliverOrder(ChannelID) {
                     var _this = this;
                     if (_this.selectAddress == "") {
-                        alert("請先選擇地址，若無地址，請先至會員專區加入您想運送的地址");
+                        Swal.fire({
+                            icon: 'error',
+                            title: '警告',
+                            text: "請先選擇地址，若無地址，請先至會員專區加入您想運送的地址",
+                            showCancelButton: false,
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: '確定'
+                        })
                     } else {
                         _this.loading = true;
                         axios.post(`/Transaction/DeliverOrder`, {

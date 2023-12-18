@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
+using sifoodproject.Areas.Stores.Models;
 using sifoodproject.Areas.Users.Models.ViewModels;
 using sifoodproject.Models;
 using sifoodproject.Services;
@@ -30,7 +32,7 @@ namespace sifoodproject.Areas.Users.Controllers
             var ordersQuery = _context.Orders
                 .Where(o => o.UserId == loginUserId)
                 .Include(o => o.OrderDetails).ThenInclude(od => od.Product)
-                .Include(o => o.Status);
+                .Include(o => o.Status).Where(s=>s.Status.StatusId==5|| s.Status.StatusId ==6|| s.Status.StatusId ==7);
 
             var ordersList = await ordersQuery.Select(o => new HistoryOrderVM
             {
@@ -39,7 +41,8 @@ namespace sifoodproject.Areas.Users.Controllers
                 OrderDate = o.OrderDate,
                 Status = o.Status.StatusName,
                 Quantity = o.OrderDetails.Sum(od => od.Quantity),
-                TotalPrice = Convert.ToInt32(o.OrderDetails.Sum(od => od.Quantity * od.Product.UnitPrice) + o.ShippingFee),
+                TotalPrice = Convert.ToInt32(o.TotalPrice),
+                //TotalPrice = Convert.ToInt32(o.OrderDetails.Sum(od => od.Quantity * od.Product.UnitPrice) + o.ShippingFee),
                 FirstProductPhotoPath = o.OrderDetails.FirstOrDefault().Product.PhotoPath,
                 FirstProductName = o.OrderDetails.FirstOrDefault().Product.ProductName
             }).ToListAsync();
@@ -63,6 +66,7 @@ namespace sifoodproject.Areas.Users.Controllers
             var viewModel = new HistoryOrderDetailVM
             {
                 OrderId = order.OrderId,
+
                 OrderDate = order.OrderDate,
                 ShippingFee = order.ShippingFee,
                 DeliveryMethod = order.DeliveryMethod,
@@ -81,32 +85,43 @@ namespace sifoodproject.Areas.Users.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> SubmitRating([FromBody] RatingModel ratingModel)
+        public async Task<object> SubmitRating([FromBody] RatingModel ratingModel)
         {
-            if (ratingModel == null || string.IsNullOrEmpty(ratingModel.OrderId))
+            if (ratingModel == null || ratingModel.OrderId == "")
             {
                 return BadRequest("無效的請求數據。");
             }
 
-            var order = await _context.Orders.Include(o => o.Comment).FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
+            //var order = await _context.Orders.Include(o => o.Comment).FirstOrDefaultAsync(o => o.OrderId == ratingModel.OrderId);
+            var comment = await _context.Comments.Where(x => x.OrderId == ratingModel.OrderId).FirstOrDefaultAsync();
 
-            if (order == null)
+            var order = await _context.Orders.Where(y => y.OrderId == ratingModel.OrderId).FirstOrDefaultAsync();
+            // 檢查訂單的 StatusID 是否為 7
+            if (order?.StatusId == 7)
             {
-                return NotFound("找不到相關的訂單。");
+                return BadRequest("已取消");
             }
 
-            if (order.Comment == null)
+            if (comment == null)
             {
-                order.Comment = new Comment { CommentRank = (short)ratingModel.Rating, Contents = ratingModel.Comment };
+                var newComment = new Comment
+                {
+                    CommentTime = DateTime.Now,
+                    CommentRank = (short)ratingModel.Rating,
+                    Contents = ratingModel.Comment,
+                    OrderId = ratingModel.OrderId,
+                    StoreId = _context.Orders.Where(x => x.OrderId == ratingModel.OrderId).Select(x => x.StoreId).FirstOrDefault()
+                };
+                _context.Comments.Add(newComment);
+                await _context.SaveChangesAsync();
             }
             else
             {
-                order.Comment.CommentRank = (short)ratingModel.Rating;
-                order.Comment.Contents = ratingModel.Comment;
+                comment.CommentRank = (short)ratingModel.Rating;
+                comment.Contents = ratingModel.Comment;
+                comment.CommentTime = DateTime.Now;
+                await _context.SaveChangesAsync();
             }
-
-            await _context.SaveChangesAsync();
-
             return Ok(new { message = "評價提交成功" });
         }
 
@@ -114,9 +129,7 @@ namespace sifoodproject.Areas.Users.Controllers
         {
             public string OrderId { get; set; } // 訂單ID
             public int Rating { get; set; } // 評分數值
-            public string Comment { get; set; } // 評論內容
+            public string Comment { get; set; } // 評論內容 
         }
-
-
     }
 }

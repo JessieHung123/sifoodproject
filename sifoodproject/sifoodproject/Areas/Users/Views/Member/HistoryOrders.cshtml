@@ -91,7 +91,7 @@
                                             <option value="default">排序</option>
                                             @* <option value="Status">訂單狀態</option> *@
                                             <option value="priceAsc">金額：由低到高</option>
-                                            <option value="priceDesc">金額: 由高到低</option>
+                                            <option value="priceDesc">金額：由高到低</option>
                                             <option value="dateAsc">訂購日期：由舊到新</option>
                                             <option value="dateDesc">訂購日期：由新到舊</option>
                                         </select>
@@ -153,6 +153,7 @@
                         <div class="border-top d-md-flex justify-content-between align-items-center p-6">
                             <nav aria-label="Page navigation">
                                 <paginate :page-count="total"
+                                          :force-page="pageNumber"
                                           :prev-text="'<'"
                                           :next-text="'>'"
                                           :click-handler="pageClick">
@@ -551,32 +552,29 @@
                         return;
                     }
 
+                    var xxx = {
+                        orderId: this.orderDetail.orderId,
+                        rating: this.currentRating,
+                        comment: this.comment,
+                    }
+
                     fetch('/api/HistoryOrderapi/SubmitRating', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({
-                            orderId: this.orderDetail.orderId,
-                            rating: this.currentRating,
-                            comment: this.comment,
-                        })
+                        body: JSON.stringify(xxx)
                     })
-                        .then(response => { 
-                                    if (response.ok) {
-                            return response.json();
-                        } else if (response.status === 400) {
-                            throw new Error('無效的請求數據。');
-                        } else if (response.status === 404) {
-                            throw new Error('找不到相關的訂單。');
-                        } else {
-                            throw new Error('發生未知錯誤。');
-                        }
+                        .then(response => {
+                            if (response.ok) {
+                                return response.json();
+                            } else {
+                                // 從響應中提取錯誤訊息
+                                return response.text().then(text => { throw new Error(text); });
+                            }
                         })
-                            //response.json())
                         .then(data => {
-                            //alert(data.message || "評價提交成功"); // 這裡可以自定義 alert 的內容
-                            //sweet alert
+                            // 處理成功的情況
                             Swal.fire({
                                 position: "top-end",
                                 icon: "success",
@@ -584,22 +582,30 @@
                                 showConfirmButton: false,
                                 timer: 1500
                             });
-
-                            $('#orderDetailModal').modal('hide'); // 這將會關閉 Modal
+                            $('#orderDetailModal').modal('hide'); // 關閉評價的模態框
                         })
                         .catch(err => {
                             console.error("提交評價出錯: ", err);
-                            //alert("提交評價出錯"); // 發生錯誤時的 alert
-                            //sweet alert
+                            let swalTitle, swalIcon;
+
+                            if (err.message === "已取消") {
+                                swalTitle = "已取消的訂單不能提交評價";
+                                swalIcon = "info";
+                            } else {
+                                swalTitle = "發生錯誤";
+                                swalIcon = "error";
+                            }
+
                             Swal.fire({
                                 position: "top-end",
-                                icon: "error",
-                                title: "發生錯誤",
+                                icon: swalIcon,
+                                title: swalTitle,
                                 showConfirmButton: false,
                                 timer: 1500
                             });
                         });
                 }
+
 
             }
         }).component("paginate", VuejsPaginateNext).mount('#historyApp');

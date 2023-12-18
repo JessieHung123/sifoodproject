@@ -63,22 +63,22 @@ namespace sifoodproject.Areas.Users.Controllers
         //加入購物車:一個user的購物車只能限定一間商店，不然要alert(購物車只能放一間商店，是否要更換店家?)
         // POST: api/CartVMapi
         [HttpPost]
-        public async Task<string> AddToCart([FromBody]CartVM cartVM)
+        public async Task<bool> AddToCart([FromBody]CartVM cartVM)
         {
             string userId = _userIdentityService.GetUserId();
             Cart? cart = new Cart
             {
                 ProductId = cartVM.ProductId,
                 Quantity = cartVM.Quantity,
-                UserId = userId,   //cartVM.UserId寫死
+                UserId = userId,  
             };
             try
             {
                   _context.Carts.Add(cart);
                  await _context.SaveChangesAsync();
-                    return "新增商品成功!";
+                    return true;
             }
-            catch (Exception){ return "新增商品失敗!"; }
+            catch (Exception){ return false; }
         }
         //刪除購物車商品
         [HttpDelete]

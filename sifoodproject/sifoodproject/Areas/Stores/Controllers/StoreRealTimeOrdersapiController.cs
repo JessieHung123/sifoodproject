@@ -22,11 +22,11 @@ namespace sifoodproject.Areas.Stores.Controllers
             _storeIdentityService = storeIdentityService;
         }
 
-        [HttpGet]
-        public void ScheduleOrderStatusCheck()
-        {
-            RecurringJob.AddOrUpdate("CheckUnconfirmedOrdersJob", () => CheckUnconfirmedOrders(), "*/1 * * * *");
-        }
+        //[HttpGet]
+        //public void ScheduleOrderStatusCheck()
+        //{
+        //    RecurringJob.AddOrUpdate("CheckUnconfirmedOrdersJob", () => CheckUnconfirmedOrders(), "*/1 * * * *");
+        //}
 
 
         [HttpGet("filter")]

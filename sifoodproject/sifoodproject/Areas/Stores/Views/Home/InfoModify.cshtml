@@ -1,11 +1,19 @@
-﻿@{
+﻿@section Styles{
+    <style>
+        [v-cloak] {
+            display: none;
+        }
+    </style>
+}
+
+@{
     ViewData["Title"] = "資料修改";
 }
 
 <body>
     <main>
         <section>
-            <div class="container" id="modifyapp">
+            <div class="container" id="modifyapp" v-cloak>
                 <div class="row">
                     <div class="col-lg-10 col-md-12 col-12">
                         <div class="py-6 p-md-6 p-lg-10">
@@ -16,60 +24,56 @@
                                 <div class="container">
                                     <div class="row">
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">商家名稱</label>
+                                            <label class="form-label" style="font-weight: bold;">商家名稱<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" v-model="ModifyInfo.storeName" required>
                                         </div>
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">負責人名稱</label>
+                                            <label class="form-label" style="font-weight: bold;">負責人名稱<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" v-model="ModifyInfo.contactName" required>
                                         </div>
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">店家電話</label>
+                                            <label class="form-label" style="font-weight: bold;">店家電話<span class="text-danger">*</span></label>
                                             <input type="number" class="form-control" v-model="ModifyInfo.phone" required>
                                         </div>
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">公休時間</label>
+                                            <label class="form-label" style="font-weight: bold;">公休時間<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" v-model="ModifyInfo.closingDay" required>
                                         </div>
                                         <div class="mb-3 col-lg-6 form-group">
-                                            <label class="form-label" style="font-weight: bold;">平日開始營業時間</label>~
+                                            <label class="form-label" style="font-weight: bold;">平日開始營業時間<span class="text-danger">*</span></label>~
                                             <input type="time" class="form-control" v-model="ModifyInfo.weekdayOpen" required>
                                         </div>
                                         <div class="mb-3 col-lg-6 form-group">
-                                            <label class="form-label" style="font-weight: bold;">平日結束營業時間</label>
+                                            <label class="form-label" style="font-weight: bold;">平日結束營業時間<span class="text-danger">*</span></label>
                                             <input type="time" class="form-control" v-model="ModifyInfo.weekdayClose" required>
                                         </div>
                                         <div class="mb-3 col-lg-6 form-group">
-                                            <label class="form-label" style="font-weight: bold;">周末開始營業時間</label>~
+                                            <label class="form-label" style="font-weight: bold;">周末開始營業時間<span class="text-danger">*</span></label>~
                                             <input type="time" class="form-control" v-model="ModifyInfo.weekendOpen" required>
                                         </div>
                                         <div class="mb-3 col-lg-6 form-group">
-                                            <label class="form-label" style="font-weight: bold;">周末結束營業時間</label>
+                                            <label class="form-label" style="font-weight: bold;">周末結束營業時間<span class="text-danger">*</span></label>
                                             <input type="time" class="form-control" v-model="ModifyInfo.weekendClose" required>
                                         </div>
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">縣市</label>
+                                            <label class="form-label" style="font-weight: bold;">縣市<span class="text-danger">*</span></label>
                                             <select class="form-select" v-model="ModifyInfo.city">
                                                 <option value="臺北市">臺北市</option>
                                                 <option value="新北市">新北市</option>
                                             </select>
                                         </div>
                                         <div class="mb-3 col-lg-6">
-                                            <label class="form-label" style="font-weight: bold;">地區</label>
+                                            <label class="form-label" style="font-weight: bold;">地區<span class="text-danger">*</span></label>
                                             <select class="form-select" v-model="ModifyInfo.region">
                                                 <option v-for="item in RegionOptions" :value="item.id">{{item.name}}</option>
                                             </select>
                                         </div>
                                         <div class="mb-3 col-lg-12">
-                                            <label class="form-label" style="font-weight: bold;">地址</label>
+                                            <label class="form-label" style="font-weight: bold;">地址<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" v-model="ModifyInfo.address" required>
                                         </div>
-                                        <div class="mb-3 col-lg-12">
-                                            <label class="form-label" style="font-weight: bold;">電子郵件</label>
-                                            <input type="email" class="form-control" v-model="ModifyInfo.email" required>
-                                        </div>
                                         <div class="mb-3 col-lg-12 mt-5">
-                                            <h4 class="mb-3 h5" style="font-weight: bold;">店家敘述</h4>
+                                            <h4 class="mb-3 h5" style="font-weight: bold;">店家敘述<span class="text-danger">*</span></h4>
                                             <div class="mb-3">
                                                 <textarea class="form-control" rows="3" v-model="ModifyInfo.description"></textarea>
                                             </div>
@@ -129,21 +133,16 @@
                     </div>
                 </div>
                 <div class="d-flex justify-content-center">
-                    <button type="button" class="btn btn-secondary" onclick='return confirm("確定取消這次修改嗎?")' @@click="getModifyAPI">取消修改</button>&ensp;
-                    <button type="button" onclick='return confirm("確定要修改嗎?")' class="btn btn-primary" @@click="updateStore">確定修改</button>
+                    <button type="button" class="btn btn-secondary"  @@click="confirmCancel">取消修改</button>&ensp;
+                    <button type="button"  class="btn btn-primary" @@click="confirmUpdateInfo">確定修改</button>
                 </div>
             </div>
         </section>
     </main>
 </body>
-</html>
+
 @section Scripts
     {
-    <script src="~/assets/libs/jquery/dist/jquery.min.js"></script>
-    <script src="~/assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/assets/libs/simplebar/dist/simplebar.min.js"></script>
-    <script src="~/assets/js/theme.min.js"></script>
-    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <script>
         const ModifyApp = Vue.createApp({
             data: function () {
@@ -179,6 +178,32 @@
                             alert("不支援的檔案上傳格式");
                         }
                     }
+                },
+                confirmUpdateInfo(Info) {
+                    Swal.fire({
+                        title: "確定修改資料?",
+                        icon: "info",
+                        showCancelButton: true,
+                        confirmButtonText: "確定",
+                        cancelButtonText: "取消",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.updateStore();
+                        }
+                    });
+                },
+                confirmCancel(Info) {
+                    Swal.fire({
+                        title: "取消修改資料?",
+                        icon: "info",
+                        showCancelButton: true,
+                        confirmButtonText: "確定",
+                        cancelButtonText: "取消",
+                    }).then((result) => {
+                        if (result.isConfirmed) {
+                            this.getModifyAPI();
+                        }
+                    });
                 },
                 getRegion: function (city) {
                     let _this = this;
@@ -266,10 +291,20 @@
                     fetch(`/api/InfoModifyapi/PutInfoModify/${_this.ModifyInfo.storeId}`, { method: "Put", body: form })
                         .then(response => {
                             if (response.ok) {
-                                alert("商家資料更新成功!");
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: '成功!',
+                                    text: "商家資料更新成功!"
+                                });
+                                // alert("商家資料更新成功!");
                                 return response.text(); // 將回傳結果轉為文字
                             } else {
-                                alert("更新失敗，請確認資料欄位是否完整");
+                                Swal.fire({
+                                    icon: 'fail',
+                                    title: '失敗!',
+                                    text: "更新失敗，請確認資料欄位是否完整!"
+                                });
+                                // alert("更新失敗，請確認資料欄位是否完整");
                                 return response.text(); // 將回傳結果轉為文字
                             }
                         })
@@ -289,7 +324,7 @@
                 getModifyAPI: function () {
                     var isLoggedIn = ('@User.Identity.IsAuthenticated' == "True");
                     if (!isLoggedIn) {
-                        alert("請先登入")
+                        // alert("請先登入")
                         window.location.href = "/Stores/Account/Login";
                     }
                     else {

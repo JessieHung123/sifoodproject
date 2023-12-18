@@ -17,7 +17,7 @@ namespace sifoodproject.Areas.Users.Models.ViewModels
 
 
         // [Required(ErrorMessage = "聯絡電話未填寫")]
-        //[RegularExpression(@"^09\d{8}$", ErrorMessage = "無效的手機號碼格式")]
+        [RegularExpression(@"^09\d{8}$", ErrorMessage = "無效的手機號碼格式")]
         [Display(Name = "電話號碼")]
         public string? UserPhone { get; set; }
 

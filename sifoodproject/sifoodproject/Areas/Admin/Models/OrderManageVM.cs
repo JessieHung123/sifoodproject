@@ -18,5 +18,6 @@
         public string? StorePhone { get; set; }
         public string? StoreAddress { get; set; }
         public decimal Total { get; set; }
+        public List<OrderDetailVM>? OrderDetails { get; set; }
     }
 }

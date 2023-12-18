@@ -4,6 +4,7 @@
     <link href="~/assets/libs/simplebar/dist/simplebar.min.css" rel="stylesheet" />
     <link href="~/assets/css/theme.css" rel="stylesheet" />
     <link href="~/css/loginsite.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11">
 }
 @{
     ViewData["Title"] = "店家密碼設定";
@@ -26,9 +27,6 @@
                     </div>
                     <div>
                         <div class="row g-3">
-                            <div class="col-12">
-                                <input type="email" class="form-control" placeholder="請輸入您的帳戶" required v-model="storeEmail">
-                            </div>
                             <div class="col-12">
                                 <input type="password" class="form-control" placeholder="請輸入您要設定的密碼" required v-model="storePassword">
                             </div>
@@ -58,13 +56,12 @@
     <partial name="_ValidationScriptsPartial" />
     <script src="https://unpkg.com/vue@3.2.36/dist/vue.global.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.6.0/axios.min.js" integrity="sha512-WrdC3CE9vf1nBf58JHepuWT4x24uTacky9fuzw2g/3L9JkihgwZ6Cfv+JGTtNyosOhEmttMtEZ6H3qJWfI7gIQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script>
-        var baseAddress = "https://localhost:7042";
         var setAccountApp = Vue.createApp({
             data: function () {
                 return {
-                    storeEmail: "",
                     storePassword: "",
                     confirmPassword: "",
                     loading: false,
@@ -74,31 +71,66 @@
                 setPassword() {
                     var _this = this;
                     if (_this.storePassword != _this.confirmPassword) {
-                        alert("密碼輸入不一致");
+                        Swal.fire({
+                            icon: 'error',
+                            title: '錯誤',
+                            text: '密碼輸入不一致',
+                        })
+                    } else if (_this.storePassword == "" || _this.confirmPassword == "" || _this.storeEmail == "") {
+                        Swal.fire({
+                            icon: 'error',
+                            title: '錯誤',
+                            text: '輸入行不能為空',
+                        })
                     } else {
                         _this.loading = true;
                         var form = new FormData();
-                        form.append("StoreAccount", _this.storeEmail);
+                        var storeEmail = _this.getCookie("email");
+                        form.append("StoreAccount", storeEmail);
                         form.append("SetPassword", _this.storePassword);
                         axios.post(`/Account/SetPassword`, form, {
                             headers: {
                                 "Content-Type": "multipart/form-data"
                             }
                         }).then(response => {
-                            alert(response.data);
-                            var success = "密碼設定成功，請重新登入";
-                            if (response.data == success) {
-                                window.location.href = '/Stores/Account/Login'
-                            } else {
-                                _this.storeEmail = "";
-                                _this.storePassword = "";
-                                _this.confirmPassword = "";
-                            }
-                            _this.loading = false;
+                            var successMessage = "密碼設定成功，請重新登入";
+                            var iconType = response.data === successMessage ? 'success' : 'error';
+                            Swal.fire({
+                                icon: iconType,
+                                title: iconType === 'success' ? '操作成功' : '操作失敗',
+                                text: response.data,
+                            }).then((result) => {
+                                if (response.data === successMessage) {
+                                    window.location.href = '/Stores/Account/Login';
+                                } else {
+                                    _this.storeEmail = "";
+                                    _this.storePassword = "";
+                                    _this.confirmPassword = "";
+                                }
+                                _this.loading = false;
+                            });
                         }).catch(err => {
-                            alert(err);
+                            Swal.fire({
+                                icon: 'error',
+                                title: '發生錯誤',
+                                text: err.toString(),
+                            });
                         });
                     }
+                },
+                getCookie(name) {
+                    var nameEQ = name + "=";
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = cookies[i];
+                        while (cookie.charAt(0) == ' ') {
+                            cookie = cookie.substring(1, cookie.length);
+                        }
+                        if (cookie.indexOf(nameEQ) == 0) {
+                            return cookie.substring(nameEQ.length, cookie.length);
+                        }
+                    }
+                    return null;
                 },
             },
         }).mount("#storeSetPasswordApp")
