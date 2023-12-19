@@ -33,7 +33,6 @@
     <Folder Include="Areas\Stores\Data\" />
     <Folder Include="Areas\Stores\Views\" />
     <Folder Include="Areas\Users\Data\" />
-    <Folder Include="Areas\Users\Models\" />
     <Folder Include="Areas\Users\Views\" />
   </ItemGroup>
 

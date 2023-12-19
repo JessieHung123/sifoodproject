@@ -83,7 +83,7 @@ namespace sifoodproject.Areas.Users.Controllers
         }
 
         [HttpPost]
-        public async Task<object> SubmitRating([FromBody] RatingModel ratingModel)
+        public async Task<object> SubmitRating([FromBody] RatingVM ratingModel)
         {
             if (ratingModel == null || ratingModel.OrderId == "")
             {
@@ -128,12 +128,13 @@ namespace sifoodproject.Areas.Users.Controllers
             }
             return Ok(new { message = "評價提交成功" });
         }
-
-        public class RatingModel
-        {
-            public string OrderId { get; set; } // 訂單ID
-            public int Rating { get; set; } // 評分數值
-            public string Comment { get; set; } // 評論內容 
-        }
+        
+        //移動去當ViewModel
+        //public class RatingVM
+        //{
+        //    public string OrderId { get; set; } // 訂單ID
+        //    public int Rating { get; set; } // 評分數值
+        //    public string Comment { get; set; } // 評論內容 
+        //}
     }
 }
