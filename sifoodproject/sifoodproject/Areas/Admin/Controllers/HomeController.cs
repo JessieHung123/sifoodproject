@@ -1,8 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using sifoodproject.Areas.Admin.Models;
+using sifoodproject.Areas.Admin.NewFolder;
 using sifoodproject.Models;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using System.Text.RegularExpressions;
+
 
 namespace sifoodproject.Areas.Admin.Controllers
 {
@@ -21,7 +28,7 @@ namespace sifoodproject.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Login(LoginVM model)
+        public async Task<IActionResult> Login(LoginVM model)
         {
             var admin = _context.Admins.Where(x => x.Account == model.Account).FirstOrDefault();
             if (admin != null)
@@ -31,9 +38,26 @@ namespace sifoodproject.Areas.Admin.Controllers
                 Byte[] RealPasswordHash = SHA256.HashData(RealPasswordBytes);
                 if (Enumerable.SequenceEqual(RealPasswordHash, admin.Password))
                 {
+                    List<Claim> claims = new()
+                        {
+                        new Claim(ClaimTypes.NameIdentifier, $"{admin.Account}"),
+                        new Claim(ClaimTypes.Role, "Admin"),
+                        };
+                    ClaimsIdentity identity = new(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                    ClaimsPrincipal principal = new(identity);
+                   await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal, new AuthenticationProperties
+                {
+                    ExpiresUtc = DateTime.UtcNow.AddDays(1)
+                });
                     return RedirectToAction("Index", "OrderManage");
                 }
             }
+            return View();
+        }
+        public IActionResult AdminChatRoom()
+        {
             return View();
         }
     }

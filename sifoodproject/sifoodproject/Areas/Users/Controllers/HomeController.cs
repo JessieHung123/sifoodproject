@@ -1,8 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using sifoodproject.Areas.Admin.NewFolder;
 using sifoodproject.Areas.Users.Models.ViewModels;
 using sifoodproject.Models;
+using sifoodproject.Services;
 
 namespace sifoodproject.Areas.Users.Controllers
 {
@@ -11,10 +14,11 @@ namespace sifoodproject.Areas.Users.Controllers
     public class HomeController : Controller
     {
         Sifood3Context _context;
-
-        public HomeController(Sifood3Context context)
+        private readonly IUserIdentityService _userIdentityService;
+        public HomeController(Sifood3Context context, IUserIdentityService userIdentityService, IHubContext<AdminChatHub> adminchathubContext)
         {
             _context = context;
+            _userIdentityService = userIdentityService;
         }
 
         public IActionResult Main()
@@ -22,7 +26,13 @@ namespace sifoodproject.Areas.Users.Controllers
 
             return View();
         }
-
+        public IActionResult ChatRoom()
+        {
+            var userId = _userIdentityService.GetUserId();
+            string UserName =_context.Users.Where(x=>x.UserId==userId).Select(x=>x.UserName).Single();
+            ViewBag.UserName = UserName;
+            return View();
+        }
         public IActionResult MapFind()
         {
             return View();
