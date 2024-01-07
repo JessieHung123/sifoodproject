@@ -28,6 +28,7 @@
                     </div>
                     <!-- form -->
                     <form asp-controller="Home" asp-action="JoinUs" class="row" id="myForm" enctype="multipart/form-data">
+                        @Html.AntiForgeryToken() <!--在表單中加入防偽令牌-->
                         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
                         <div class="col-md-6 mb-3">
                             <label asp-for="ContactName" class="form-label">聯絡人姓名<span class="text-danger">*</span></label>
@@ -338,6 +339,10 @@
             fetch('/Users/Home/JoinUsSubmit', {
                 method: 'POST',
                 body: formData,
+                //在 AJAX 請求中包含防偽令牌
+                headers: {
+                    'RequestVerificationToken': document.getElementsByName('__RequestVerificationToken')[0].value
+                }
             })
                 .then(response => response.text()) // 將響應轉換為 JSON
                 .then(data => {
